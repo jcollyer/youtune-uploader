@@ -52,6 +52,11 @@ export default function UserDropdown({ open, closeDropdown }) {
           </Link>
         </li>
         <li className="dropdown-item">
+          <Link to="/upload" onClick={closeDropdown}>
+            Upload Video
+          </Link>
+        </li>
+        <li className="dropdown-item">
           <Link to="/settings" onClick={closeDropdown}>
             Settings
           </Link>
