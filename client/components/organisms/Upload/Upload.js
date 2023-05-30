@@ -5,6 +5,7 @@ import * as R from 'ramda';
 import { Typography, Button, Form, Input } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
+import axios from 'axios';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -60,15 +61,34 @@ export default function Upload() {
     setCategories(event.currentTarget.value);
   };
 
-  const onSubmit = () => {};
+  const onSubmit = event => {
+    event.preventDefault();
+    console.log('--------form-->', file, title, Description);
+    const videoData = new FormData();
+
+    videoData.append('videoFile', file);
+    videoData.append('title', title);
+    videoData.append('description', Description);
+    videoData.append('fileSize', file.size);
+    console.log('-----------videoData', videoData.get('file'));
+
+    axios
+      .post('http://localhost:3000/uploadVideo', videoData)
+      .then(response => {
+        console.log('axios->', response.data);
+      });
+  };
 
   const onDrop = useCallback(acceptedFiles => {
-    console.log('--------->', acceptedFiles);
+    console.log('--------->', typeof acceptedFiles);
     if (acceptedFiles[0]) {
-      setFile(acceptedFiles[0].path);
+      // setFile(acceptedFiles[0].path);
+      // const inputValue =
+      setFile(acceptedFiles[0]);
     }
   }, []);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  console.log(loading, privacy, Categories);
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -86,13 +106,14 @@ export default function Upload() {
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            {...getRootProps()}>
+            {...getRootProps()}
+          >
             <input {...getInputProps()} />
             <PlusSquareOutlined style={{ fontSize: '3rem' }} />
             {isDragActive ? (
               <p>Drop the files here ...</p>
             ) : (
-              <p>Drag 'n' drop some files here, or click to select files</p>
+              <p>Click to add files</p>
             )}
           </div>
 
@@ -115,8 +136,8 @@ export default function Upload() {
         <br />
 
         <select onChange={handleChangeOne}>
-          {Private.map((item, index) => (
-            <option key={index} value={item.value}>
+          {Private.map((item) => (
+            <option key={item.value} value={item.value}>
               {item.label}
             </option>
           ))}
@@ -125,8 +146,8 @@ export default function Upload() {
         <br />
 
         <select onChange={handleChangeTwo}>
-          {Catogory.map((item, index) => (
-            <option key={index} value={item.label}>
+          {Catogory.map((item) => (
+            <option key={item.value} value={item.label}>
               {item.label}
             </option>
           ))}
