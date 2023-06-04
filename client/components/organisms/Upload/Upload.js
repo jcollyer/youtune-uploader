@@ -37,40 +37,42 @@ export default function Upload() {
     }
   }, [dispatch, user]);
 
-  const [file, setFile] = useState('');
-  const [title, setTitle] = useState('');
-  const [Description, setDescription] = useState('');
-  const [privacy, setPrivacy] = useState(0);
-  const [Categories, setCategories] = useState('Film & Animation');
+  const [video, setVideo] = useState({
+    file: { size: 0 },
+    title: '',
+    description: '',
+    privacy: 0,
+    categorie: 'Film & Animation',
+  });
 
   const handleChangeTitle = event => {
-    setTitle(event.currentTarget.value);
+    setVideo({ ...video, title: event.currentTarget.value });
   };
 
   const handleChangeDecsription = event => {
     console.log(event.currentTarget.value);
 
-    setDescription(event.currentTarget.value);
+    setVideo({ ...video, description: event.currentTarget.value });
   };
 
   const handleChangeOne = event => {
-    setPrivacy(event.currentTarget.value);
+    setVideo({ ...video, privacy: event.currentTarget.value });
   };
 
   const handleChangeTwo = event => {
-    setCategories(event.currentTarget.value);
+    setVideo({ ...video, categorie: event.currentTarget.value });
   };
 
   const onSubmit = event => {
     event.preventDefault();
-    console.log('--------form-->', file, title, Description);
+    // console.log('--------form-->', file, title, Description);
     const videoData = new FormData();
 
-    videoData.append('videoFile', file);
-    videoData.append('title', title);
-    videoData.append('description', Description);
-    videoData.append('fileSize', file.size);
-    console.log('-----------videoData', videoData.get('file'));
+    videoData.append('videoFile', video.file);
+    videoData.append('title', video.title);
+    videoData.append('description', video.description);
+    videoData.append('fileSize', video.file.size);
+    // console.log('-----------videoData', videoData.get('file'));
 
     axios
       .post('http://localhost:3000/uploadVideo', videoData)
@@ -79,16 +81,19 @@ export default function Upload() {
       });
   };
 
-  const onDrop = useCallback(acceptedFiles => {
-    console.log('--------->', typeof acceptedFiles);
-    if (acceptedFiles[0]) {
-      // setFile(acceptedFiles[0].path);
-      // const inputValue =
-      setFile(acceptedFiles[0]);
-    }
-  }, []);
+  const onDrop = useCallback(
+    acceptedFiles => {
+      console.log('--------->', typeof acceptedFiles);
+      if (acceptedFiles[0]) {
+        // setFile(acceptedFiles[0].path);
+        // const inputValue =
+        setVideo({ ...video, file: acceptedFiles[0] });
+      }
+    },
+    [video],
+  );
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-  console.log(loading, privacy, Categories);
+  console.log(loading);
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -127,16 +132,19 @@ export default function Upload() {
         <br />
         <br />
         <label>Title</label>
-        <Input onChange={handleChangeTitle} value={title} />
+        <Input onChange={handleChangeTitle} value={video.title} />
         <br />
         <br />
         <label>Description</label>
-        <TextArea onChange={handleChangeDecsription} value={Description} />
+        <TextArea
+          onChange={handleChangeDecsription}
+          value={video.description}
+        />
         <br />
         <br />
 
         <select onChange={handleChangeOne}>
-          {Private.map((item) => (
+          {Private.map(item => (
             <option key={item.value} value={item.value}>
               {item.label}
             </option>
@@ -146,8 +154,8 @@ export default function Upload() {
         <br />
 
         <select onChange={handleChangeTwo}>
-          {Catogory.map((item) => (
-            <option key={item.value} value={item.label}>
+          {Catogory.map(item => (
+            <option key={item.label} value={item.label}>
               {item.label}
             </option>
           ))}
@@ -159,6 +167,13 @@ export default function Upload() {
           Submit
         </Button>
       </Form>
+      <div>
+        <div>{video?.file.size}</div>
+        <div>{video?.title}</div>
+        <div>{video?.description}</div>
+        <div>{video?.privacy === 0 ? 'privet' : 'public'}</div>
+        <div>{video?.categorie}</div>
+      </div>
     </div>
   );
 }
