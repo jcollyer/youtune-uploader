@@ -39,7 +39,7 @@ const storage = multer.diskStorage({
 
 const uploadVideoFile = multer({
   storage,
-}).any('file');
+}).array('file');
 
 const oAuth = youtube.authenticate({
   type: 'oauth',
@@ -53,6 +53,7 @@ app.post('/uploadVideo', uploadVideoFile, (req) => {
     file: req.file,
     files: req.files,
     body: req.body,
+    // stuff: req.body.file[0],
   });
 
   if (req.files) {
