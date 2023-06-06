@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const youtube = require('youtube-api');
 const uuid = require('uuid').v4;
 const cors = require('cors');
-const readline = require('readline');
+// const readline = require('readline');
 const multer = require('multer');
 const open = require('open');
 const fs = require('fs');
@@ -22,7 +22,8 @@ const port = process.env.PORT;
 const app = express();
 
 app.use(express.static(assetFolder));
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.json());
 app.use(cors());
@@ -30,15 +31,15 @@ app.use(cors());
 const storage = multer.diskStorage({
   destination: './',
   filename(req, file, cb) {
+    console.log('------storage------>', file);
     const newFilename = `${uuid()}-${file.originalname}`;
-    console.log('------storage------>', newFilename);
     cb(null, newFilename);
   },
 });
 
 const uploadVideoFile = multer({
   storage,
-}).single('videoFile');
+}).any('file');
 
 const oAuth = youtube.authenticate({
   type: 'oauth',
@@ -48,16 +49,27 @@ const oAuth = youtube.authenticate({
 });
 
 app.post('/uploadVideo', uploadVideoFile, (req) => {
-  if (req.file) {
-    console.log('------------post--->', req.file.filename);
-    const { filename } = req.file;
+  console.log('------------uploadVideo--->', {
+    file: req.file,
+    files: req.files,
+    body: req.body,
+  });
+
+  if (req.files) {
     const { title, description } = req.body;
-    open(
+
+    // const { filename } = req.files;
+    console.log('------------post--->', {
+      title,
+      description,
+      files: req.files,
+    });
+    return open(
       oAuth.generateAuthUrl({
         access_type: 'offline',
         scope: 'https://www.googleapis.com/auth/youtube.upload',
         state: JSON.stringify({
-          filename,
+          filename: req.files,
           title,
           description,
         }),
@@ -66,17 +78,14 @@ app.post('/uploadVideo', uploadVideoFile, (req) => {
   }
 });
 
-app.get('/oauth2callback', (req, res) => {
-  res.redirect('/upload');
-  const { filename, title, description, fileSize } = JSON.parse(req.query.state);
-  console.log('-------------->', { title, description, fileSize });
-  oAuth.getToken(req.query.code, (err, tokens) => {
-    if (err) {
-      console.log('err');
-      return;
-    }
-    oAuth.setCredentials(tokens);
-
+const sendToYT = (videoQue, files, title, description) => {
+  console.log('---------sendToYT--->', { files, title, description });
+  let index = -1;
+  if (videoQue === 0) {
+    process.exit();
+  } else {
+    index++;
+    videoQue--;
     youtube.videos.insert(
       {
         part: 'id,snippet,status',
@@ -91,25 +100,46 @@ app.get('/oauth2callback', (req, res) => {
           },
         },
         media: {
-          body: fs.createReadStream(filename),
+          body: fs.createReadStream(files[index].filename),
         },
       },
-      {
-        // Use the `onUploadProgress` event from Axios to track the
-        // number of bytes uploaded to this point.
-        onUploadProgress: evt => {
-          const progress = (evt.bytesRead / fileSize) * 100;
-          readline.clearLine(process.stdout, 0);
-          readline.cursorTo(process.stdout, 0, null);
-          process.stdout.write(`${Math.round(progress)}% complete`);
-        },
-      },
+      // {
+      //   // Use the `onUploadProgress` event from Axios to track the
+      //   // number of bytes uploaded to this point.
+      //   onUploadProgress: evt => {
+      //     const progress = (evt.bytesRead / fileSize) * 100;
+      //     readline.clearLine(process.stdout, 0);
+      //     readline.cursorTo(process.stdout, 0, null);
+      //     process.stdout.write(`${Math.round(progress)}% complete`);
+      //   },
+      // },
       (err, data) => {
         console.log(err, data);
         console.log('Done');
-        process.exit();
+        sendToYT(videoQue, files, title, description);
       },
     );
+  }
+};
+
+app.get('/oauth2callback', (req, res) => {
+  res.redirect('/upload');
+  const { filename, title, description, fileSize } = JSON.parse(
+    req.query.state,
+  );
+  console.log('-------------->', { filename, title, description, fileSize });
+  oAuth.getToken(req.query.code, (err, tokens) => {
+    if (err) {
+      console.log('err');
+      return;
+    }
+    oAuth.setCredentials(tokens);
+    const videoQue = Object.keys(filename).length;
+    console.log('-------this far-->', videoQue);
+    return sendToYT(videoQue, filename, title, description);
+    // Object.values(filename).forEach(file => {
+    //   console.log('----------file-', file);
+    // });
   });
 });
 
