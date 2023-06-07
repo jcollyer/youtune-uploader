@@ -48,7 +48,7 @@ const oAuth = youtube.authenticate({
   redirect_url: creds.web.redirect_uris[0],
 });
 
-app.post('/uploadVideo', uploadVideoFile, (req) => {
+app.post('/uploadVideo', uploadVideoFile, req => {
   console.log('------------uploadVideo--->', {
     file: req.file,
     files: req.files,
