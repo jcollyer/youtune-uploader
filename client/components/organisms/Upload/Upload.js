@@ -37,52 +37,32 @@ export default function Upload() {
   //   }
   // }, [dispatch, user]);
 
-  const [video, setVideo] = useState({
-    file: { size: 0 },
-    title: '',
-    description: '',
-    privacy: 0,
-    categorie: 'Film & Animation',
-  });
   const [activeIndex, setActiveIndex] = useState(0);
-  // const [videoFiles, setVideoFiles] = useState([]);
-
   const [videos, setVideos] = useState([]);
 
-  const onDrop = useCallback(
-    acceptedFiles => {
-      if (acceptedFiles.length) {
-        // console.log('------onDrop--->', acceptedFiles[0]);
-        // if (video.file.size > 0) {
-        //   setVideos([...videos, video]);
-        //   // setVideoFiels([...videoFiles, video.file]);
-        // }
-        // setFile(acceptedFiles[0].path);
-        // const inputValue =
-        acceptedFiles.forEach(file => {
-          // console.log('-------file', file, videoFiles);
-          // setVideoFiles([...videoFiles, file]);
-          // setVideoFiles(videoFiles => [...videoFiles, file]);
-          setVideos(videos => [
-            ...videos,
-            { file, title: '', description: '' },
-          ]);
-        });
-      }
-    },
-    [],
-  );
+  const onDrop = useCallback(acceptedFiles => {
+    if (acceptedFiles.length) {
+      acceptedFiles.forEach((file, index) => {
+        setVideos(videos => [
+          ...videos,
+          { id: index, file, title: '', description: '' },
+        ]);
+      });
+    }
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const handleChangeTitle = event => {
-    setVideo({ ...video, title: event.currentTarget.value });
-  };
+  const updateInput = (event, inputName) => {
+    const updatedCurrentVideo = {
+      ...videos[activeIndex],
+      [`${inputName}`]: event.currentTarget.value,
+    };
+    const updatedVideos = videos.map(video =>
+      video.id !== updatedCurrentVideo.id ? video : updatedCurrentVideo,
+    );
 
-  const handleChangeDecsription = event => {
-    console.log(event.currentTarget.value);
-
-    setVideo({ ...video, description: event.currentTarget.value });
+    setVideos(updatedVideos);
   };
 
   // const handleChangeOne = event => {
@@ -107,24 +87,10 @@ export default function Upload() {
         .then(response => {
           console.log('axios->', response.data);
         });
-    } else {
-      const videoData = new FormData();
-      videoData.append('file', video.file);
-      videoData.append('title', video.title);
-      videoData.append('description', video.description);
-      videoData.append('fileSize', video.file.size);
-
-      // console.log('-----------videoData', videoData.get('file'), video.file);
-
-      axios
-        .post('http://localhost:3000/uploadVideo', videoData)
-        .then(response => {
-          console.log('axios->', response.data);
-        });
     }
   };
 
-  console.log('---------', { videos });
+  // console.log('---------', { videos });
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
@@ -158,29 +124,20 @@ export default function Upload() {
                 </div>
             } */}
         </div>
-
-        {/* <div className="flex flex-col border">
-          <h1 className="text-3xl font-bold">Current Video</h1>
-          <div>{`File Size: ${video?.file?.size / 10000} MB`}</div>
-          <div>{`Title: ${video?.title}`}</div>
-          <div>{`Description: ${video?.description}`}</div>
-          <div>{`Private: ${video?.privacy === 0 ? 'private' : 'public'}`}</div>
-          <div>{`Catogory: ${video?.categorie}`}</div>
-        </div> */}
         <br />
         <br />
         <div>
           <h1 className="text-3xl font-bold">Upload List</h1>
           {videos?.map((video, index) => (
             <div
-              key={video.file.size}
+              key={video.file?.size}
               className={`${
                 activeIndex === index ? 'active' : ''
               } flex flex-row border-b p-4`}
             >
               <div className="border-r flex-row mr-2 pr-2">
-                <div>{video.file.name}</div>
-                <div>{video.file.size}</div>
+                <div>{video.file?.name}</div>
+                <div>{video.file?.size}</div>
               </div>
               <div
                 className="flex-row"
@@ -193,15 +150,22 @@ export default function Upload() {
             </div>
           ))}
         </div>
-
-        <label>Title</label>
-        <Input onChange={handleChangeTitle} name="title" value={video.title} />
-        <label>Description</label>
-        <TextArea
-          name="description"
-          onChange={handleChangeDecsription}
-          value={video.description}
-        />
+        <div>
+          <label>Title</label>
+          <Input
+            onChange={event => updateInput(event, 'title')}
+            name="title"
+            value={videos[activeIndex]?.title}
+            placeholder="Title"
+          />
+          <label>Description</label>
+          <TextArea
+            name="description"
+            onChange={event => updateInput(event, 'description')}
+            value={videos[activeIndex]?.description}
+            placeholder="Description"
+          />
+        </div>
         {/* <select onChange={handleChangeOne}>
           {Private.map(item => (
             <option key={item.value} value={item.value}>
@@ -220,7 +184,6 @@ export default function Upload() {
         <Button type="primary" size="large" onClick={onSubmit}>
           Submit
         </Button>
-        {/* <input type="submit" /> */}
       </form>
     </div>
   );
