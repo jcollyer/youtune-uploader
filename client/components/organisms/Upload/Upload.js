@@ -78,8 +78,9 @@ export default function Upload() {
     if (videos.length) {
       const formData = new FormData();
       videos.forEach(video => {
-        // console.log('--------formData-->',video.file);
         formData.append('file', video.file);
+        formData.append('title', video.title);
+        formData.append('description', video.description);
       });
 
       axios

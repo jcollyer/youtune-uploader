@@ -93,8 +93,8 @@ const sendToYT = (videoQue, files, title, description) => {
         notifySubscribers: false,
         requestBody: {
           snippet: {
-            title,
-            description,
+            title: title[index],
+            description: description[index],
           },
           status: {
             privacyStatus: 'private',
@@ -128,7 +128,7 @@ app.get('/oauth2callback', (req, res) => {
   const { filename, title, description, fileSize } = JSON.parse(
     req.query.state,
   );
-  console.log('-------------->', { filename, title, description, fileSize });
+  console.log('-----oauth2callback--------->', { filename, title, description, fileSize });
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
       console.log('err');
