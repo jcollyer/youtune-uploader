@@ -2,13 +2,9 @@ import React, { useCallback, useState } from 'react';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { push } from 'redux-first-history';
 // import * as R from 'ramda';
-import { Typography, Button, Input } from 'antd';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
-
-const { Title } = Typography;
-const { TextArea } = Input;
 
 // const Private = [
 //   { value: 0, label: 'Private' },
@@ -95,7 +91,7 @@ export default function Upload() {
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <Title level={2}> Upload Video</Title>
+        <p className="font-semibold text-gray-500"> Upload Video</p>
       </div>
 
       <form action="uploadVideo" method="post" encType="multipart/form-data">
@@ -138,35 +134,47 @@ export default function Upload() {
             >
               <div className="border-r flex-row mr-2 pr-2">
                 <div>{video.file?.name}</div>
-                <div>{video.file?.size}</div>
+
+                <div>{`${Math.round(video.file?.size) / 1000000}MB`}</div>
               </div>
               <div
                 className="flex-row"
                 onClick={() => setActiveIndex(index)}
                 onKeyDown={() => setActiveIndex(index)}
               >
-                <div>{`Title:${video.title}`}</div>
-                <div>{`Description:${video.description}`}</div>
+                <div
+                  className={`${
+                    activeIndex !== index ? 'flex' : 'hidden'
+                  } flex-col`}
+                >
+                  <div>{`Title: ${video.title}`}</div>
+                  <div>{`Description: ${video.description}`}</div>
+                </div>
+                <div
+                  className={`${
+                    activeIndex === index ? 'flex' : 'hidden'
+                  } flex-col`}
+                >
+                  <input
+                    onChange={event => updateInput(event, 'title')}
+                    className="border-0 outline-0 bg-transparent border-b border-slate-300"
+                    name="title"
+                    value={videos[activeIndex]?.title}
+                    placeholder="Title"
+                  />
+                  <textarea
+                    name="description"
+                    className="border-0 outline-0 bg-transparent border-slate-300  h-6"
+                    onChange={event => updateInput(event, 'description')}
+                    value={videos[activeIndex]?.description}
+                    placeholder="Description"
+                  />
+                </div>
               </div>
             </div>
           ))}
         </div>
-        <div>
-          <label>Title</label>
-          <Input
-            onChange={event => updateInput(event, 'title')}
-            name="title"
-            value={videos[activeIndex]?.title}
-            placeholder="Title"
-          />
-          <label>Description</label>
-          <TextArea
-            name="description"
-            onChange={event => updateInput(event, 'description')}
-            value={videos[activeIndex]?.description}
-            placeholder="Description"
-          />
-        </div>
+
         {/* <select onChange={handleChangeOne}>
           {Private.map(item => (
             <option key={item.value} value={item.value}>
@@ -182,9 +190,13 @@ export default function Upload() {
           ))}
         </select> */}
 
-        <Button type="primary" size="large" onClick={onSubmit}>
+        <button
+          type="submit"
+          onClick={onSubmit}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
           Submit
-        </Button>
+        </button>
       </form>
     </div>
   );
