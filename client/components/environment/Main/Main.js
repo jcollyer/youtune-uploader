@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import * as R from 'ramda';
+import React, { useEffect } from 'react';
+// import * as R from 'ramda';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { ReactNotifications } from 'react-notifications-component';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 
-import { attemptGetUser } from '_store/thunks/user';
+// import { attemptGetUser } from '_store/thunks/user';
 
 import WelcomePage from '_components/pages/WelcomePage';
 import LoginPage from '_components/pages/LoginPage';
@@ -21,25 +21,25 @@ import Footer from '_components/organisms/Footer';
 import styles from './styles.module.css';
 
 export default function Main() {
-  const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
+  // const dispatch = useDispatch();
+  // const [loading, setLoading] = useState(true);
   const { pathname } = useLocation();
 
-  useEffect(() => {
-    let subscribed = true;
+  // useEffect(() => {
+  //   let subscribed = true;
 
-    dispatch(attemptGetUser())
-      .then(() => subscribed && setLoading(false))
-      .catch(R.identity);
+  //   dispatch(attemptGetUser())
+  //     .then(() => subscribed && setLoading(false))
+  //     .catch(R.identity);
 
-    return () => { subscribed = false; };
-  }, [dispatch]);
+  //   return () => { subscribed = false; };
+  // }, [dispatch]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  return !loading && (
+  return (
     <React.Fragment>
       <ReactNotifications />
       <Navigation />
