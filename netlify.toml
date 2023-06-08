@@ -1,9 +1,4 @@
 [[redirects]]
-  from = "/api/user"
-  to = "https://6481c335b16c621fe9ec50fe--golden-basbousa-98d7c5.netlify.app/api/user"
-  status = 200
-
-[[redirects]]
   from = "/*"
   to = "/client/index.html"
   status = 200

@@ -8,7 +8,7 @@ const router = express.Router();
 module.exports = router;
 
 router.get('/', (req, res) => {
-  const user = {};
+  const user = (req.user && req.user.hidePassword()) || {};
 
   res.send({ message: 'User info successfully retreived', user });
 });
