@@ -1,6 +1,6 @@
 [[redirects]]
-  from = "/api/*"
-  to = "https://6481c335b16c621fe9ec50fe--golden-basbousa-98d7c5.netlify.app/api/:splat"
+  from = "/api/user"
+  to = "https://6481c335b16c621fe9ec50fe--golden-basbousa-98d7c5.netlify.app/api/user"
   status = 200
 
 [[redirects]]
