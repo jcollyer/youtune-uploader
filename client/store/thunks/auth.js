@@ -2,10 +2,10 @@ import { snakeToCamelCase } from 'json-style-converter/es5';
 import { Store as RNC } from 'react-notifications-component';
 import { push } from 'redux-first-history';
 
-import { postRegister, postLogin, postLogout } from '_api/auth';
 import { login, logout } from '_store/actions/user';
 
 import { dispatchError } from '_utils/api';
+import { postRegister, postLogin, postLogout } from '../../../api/auth';
 
 export const attemptLogin = user => dispatch =>
   postLogin(user)

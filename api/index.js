@@ -11,11 +11,11 @@ const open = require('open');
 const fs = require('fs');
 const creds = require('../client_secret.json');
 
-require('./config/environment');
-require('./database');
+require('../server/config/environment');
+require('../server/database');
 
-const routes = require('./routes/index');
-const configPassport = require('./passport/config');
+const routes = require('../server/routes/index');
+const configPassport = require('../server/passport/config');
 
 const assetFolder = path.resolve(__dirname, '../dist/');
 const port = process.env.PORT;
@@ -26,7 +26,36 @@ app.use(express.static(assetFolder));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.json());
-app.use(cors());
+
+const corsOptions = {
+  origin: ['http://localhost:3000', 'https://youtune-uploader-cwyn.vercel.app'],
+};
+app.use(cors(corsOptions));
+
+const whitelist = [
+  '*'
+];
+
+app.use((req, res, next) => {
+  const origin = req.get('referer');
+  const isWhitelisted = whitelist.find((w) => origin && origin.includes(w));
+  if (isWhitelisted) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+  }
+  // Pass to next layer of middleware
+  if (req.method === 'OPTIONS') res.sendStatus(200);
+  else next();
+});
+
+const setContext = (req, res, next) => {
+  if (!req.context) req.context = {};
+  next();
+};
+app.use(setContext);
+
 
 const storage = multer.diskStorage({
   destination: './',
@@ -128,7 +157,12 @@ app.get('/oauth2callback', (req, res) => {
   const { filename, title, description, fileSize } = JSON.parse(
     req.query.state,
   );
-  console.log('-----oauth2callback--------->', { filename, title, description, fileSize });
+  console.log('-----oauth2callback--------->', {
+    filename,
+    title,
+    description,
+    fileSize,
+  });
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
       console.log('err');

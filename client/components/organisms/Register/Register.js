@@ -18,9 +18,9 @@ import Label from 'react-bulma-companion/lib/Label';
 import Help from 'react-bulma-companion/lib/Help';
 
 import useKeyPress from '_hooks/useKeyPress';
-import { postCheckUsername } from '_api/users';
 import { validateUsername, validatePassword } from '_utils/validation';
 import { attemptRegister } from '_store/thunks/auth';
+import { postCheckUsername } from '../../../../api/users';
 
 import styles from './styles.module.css';
 
@@ -82,8 +82,7 @@ export default function Register() {
         password,
       };
 
-      dispatch(attemptRegister(newUser))
-        .catch(R.identity);
+      dispatch(attemptRegister(newUser)).catch(R.identity);
     }
   };
 
@@ -91,25 +90,21 @@ export default function Register() {
 
   return (
     <Box className={styles.root}>
-      <Title size="3">
-        Sign Up
-      </Title>
+      <Title size="3">Sign Up</Title>
       <hr className="separator" />
       <p className="has-space-below">
         Already a member?&nbsp;
-        <Link to="/login">
-          Login
-        </Link>
+        <Link to="/login">Login</Link>
       </p>
       <Field>
-        <Label htmlFor="username">
-          Username
-        </Label>
+        <Label htmlFor="username">Username</Label>
         <Control iconsRight>
           <Input
             id="username"
             placeholder="Username"
-            color={username ? (usernameAvailable ? 'success' : 'danger') : undefined}
+            color={
+              username ? (usernameAvailable ? 'success' : 'danger') : undefined
+            }
             value={username}
             onChange={handleUsernameChange}
           />
@@ -132,15 +127,15 @@ export default function Register() {
         )}
       </Field>
       <Field>
-        <Label htmlFor="password">
-          Password
-        </Label>
+        <Label htmlFor="password">Password</Label>
         <Control iconsRight>
           <Input
             id="password"
             placeholder="Password"
             type="password"
-            color={password ? (passwordValid ? 'success' : 'danger') : undefined}
+            color={
+              password ? (passwordValid ? 'success' : 'danger') : undefined
+            }
             value={password}
             onChange={handlePasswordChange}
           />
@@ -164,7 +159,11 @@ export default function Register() {
       </Field>
       <hr className="separator" />
       <div className="has-text-right">
-        <Button color="success" onClick={register} disabled={!passwordValid || !usernameAvailable}>
+        <Button
+          color="success"
+          onClick={register}
+          disabled={!passwordValid || !usernameAvailable}
+        >
           Create Account
         </Button>
       </div>

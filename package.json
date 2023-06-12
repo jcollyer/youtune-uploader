@@ -2,7 +2,7 @@
   "name": "mern-boilerplate",
   "version": "1.0.0",
   "description": "A full MERN stack boilerplate",
-  "main": "server/index.js",
+  "main": "api/index.js",
   "scripts": {
     "build": "./scripts/build-prd.sh",
     "build:prd": "./scripts/build-prd.sh",
