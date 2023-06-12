@@ -6,6 +6,9 @@ module.exports = {
     browser: true,
     jest: true,
   },
+  parserOptions: {
+    requireConfigFile: false,
+  },
   settings: {
     'import/resolver': {
       webpack: { config: './client/config/webpack.config.js' },
