@@ -3,7 +3,7 @@ import * as R from 'ramda';
 
 import { setTodos, addTodo, toggleCompleteTodo, updateTodo, removeTodo } from '_store/actions/todos';
 
-import { dispatchError } from '_utils/api';
+import { dispatchError } from '../../utils/api';
 import { getTodos, postTodo, putToggleCompleteTodo, putTodo, deleteTodo } from '../../../api/todos';
 
 export const attemptGetTodos = () => dispatch =>

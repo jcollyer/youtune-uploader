@@ -19,8 +19,8 @@ import Label from 'react-bulma-companion/lib/Label';
 import Help from 'react-bulma-companion/lib/Help';
 import Input from 'react-bulma-companion/lib/Input';
 
-import { validateName } from '_utils/validation';
 import { attemptGetUser, attemptUpdateUser } from '_store/thunks/user';
+import { validateName } from '../../../utils/validation';
 
 export default function GeneralProfile() {
   const dispatch = useDispatch();

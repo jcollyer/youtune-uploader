@@ -39,9 +39,7 @@ module.exports = {
       _client: resolve('client'),
       _components: resolve('client/components/'),
       _store: resolve('client/store/'),
-      _utils: resolve('client/utils/'),
       _hooks: resolve('client/hooks/'),
-      _api: resolve('client/api/'),
     },
   },
   module: {

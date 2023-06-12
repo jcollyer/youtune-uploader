@@ -3,7 +3,7 @@ import { Store as RNC } from 'react-notifications-component';
 
 import { updateUser } from '_store/actions/user';
 
-import { dispatchError } from '_utils/api';
+import { dispatchError } from '../../utils/api';
 import { getUser, putUser, putUserPassword } from '../../../api/user';
 
 export const attemptGetUser = () => dispatch =>

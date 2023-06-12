@@ -4,7 +4,7 @@ import { push } from 'redux-first-history';
 
 import { login, logout } from '_store/actions/user';
 
-import { dispatchError } from '_utils/api';
+import { dispatchError } from '../../utils/api';
 import { postRegister, postLogin, postLogout } from '../../../api/auth';
 
 export const attemptLogin = user => dispatch =>
