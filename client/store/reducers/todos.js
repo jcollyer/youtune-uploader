@@ -3,9 +3,9 @@ import * as R from 'ramda';
 
 import {
   SET_TODOS, ADD_TODO, TOGGLE_COMPLETE_TODO, UPDATE_TODO, REMOVE_TODO,
-} from '_store/actions/todos';
+} from '../actions/todos';
 
-import { LOGOUT_USER } from '_store/actions/user';
+import { LOGOUT_USER } from '../actions/user';
 
 export function todo(state = {
   completed: false,

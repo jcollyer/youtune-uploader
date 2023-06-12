@@ -6,8 +6,8 @@ import Column from 'react-bulma-companion/lib/Column';
 import Button from 'react-bulma-companion/lib/Button';
 import Input from 'react-bulma-companion/lib/Input';
 
-import { attemptAddTodo } from '_store/thunks/todos';
-import useKeyPress from '_hooks/useKeyPress';
+import useKeyPress from '../../../hooks/useKeyPress';
+import { attemptAddTodo } from '../../../store/thunks/todos';
 
 export default function AddTodo() {
   const dispatch = useDispatch();

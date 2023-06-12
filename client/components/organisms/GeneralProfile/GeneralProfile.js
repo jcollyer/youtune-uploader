@@ -19,7 +19,7 @@ import Label from 'react-bulma-companion/lib/Label';
 import Help from 'react-bulma-companion/lib/Help';
 import Input from 'react-bulma-companion/lib/Input';
 
-import { attemptGetUser, attemptUpdateUser } from '_store/thunks/user';
+import { attemptGetUser, attemptUpdateUser } from '../../../store/thunks/user';
 import { validateName } from '../../../utils/validation';
 
 export default function GeneralProfile() {

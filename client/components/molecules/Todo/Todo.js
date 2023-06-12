@@ -18,8 +18,8 @@ import Level from 'react-bulma-companion/lib/Level';
 import Icon from 'react-bulma-companion/lib/Icon';
 import Textarea from 'react-bulma-companion/lib/Textarea';
 
-import { attemptToggleCompleteTodo, attemptUpdateTodo, attemptDeleteTodo } from '_store/thunks/todos';
-import ConfirmModal from '_components/organisms/ConfirmModal';
+import ConfirmModal from '../../organisms/ConfirmModal';
+import { attemptToggleCompleteTodo, attemptUpdateTodo, attemptDeleteTodo } from '../../../store/thunks/todos';
 
 const fromNow = date => formatDistanceToNow(parseISO(date), { addSuffix: true });
 

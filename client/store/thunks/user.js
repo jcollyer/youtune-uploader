@@ -1,7 +1,7 @@
 import { snakeToCamelCase } from 'json-style-converter/es5';
 import { Store as RNC } from 'react-notifications-component';
 
-import { updateUser } from '_store/actions/user';
+import { updateUser } from '../actions/user';
 
 import { dispatchError } from '../../utils/api';
 import { getUser, putUser, putUserPassword } from '../../../api/user';

@@ -4,19 +4,18 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { ReactNotifications } from 'react-notifications-component';
 import { useDispatch } from 'react-redux';
 
-import { attemptGetUser } from '_store/thunks/user';
+import WelcomePage from '../../pages/WelcomePage';
+import LoginPage from '../../pages/LoginPage';
+import RegisterPage from '../../pages/RegisterPage';
+import HomePage from '../../pages/HomePage';
+import TodoPage from '../../pages/TodoPage';
+import UploadPage from '../../pages/UploadPage';
+import SettingsPage from '../../pages/SettingsPage';
+import LostPage from '../../pages/LostPage';
 
-import WelcomePage from '_components/pages/WelcomePage';
-import LoginPage from '_components/pages/LoginPage';
-import RegisterPage from '_components/pages/RegisterPage';
-import HomePage from '_components/pages/HomePage';
-import TodoPage from '_components/pages/TodoPage';
-import UploadPage from '_components/pages/UploadPage';
-import SettingsPage from '_components/pages/SettingsPage';
-import LostPage from '_components/pages/LostPage';
-
-import Navigation from '_components/organisms/Navigation';
-import Footer from '_components/organisms/Footer';
+import Navigation from '../../organisms/Navigation';
+import Footer from '../../organisms/Footer';
+import { attemptGetUser } from '../../../store/thunks/user';
 
 import styles from './styles.module.css';
 

@@ -10,10 +10,6 @@ module.exports = {
   moduleFileExtensions: ['js', 'jsx'],
   moduleDirectories: ['node_modules'],
   moduleNameMapper: {
-    '^_client(.*)$': '<rootDir>/client/$1',
-    '^_components(.*)$': '<rootDir>/client/components/$1',
-    '^_store(.*)$': '<rootDir>/client/store/$1',
-    '^_hooks(.*)$': '<rootDir>/client/hooks/$1',
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
   rootDir: path.join(__dirname, '../..'),

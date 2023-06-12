@@ -5,7 +5,7 @@ import * as R from 'ramda';
 
 import Section from 'react-bulma-companion/lib/Section';
 
-import Login from '_components/organisms/Login';
+import Login from '../../organisms/Login';
 
 export default function LoginPage() {
   const dispatch = useDispatch();

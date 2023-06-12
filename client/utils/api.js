@@ -1,7 +1,7 @@
 import { push } from 'redux-first-history';
 import { Store as RNC } from 'react-notifications-component';
 
-import { logout } from '_store/actions/user';
+import { logout } from '../store/actions/user';
 
 export const handleSuccess = resp => resp.body;
 

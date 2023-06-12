@@ -17,8 +17,8 @@ import Input from 'react-bulma-companion/lib/Input';
 import Label from 'react-bulma-companion/lib/Label';
 import Help from 'react-bulma-companion/lib/Help';
 
-import useKeyPress from '_hooks/useKeyPress';
-import { attemptRegister } from '_store/thunks/auth';
+import useKeyPress from '../../../hooks/useKeyPress';
+import { attemptRegister } from '../../../store/thunks/auth';
 import { validateUsername, validatePassword } from '../../../utils/validation';
 import { postCheckUsername } from '../../../../api/users';
 

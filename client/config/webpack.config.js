@@ -34,14 +34,6 @@ module.exports = {
     publicPath: '/',
     clean: true,
   },
-  resolve: {
-    alias: {
-      _client: resolve('client'),
-      _components: resolve('client/components/'),
-      _store: resolve('client/store/'),
-      _hooks: resolve('client/hooks/'),
-    },
-  },
   module: {
     rules: [
       {

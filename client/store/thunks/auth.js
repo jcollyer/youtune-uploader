@@ -2,8 +2,7 @@ import { snakeToCamelCase } from 'json-style-converter/es5';
 import { Store as RNC } from 'react-notifications-component';
 import { push } from 'redux-first-history';
 
-import { login, logout } from '_store/actions/user';
-
+import { login, logout } from '../actions/user';
 import { dispatchError } from '../../utils/api';
 import { postRegister, postLogin, postLogout } from '../../../api/auth';
 

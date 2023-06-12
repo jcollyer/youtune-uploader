@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 
-import { store, history } from '_store';
+import { store, history } from '../../../store';
 
 import Root from './Root';
 

@@ -13,9 +13,9 @@ import Control from 'react-bulma-companion/lib/Control';
 import Button from 'react-bulma-companion/lib/Button';
 import Checkbox from 'react-bulma-companion/lib/Checkbox';
 
-import useKeyPress from '_hooks/useKeyPress';
-import { attemptLogin } from '_store/thunks/auth';
-import FormInput from '_components/molecules/FormInput';
+import useKeyPress from '../../../hooks/useKeyPress';
+import { attemptLogin } from '../../../store/thunks/auth';
+import FormInput from '../../molecules/FormInput';
 
 import styles from './styles.module.css';
 

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Modal from 'react-bulma-companion/lib/Modal';
 
-import ConfirmDeleteTodo from '_components/organisms/ConfirmDeleteTodo';
+import ConfirmDeleteTodo from '../ConfirmDeleteTodo';
 
 export default function ConfirmModal({ confirm, closeModal, deleteTodo }) {
   return (
