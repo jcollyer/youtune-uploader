@@ -20,8 +20,8 @@ import Help from 'react-bulma-companion/lib/Help';
 import useKeyPress from '../../../hooks/useKeyPress';
 import { attemptRegister } from '../../../store/thunks/auth';
 import { validateUsername, validatePassword } from '../../../utils/validation';
-/* eslint-disable */
-import { postCheckUsername } from '../../../../api/users';
+
+import { postCheckUsername } from '../../../services/users';
 
 import styles from './styles.module.css';
 

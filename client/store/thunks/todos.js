@@ -4,8 +4,7 @@ import * as R from 'ramda';
 import { setTodos, addTodo, toggleCompleteTodo, updateTodo, removeTodo } from '../actions/todos';
 
 import { dispatchError } from '../../utils/api';
-/* eslint-disable */
-import { getTodos, postTodo, putToggleCompleteTodo, putTodo, deleteTodo } from '../../../api/todos';
+import { getTodos, postTodo, putToggleCompleteTodo, putTodo, deleteTodo } from '../../services/todos';
 
 export const attemptGetTodos = () => dispatch =>
   getTodos()
