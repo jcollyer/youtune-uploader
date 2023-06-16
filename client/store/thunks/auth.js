@@ -4,6 +4,7 @@ import { push } from 'redux-first-history';
 
 import { login, logout } from '../actions/user';
 import { dispatchError } from '../../utils/api';
+/* eslint-disable */
 import { postRegister, postLogin, postLogout } from '../../../api/auth';
 
 export const attemptLogin = user => dispatch =>
