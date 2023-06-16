@@ -8,7 +8,7 @@ import WelcomePage from '../../pages/WelcomePage';
 import LoginPage from '../../pages/LoginPage';
 import RegisterPage from '../../pages/RegisterPage';
 import HomePage from '../../pages/HomePage';
-import TodoPage from '../../pages/TodoPage';
+// import TodoPage from '../../pages/TodoPage';
 import UploadPage from '../../pages/UploadPage';
 import SettingsPage from '../../pages/SettingsPage';
 import LostPage from '../../pages/LostPage';
@@ -50,7 +50,7 @@ export default function Main() {
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="home" element={<HomePage />} />
-            <Route path="todo" element={<TodoPage />} />
+            {/* <Route path="todo" element={<TodoPage />} /> */}
             <Route path="upload" element={<UploadPage />} />
             <Route path="settings/*" element={<SettingsPage />} />
             <Route path="*" element={<LostPage />} />
