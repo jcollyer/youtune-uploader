@@ -11,11 +11,11 @@ const open = require('open');
 const fs = require('fs');
 const creds = require('../client_secret.json');
 
-require('../server/config/environment');
-require('../server/database');
+require('./config/environment');
+require('./database');
 
-const routes = require('../server/routes/index');
-const configPassport = require('../server/passport/config');
+const routes = require('./routes/index');
+const configPassport = require('./passport/config');
 
 const assetFolder = path.resolve(__dirname, '../dist/');
 const port = process.env.PORT;

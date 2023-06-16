@@ -1,1 +1,1 @@
-jest server --config=./server/config/jest.config.js --watch
+jest api --config=./api/config/jest.config.js --watch
