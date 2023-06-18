@@ -14,7 +14,7 @@ const creds = require('../client_secret.json');
 require('../server/config/environment');
 require('../server/database');
 
-const routes = require('./routes/index');
+const routes = require('./routes/index.js');
 const configPassport = require('../server/passport/config');
 
 const assetFolder = path.resolve(__dirname, '../dist/');
