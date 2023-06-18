@@ -5,7 +5,7 @@ import { updateUser } from '../actions/user';
 
 import { dispatchError } from '../../utils/api';
 import { putUser, putUserPassword } from '../../services/user';
-import { getUser } from '../../services/getUser';
+import { getUser } from '../../../api/getUser';
 
 export const attemptGetUser = () => dispatch =>
   getUser()
