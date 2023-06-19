@@ -9,3 +9,13 @@
 @import 'navigation';
 @import 'todo';
 @import 'settings';
+
+
+h1, h2, h3 {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+}
+
+p {
+    font-family: 'Public Sans', sans-serif;
+}

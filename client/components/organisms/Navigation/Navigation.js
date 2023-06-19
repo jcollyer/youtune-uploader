@@ -1,10 +1,9 @@
-import React, { useState, useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import * as R from 'ramda';
 
 import Navbar from 'react-bulma-companion/lib/Navbar';
-import Container from 'react-bulma-companion/lib/Container';
 import Image from 'react-bulma-companion/lib/Image';
 import Title from 'react-bulma-companion/lib/Title';
 import Button from 'react-bulma-companion/lib/Button';
@@ -26,30 +25,16 @@ export default function Navigation() {
 
   const closeDropdown = () => setOpen(false);
 
-  const isHome = (pathname.length === 5)
-    ? pathname === '/home'
-    : R.slice(0, 6, pathname) === '/home/';
-
-  const isTodo = (pathname.length === 5)
-    ? pathname === '/todo'
-    : R.slice(0, 6, pathname) === '/todo/';
-
-  const isSettings = (pathname.length === 9)
-    ? pathname === '/settings'
-    : R.slice(0, 10, pathname) === '/settings/';
-
   return (
-    <Navbar fixed="top" shadow>
-      <Container>
-        <Navbar.Brand>
+    <Navbar fixed="top">
+      <container>
+        <Navbar.Brand className="bg-gray-800">
           <Navbar.Item
             to={auth ? '/home' : '/'}
             aria-label="main navigation"
             component={Link}
           >
-            <Title className="logo" size="3">
-              MERN Boilerplate
-            </Title>
+            <img src="/images/icon.png" width="36" height="36" alt="icon" />
           </Navbar.Item>
           <div className="navbar-brand-right">
             {!auth && (
@@ -58,9 +43,7 @@ export default function Navigation() {
                 to="/login"
                 component={Link}
               >
-                <Title size="6">
-                  Login
-                </Title>
+                <Title size="6">Login</Title>
               </Navbar.Item>
             )}
             {!auth && (
@@ -69,7 +52,12 @@ export default function Navigation() {
                 to="/register"
                 component={Link}
               >
-                <Button color="success">Sign Up</Button>
+                <button
+                  className="bg-orange-500 p-2 rounded font-bold text-white"
+                  type="button"
+                >
+                  Sign Up
+                </button>
               </Navbar.Item>
             )}
             {auth && (
@@ -98,7 +86,7 @@ export default function Navigation() {
               <Navbar.Item
                 className="is-hidden-mobile"
                 to="/home"
-                active={isHome}
+                active={pathname === '/home'}
                 tab
                 component={Link}
               >
@@ -106,29 +94,21 @@ export default function Navigation() {
               </Navbar.Item>
               <Navbar.Item
                 className="is-hidden-mobile"
-                to="/todo"
-                active={isTodo}
-                tab
-                component={Link}
-              >
-                <Title size="6">
-                  Todo
-                </Title>
-              </Navbar.Item>
-              <Navbar.Item
-                className="is-hidden-mobile"
                 to="/settings"
-                active={isSettings}
+                active={pathname === '/settings'}
                 tab
                 component={Link}
               >
-                <Title size="6">
-                  Settings
-                </Title>
+                <Title size="6">Settings</Title>
               </Navbar.Item>
             </Navbar.Start>
             <Navbar.End>
-              <Navbar.Item onClick={toggleDropdown} onKeyPress={toggleDropdown} hoverable component="a">
+              <Navbar.Item
+                onClick={toggleDropdown}
+                onKeyPress={toggleDropdown}
+                hoverable
+                component="a"
+              >
                 <Image size="32x32">
                   <Image.Content
                     className="profile-img"
@@ -143,9 +123,7 @@ export default function Navigation() {
           <Navbar.Menu>
             <Navbar.End>
               <Navbar.Item to="/login" component={Link}>
-                <Title size="6">
-                  Login
-                </Title>
+                <Title size="6">Login</Title>
               </Navbar.Item>
               <Navbar.Item to="/register" component={Link}>
                 <Button color="success">Sign Up</Button>
@@ -154,7 +132,7 @@ export default function Navigation() {
           </Navbar.Menu>
         )}
         <UserDropdown open={open} closeDropdown={closeDropdown} />
-      </Container>
+      </container>
     </Navbar>
   );
 }

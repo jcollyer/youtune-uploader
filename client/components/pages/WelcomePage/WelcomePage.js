@@ -3,10 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
 import * as R from 'ramda';
 
-import Section from 'react-bulma-companion/lib/Section';
-import Container from 'react-bulma-companion/lib/Container';
-import Title from 'react-bulma-companion/lib/Title';
-
 export default function WelcomePage() {
   const dispatch = useDispatch();
   const { user } = useSelector(R.pick(['user']));
@@ -18,14 +14,28 @@ export default function WelcomePage() {
   }, [dispatch, user]);
 
   return (
-    <div className="bg-green-100">
-      <Section>
-        <Container>
-          <Title size="1">
-            Welcome Page!
-          </Title>
-        </Container>
-      </Section>
+    <div className="flex flex-col">
+      <h1 className="text-8xl text-center pt-20 text-orange-400">
+        Carrot Cake
+      </h1>
+      <div
+        className="m-auto"
+        style={{
+          background: 'url(/images/icon.png)',
+          width: '550px',
+          height: '350px',
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+        }}
+      >
+        &nbsp;
+      </div>
+      <h3 className="text-center mt-20 text-3xl">SET IT + FORGET IT</h3>
+      <p className="text-center text-2xl mt-4">
+        Easily Upload and Schedule
+        <b> YouTube </b>
+        Videos to your channel.
+      </p>
     </div>
   );
 }

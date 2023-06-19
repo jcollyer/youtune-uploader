@@ -10,14 +10,13 @@
   }
 
   .dropdown-header {
-    padding: 0 1rem;
+    padding: 1rem 2rem;
     text-align: center;
   }
 
   .dropdown-item {
     font-size: 1rem;
     font-weight: $weight-semibold;
-    padding: 0 1rem;
     text-align: left;
 
     a {
@@ -28,14 +27,14 @@
     }
 
     a:hover {
-      background-color: $mern-primary;
+      background-color: $dark-grey;
       color: $white;
       cursor: pointer;
     }
   }
 
   .dropdown-separator {
-    margin: .5rem 0;
+    margin: 0;
   }
 }
 

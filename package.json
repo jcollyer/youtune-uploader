@@ -1,7 +1,7 @@
 {
-  "name": "mern-boilerplate",
+  "name": "YouTube Multi Uploader",
   "version": "1.0.0",
-  "description": "A full MERN stack boilerplate",
+  "description": "Express, React, Mongo app to upload videos to YouTube",
   "main": "api/index.js",
   "scripts": {
     "build": "./scripts/build-prd.sh",
@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/djizco/mern-boilerplate.git"
+    "url": "git+https://https://github.com/jcollyer/youtune-uploader.git"
   },
   "author": {
     "name": "Federico Rojas",
@@ -33,7 +33,7 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/djizco/mern-boilerplate/issues"
+    "url": "https://github.com/jcollyer/youtune-uploader/issues"
   },
   "keywords": [
     "react",
@@ -47,7 +47,7 @@
     "eslint",
     "jest"
   ],
-  "homepage": "https://github.com/djizco/mern-boilerplate#readme",
+  "homepage": "https://github.com/jcollyer/youtune-uploader#readme",
   "engines": {
     "node": ">=12.0.0"
   },
