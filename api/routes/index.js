@@ -7,9 +7,23 @@ const users        = require('./users');
 
 const router = express.Router();
 
+
+function checkTrailingSlash(req, res, next) {
+  const trailingSlashUrl = req.baseUrl + req.url;
+  if (req.originalUrl !== trailingSlashUrl) {
+    res.redirect(301, trailingSlashUrl);
+  } else {
+    next();
+  }
+}
+
+
+
 router.use('/api/auth', auth);
 router.use('/api/user', user);
 router.use('/api/users', users);
+
+router.use(checkTrailingSlash);
 
 router.get('/api/tags', (req, res) => {
   res.send([
