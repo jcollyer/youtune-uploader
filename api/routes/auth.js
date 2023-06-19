@@ -1,4 +1,4 @@
-const express  = require('express');
+const express = require('express');
 const passport = require('passport');
 const { User } = require('../../server/database/schemas');
 
@@ -6,7 +6,7 @@ const router = express.Router();
 
 module.exports = router;
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
   if (!req || !req.body || !req.body.username || !req.body.password) {
     res.status(400).send({ message: 'Username and Password required' });
   }
@@ -17,25 +17,27 @@ router.post('/register', (req, res) => {
   const { username } = req.body;
   const newUser = User(req.body);
 
-  User.find({ username }, (err, users) => {
-    if (err) {
-      res.status(400).send({ message: 'Create user failed', err });
-    }
-    if (users[0]) {
+  try {
+    const data = await User.find({ username });
+    if (data[0]) {
       res.status(400).send({ message: 'Username exists' });
     }
-
+    
     newUser.hashPassword().then(() => {
-      newUser.save((err, savedUser) => {
+      newUser.save().then((savedUser, err) => {
         if (err || !savedUser) {
           res.status(400).send({ message: 'Create user failed', err });
         } else {
-          res.send({ message: 'User created successfully', user: savedUser.hidePassword() });
+          res.send({
+            message: 'User created successfully',
+            user: savedUser.hidePassword(),
+          });
         }
       });
     });
-
-  });
+  } catch (error) {
+    res.status(400).send({ message: 'Create user failed', error });
+  }
 });
 
 router.post('/login', (req, res, next) => {
@@ -53,9 +55,11 @@ router.post('/login', (req, res, next) => {
       if (err) {
         res.status(401).send({ message: 'Login failed', err });
       }
-      res.send({ message: 'Logged in successfully', user: user.hidePassword() });
+      res.send({
+        message: 'Logged in successfully',
+        user: user.hidePassword(),
+      });
     });
-
   })(req, res, next);
 });
 
