@@ -59,7 +59,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@google-cloud/local-auth": "^2.1.1",
-    "@typegoose/auto-increment": "^1.8.0",
+    "@typegoose/auto-increment": "^3.3.0",
     "animate.css": "^4.1.1",
     "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
