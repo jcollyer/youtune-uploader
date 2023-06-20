@@ -7,9 +7,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons/faTriangleExclamation';
 
-import Box from 'react-bulma-companion/lib/Box';
-import Button from 'react-bulma-companion/lib/Button';
-import Title from 'react-bulma-companion/lib/Title';
 import Field from 'react-bulma-companion/lib/Field';
 import Control from 'react-bulma-companion/lib/Control';
 import Icon from 'react-bulma-companion/lib/Icon';
@@ -22,8 +19,6 @@ import { attemptRegister } from '../../../store/thunks/auth';
 import { validateUsername, validatePassword } from '../../../utils/validation';
 
 import { postCheckUsername } from '../../../services/users';
-
-import styles from './styles.module.css';
 
 export default function Register() {
   const dispatch = useDispatch();
@@ -90,13 +85,13 @@ export default function Register() {
   useKeyPress('Enter', register);
 
   return (
-    <Box className={styles.root}>
-      <Title size="3">Sign Up</Title>
-      <hr className="separator" />
-      <p className="has-space-below">
+    <section className="bg-white w-96 mx-auto mt-64 py-8 px-12 rounded-xl">
+      <h3 className="mb-8 text-5xl">Sign Up</h3>
+      <p>
         Already a member?&nbsp;
         <Link to="/login">Login</Link>
       </p>
+      <br />
       <Field>
         <Label htmlFor="username">Username</Label>
         <Control iconsRight>
@@ -158,16 +153,17 @@ export default function Register() {
           </Help>
         )}
       </Field>
-      <hr className="separator" />
+      <br />
       <div className="has-text-right">
-        <Button
-          color="success"
+        <button
+          className="bg-orange-500 p-2 rounded font-bold text-white w-full"
           onClick={register}
           disabled={!passwordValid || !usernameAvailable}
+          type="button"
         >
           Create Account
-        </Button>
+        </button>
       </div>
-    </Box>
+    </section>
   );
 }

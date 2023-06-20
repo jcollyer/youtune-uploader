@@ -8,7 +8,6 @@ import WelcomePage from '../../pages/WelcomePage';
 import LoginPage from '../../pages/LoginPage';
 import RegisterPage from '../../pages/RegisterPage';
 import HomePage from '../../pages/HomePage';
-// import TodoPage from '../../pages/TodoPage';
 import UploadPage from '../../pages/UploadPage';
 import SettingsPage from '../../pages/SettingsPage';
 import LostPage from '../../pages/LostPage';
