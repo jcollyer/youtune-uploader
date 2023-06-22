@@ -77,6 +77,16 @@ const oAuth = youtube.authenticate({
   redirect_url: creds.web.redirect_uris[0],
 });
 
+
+app.post('/connectYT', (req, res) => {
+  return open(
+    oAuth.generateAuthUrl({
+      access_type: 'offline',
+      scope: 'https://www.googleapis.com/auth/youtube.upload',
+    }),
+  );
+});
+
 app.post('/uploadVideo', uploadVideoFile, req => {
   console.log('------------uploadVideo--->', {
     file: req.file,
