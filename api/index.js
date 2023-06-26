@@ -32,17 +32,21 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const whitelist = [
-  '*'
-];
+const whitelist = ['*'];
 
 app.use((req, res, next) => {
   const origin = req.get('referer');
-  const isWhitelisted = whitelist.find((w) => origin && origin.includes(w));
+  const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
   if (isWhitelisted) {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,Content-Type,Authorization');
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+    );
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'X-Requested-With,Content-Type,Authorization',
+    );
     res.setHeader('Access-Control-Allow-Credentials', true);
   }
   // Pass to next layer of middleware
@@ -55,7 +59,6 @@ const setContext = (req, res, next) => {
   next();
 };
 app.use(setContext);
-
 
 const storage = multer.diskStorage({
   destination: './',
@@ -77,9 +80,8 @@ const oAuth = youtube.authenticate({
   redirect_url: creds.web.redirect_uris[0],
 });
 
-
 app.post('/connectYT', (req, res) => {
-  return open(
+  res.send(
     oAuth.generateAuthUrl({
       access_type: 'offline',
       scope: 'https://www.googleapis.com/auth/youtube.upload',
@@ -87,24 +89,27 @@ app.post('/connectYT', (req, res) => {
   );
 });
 
-app.post('/uploadVideo', uploadVideoFile, req => {
+app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   console.log('------------uploadVideo--->', {
     file: req.file,
     files: req.files,
     body: req.body,
-    // stuff: req.body.file[0],
   });
 
   if (req.files) {
     const { title, description } = req.body;
 
-    // const { filename } = req.files;
     console.log('------------post--->', {
       title,
       description,
       files: req.files,
     });
-    return open(
+
+    const filename = req.files;
+    const videoQue = Object.keys(filename).length;
+
+    // return sendToYT(videoQue, filename, title, description);
+    return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
         scope: 'https://www.googleapis.com/auth/youtube.upload',
@@ -112,6 +117,7 @@ app.post('/uploadVideo', uploadVideoFile, req => {
           filename: req.files,
           title,
           description,
+          videoQue,
         }),
       }),
     );
@@ -119,21 +125,26 @@ app.post('/uploadVideo', uploadVideoFile, req => {
 });
 
 const sendToYT = (videoQue, files, title, description) => {
-  console.log('---------sendToYT--->', { files, title, description });
   let index = -1;
   if (videoQue === 0) {
     process.exit();
   } else {
     index++;
     videoQue--;
+    console.log('---------sendToYT--->', {
+      videoQue,
+      files,
+      description: Array.isArray(description) ? description[index] : description,
+      title: Array.isArray(title) ? title[index] : title,
+    });
     youtube.videos.insert(
       {
         part: 'id,snippet,status',
         notifySubscribers: false,
         requestBody: {
           snippet: {
-            title: title[index],
-            description: description[index],
+            title: Array.isArray(title) ? title[index] : title,
+            description: Array.isArray(description) ? description[index] : description,
           },
           status: {
             privacyStatus: 'private',
@@ -163,28 +174,26 @@ const sendToYT = (videoQue, files, title, description) => {
 };
 
 app.get('/oauth2callback', (req, res) => {
-  res.redirect('/upload');
-  const { filename, title, description, fileSize } = JSON.parse(
+  const { filename, title, description, videoQue, fileSize } = JSON.parse(
     req.query.state,
   );
-  console.log('-----oauth2callback--------->', {
-    filename,
-    title,
-    description,
-    fileSize,
-  });
+  // console.log('-----oauth2callback--------->', {
+  //   filename,
+  //   title,
+  //   description,
+  //   fileSize,
+  // });
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
       console.log('err');
       return;
     }
+
     oAuth.setCredentials(tokens);
-    const videoQue = Object.keys(filename).length;
-    console.log('-------this far-->', videoQue);
+    console.log('-------tokens------>', tokens);
+    // hack to close the window
+    res.send("<script>window.close();</script > ");
     return sendToYT(videoQue, filename, title, description);
-    // Object.values(filename).forEach(file => {
-    //   console.log('----------file-', file);
-    // });
   });
 });
 

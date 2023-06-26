@@ -83,7 +83,14 @@ export default function Upload() {
         .post('http://localhost:3000/uploadVideo', formData)
         .then(response => {
           console.log('axios->', response.data);
+          window.open(
+            response.data,
+            'SomeAuthentication',
+            'width=672,height=660,modal=yes,alwaysRaised=yes',
+          );
         });
+
+      setVideos([]);
     }
   };
 
