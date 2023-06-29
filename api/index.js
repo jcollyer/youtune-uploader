@@ -134,7 +134,9 @@ const sendToYT = (videoQue, files, title, description) => {
     console.log('---------sendToYT--->', {
       videoQue,
       files,
-      description: Array.isArray(description) ? description[index] : description,
+      description: Array.isArray(description)
+        ? description[index]
+        : description,
       title: Array.isArray(title) ? title[index] : title,
     });
     youtube.videos.insert(
@@ -144,7 +146,9 @@ const sendToYT = (videoQue, files, title, description) => {
         requestBody: {
           snippet: {
             title: Array.isArray(title) ? title[index] : title,
-            description: Array.isArray(description) ? description[index] : description,
+            description: Array.isArray(description)
+              ? description[index]
+              : description,
           },
           status: {
             privacyStatus: 'private',
@@ -174,15 +178,6 @@ const sendToYT = (videoQue, files, title, description) => {
 };
 
 app.get('/oauth2callback', (req, res) => {
-  const { filename, title, description, videoQue, fileSize } = JSON.parse(
-    req.query.state,
-  );
-  // console.log('-----oauth2callback--------->', {
-  //   filename,
-  //   title,
-  //   description,
-  //   fileSize,
-  // });
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
       console.log('err');
@@ -191,9 +186,38 @@ app.get('/oauth2callback', (req, res) => {
 
     oAuth.setCredentials(tokens);
     console.log('-------tokens------>', tokens);
-    // hack to close the window
-    res.send("<script>window.close();</script > ");
-    return sendToYT(videoQue, filename, title, description);
+    return (userPlaylistId = youtube.channels
+      .list({
+        part: ['contentDetails'],
+        mine: true,
+      })
+      .then(
+        response => {
+          // return the uploads playlist id
+          console.log(
+            'Response--------------->',
+            response.data.items[0].contentDetails.relatedPlaylists.uploads,
+          );
+          // const playlistId = response.data.items[0].contentDetails.relatedPlaylists.uploads;
+          const playlistId = 33333;
+          res.cookie('userPlaylistId', playlistId, {
+            maxAge: 900000,
+            httpOnly: false,
+          });
+          // hack to close the window
+          res.send('<script>window.close();</script > ');
+
+          if (req.query.state) {
+            const { filename, title, description, videoQue, fileSize } =
+              JSON.parse(req.query.state);
+            return sendToYT(videoQue, filename, title, description);
+          }
+          return response.data.items[0].contentDetails.relatedPlaylists.uploads;
+        },
+        err => {
+          console.error('Execute error', err);
+        },
+      ));
   });
 });
 
