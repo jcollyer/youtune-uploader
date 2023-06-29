@@ -84,9 +84,46 @@ app.post('/connectYT', (req, res) => {
   res.send(
     oAuth.generateAuthUrl({
       access_type: 'offline',
-      scope: 'https://www.googleapis.com/auth/youtube.upload',
+      scope: 'https://www.googleapis.com/auth/youtube.readonly',
     }),
   );
+});
+
+app.post('/getUnlisted', (req, res) => {
+  console.log('--------------getunlisted------------->', req.body);
+  const { playlistId } = req.body;
+  youtube.playlistItems
+    .list({
+      part: ['status, id, contentDetails'],
+      playlistId: playlistId,
+    })
+    .then(
+      response => {
+        const playlistItems = response.data.items;
+        const videoIds = playlistItems.map(pItem => pItem.contentDetails.videoId);
+        youtube.videos
+          .list({
+            part: ['status', 'snippet'],
+            id: videoIds,
+          })
+          .then(
+            response => {
+              const videos = response.data.items;
+              const unlistedVideos = videos.filter((video) => video.status.privacyStatus === 'private');
+              const scheduledVideos = unlistedVideos.filter((video) => new Date(video.status.publishAt) >= new Date());
+
+              console.log('scheduledVideos-----------------------------------', scheduledVideos);
+              res.send(scheduledVideos);
+            },
+            err => {
+              console.error('Execute error', err);
+            },
+          );
+      },
+      err => {
+        console.error('Execute error', err);
+      },
+    );
 });
 
 app.post('/uploadVideo', uploadVideoFile, (req, res) => {
@@ -198,8 +235,9 @@ app.get('/oauth2callback', (req, res) => {
             'Response--------------->',
             response.data.items[0].contentDetails.relatedPlaylists.uploads,
           );
-          // const playlistId = response.data.items[0].contentDetails.relatedPlaylists.uploads;
-          const playlistId = 33333;
+          const playlistId =
+            response.data.items[0].contentDetails.relatedPlaylists.uploads;
+          // const playlistId = 33333;
           res.cookie('userPlaylistId', playlistId, {
             maxAge: 900000,
             httpOnly: false,
