@@ -8,12 +8,22 @@ import Cookies from 'js-cookie';
 import styles from './styles.module.css';
 
 export default function HomePage() {
+  Cookies.set('userPlaylistId', '');
   const dispatch = useDispatch();
   const { user } = useSelector(R.pick(['user']));
   const [authToken, setAuthToken] = useState(Cookies.get('userPlaylistId'));
+  const [calendar, setCalendar] = useState([]);
 
   if (authToken) {
     console.log('authToken->', authToken);
+    // const formData = new FormData();
+    // formData.append('playlistId', authToken);
+    axios
+      .post('http://localhost:3000/getUnlisted', { playlistId: authToken })
+      .then(response => {
+        console.log('axios->', response.data);
+        setCalendar(response.data);
+      });
   }
 
   useEffect(() => {
@@ -56,16 +66,14 @@ export default function HomePage() {
       }
     }, 1000);
 
-    axios
-      .post('http://localhost:3000/connectYT')
-      .then(response => {
-        console.log('axios->', response.data);
-        window.open(
-          response.data,
-          'oauth window',
-          'width=672,height=660,modal=yes,alwaysRaised=yes',
-        );
-      });
+    axios.post('http://localhost:3000/connectYT').then(response => {
+      console.log('axios->', response.data);
+      window.open(
+        response.data,
+        'oauth window',
+        'width=672,height=660,modal=yes,alwaysRaised=yes',
+      );
+    });
   };
 
   return (
@@ -85,6 +93,15 @@ export default function HomePage() {
         </form>
       </div>
       {authToken && <p>authenticated!</p>}
+      {calendar?.map(video => (
+        <div key={video.id}>
+          <p>{new Date(video.status.publishAt).toDateString()}</p>
+          <img
+            src={video.snippet.thumbnails.default.url}
+            alt="youtube thumbnail"
+          />
+        </div>
+      ))}
     </div>
   );
 }
