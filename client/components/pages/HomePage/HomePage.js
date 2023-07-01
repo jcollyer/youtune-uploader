@@ -4,6 +4,7 @@ import { push } from 'redux-first-history';
 import axios from 'axios';
 import * as R from 'ramda';
 import Cookies from 'js-cookie';
+import Calendar from '../../organisms/Calendar/Calendar';
 
 import styles from './styles.module.css';
 
@@ -41,10 +42,6 @@ export default function HomePage() {
     let lastCookie = Cookies.get('userPlaylistId');
     setInterval(() => {
       const userPlaylistIdCookie = Cookies.get('userPlaylistId');
-      console.log(
-        '------------userPlaylistIdCookie----------->',
-        userPlaylistIdCookie,
-      );
 
       if (userPlaylistIdCookie !== lastCookie) {
         try {
@@ -102,6 +99,7 @@ export default function HomePage() {
           />
         </div>
       ))}
+      <Calendar />
     </div>
   );
 }
