@@ -13,7 +13,7 @@ export default function HomePage() {
   const dispatch = useDispatch();
   const { user } = useSelector(R.pick(['user']));
   const [authToken, setAuthToken] = useState(Cookies.get('userPlaylistId'));
-  const [calendar, setCalendar] = useState([]);
+  const [scheduledVideos, setscheduledVideos] = useState([]);
 
   if (authToken) {
     console.log('authToken->', authToken);
@@ -23,7 +23,7 @@ export default function HomePage() {
       .post('http://localhost:3000/getUnlisted', { playlistId: authToken })
       .then(response => {
         console.log('axios->', response.data);
-        setCalendar(response.data);
+        setscheduledVideos(response.data);
       });
   }
 
@@ -76,30 +76,23 @@ export default function HomePage() {
   return (
     <div className={styles.root}>
       <div className="flex flex-col max-w-xl m-auto">
-        <form action="connectYT" method="post">
-          <h3 className="text-center mt-20 text-3xl mb-12">
-            Connect your YouTube account to get started!
-          </h3>
-          <button
-            type="submit"
-            onClick={onSubmit}
-            className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
-          >
-            CONNECT
-          </button>
-        </form>
+        {scheduledVideos.length === 0 && (
+          <form action="connectYT" method="post">
+            <h3 className="text-center mt-20 text-3xl mb-12">
+              Connect your YouTube account to get started!
+            </h3>
+            <button
+              type="submit"
+              onClick={onSubmit}
+              className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
+            >
+              CONNECT
+            </button>
+          </form>
+        )}
       </div>
       {authToken && <p>authenticated!</p>}
-      {calendar?.map(video => (
-        <div key={video.id}>
-          <p>{new Date(video.status.publishAt).toDateString()}</p>
-          <img
-            src={video.snippet.thumbnails.default.url}
-            alt="youtube thumbnail"
-          />
-        </div>
-      ))}
-      <Calendar />
+      {scheduledVideos.length > 0 && <Calendar scheduledVideos={scheduledVideos} />}
     </div>
   );
 }

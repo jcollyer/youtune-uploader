@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 import { Week } from './Week';
 
-export function Calendar() {
+export function Calendar({ scheduledVideos }) {
   const [month, setMonth] = useState(moment());
   const [selected, setSelected] = useState(moment().startOf('day'));
   const [duck, setDuck] = useState(0);
@@ -41,6 +42,7 @@ export function Calendar() {
           month={month}
           select={day => select(day)}
           selected={selected}
+          scheduledVideos={scheduledVideos}
         />,
       );
 
@@ -68,18 +70,22 @@ export function Calendar() {
           />
         </div>
         <div className="row day-names">
-          <span className="day">Sun</span>
-          <span className="day">Mon</span>
-          <span className="day">Tue</span>
-          <span className="day">Wed</span>
-          <span className="day">Thu</span>
-          <span className="day">Fri</span>
-          <span className="day">Sat</span>
+          <span className="day day-label">Sun</span>
+          <span className="day day-label">Mon</span>
+          <span className="day day-label">Tue</span>
+          <span className="day day-label">Wed</span>
+          <span className="day day-label">Thu</span>
+          <span className="day day-label">Fri</span>
+          <span className="day day-label">Sat</span>
         </div>
       </header>
       {renderWeeks()}
     </section>
   );
 }
+
+Calendar.propTypes = {
+  scheduledVideos: PropTypes.array.isRequired,
+};
 
 export default Calendar;

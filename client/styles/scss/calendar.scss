@@ -17,7 +17,7 @@ $background: $white;
 .calendar {
     display: block;
     background: $white;
-    width: 300px;
+    width: 900px;
     border: solid 1px $borderColor;
     margin: 10px auto;
     box-shadow: 0 0 15px 0 $mdGrey;
@@ -91,10 +91,10 @@ $background: $white;
         justify-content: center;
         align-items: center;
         flex: 1;
-        height: 35px;
         border-left: solid 1px $borderColor;
         cursor: pointer;
         transition: all 0.2s;
+        padding: 10px 0;
 
         &:hover {
             background: $ltGrey;
@@ -116,5 +116,26 @@ $background: $white;
             background: $secondary;
             color: $white;
         }
+    }
+    .day-label {
+        height: 45px;
+    }
+    .video-scheduled-day {
+        flex: 1;
+        border-left: solid 1px $borderColor;
+        color: white;
+        text-align: left;
+        background-size: cover;
+        background-position: center;
+        max-width: 130px;
+    }
+    .active-date {
+        background: $secondary;
+        color: $white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        padding: 4px 5px;
+        margin: 5px;
     }
 }

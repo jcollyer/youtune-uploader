@@ -149,7 +149,7 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
     return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
-        scope: 'https://www.googleapis.com/auth/youtube.upload',
+        scope: 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
         state: JSON.stringify({
           filename: req.files,
           title,
