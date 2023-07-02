@@ -100,7 +100,9 @@ app.post('/getUnlisted', (req, res) => {
     .then(
       response => {
         const playlistItems = response.data.items;
-        const videoIds = playlistItems.map(pItem => pItem.contentDetails.videoId);
+        const videoIds = playlistItems.map(
+          pItem => pItem.contentDetails.videoId,
+        );
         youtube.videos
           .list({
             part: ['status', 'snippet'],
@@ -109,10 +111,21 @@ app.post('/getUnlisted', (req, res) => {
           .then(
             response => {
               const videos = response.data.items;
-              const unlistedVideos = videos.filter((video) => video.status.privacyStatus === 'private');
-              const scheduledVideos = unlistedVideos.filter((video) => new Date(video.status.publishAt) >= new Date());
+              const unlistedVideos = videos.filter(
+                video => video.status.privacyStatus === 'private',
+              );
+              
+              const scheduledVideos = unlistedVideos.filter(
+                video => {
+                  console.log('------date',video.status.publishAt);
+                  return new Date(video.status.publishAt) >= new Date();
+                }
+              );
 
-              console.log('scheduledVideos-----------------------------------', scheduledVideos);
+              console.log(
+                'scheduledVideos-----------------------------------',
+                scheduledVideos,
+              );
               res.send(scheduledVideos);
             },
             err => {
@@ -134,7 +147,7 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   });
 
   if (req.files) {
-    const { title, description } = req.body;
+    const { title, description, scheduleDate, categoryId, tags } = req.body;
 
     console.log('------------post--->', {
       title,
@@ -149,11 +162,15 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
     return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
-        scope: 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
+        scope:
+          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
         state: JSON.stringify({
           filename: req.files,
           title,
           description,
+          scheduleDate,
+          categoryId,
+          tags,
           videoQue,
         }),
       }),
@@ -161,7 +178,7 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   }
 });
 
-const sendToYT = (videoQue, files, title, description) => {
+const sendToYT = (videoQue, files, title, description, scheduleDate, categoryId, tags) => {
   let index = -1;
   if (videoQue === 0) {
     process.exit();
@@ -171,11 +188,18 @@ const sendToYT = (videoQue, files, title, description) => {
     console.log('---------sendToYT--->', {
       videoQue,
       files,
+      index,
       description: Array.isArray(description)
         ? description[index]
         : description,
       title: Array.isArray(title) ? title[index] : title,
+      scheduleDate: Array.isArray(scheduleDate)
+        ? new Date(scheduleDate[index])?.toISOString()
+        : new Date(scheduleDate)?.toISOString(),
+      categoryId: Array.isArray(categoryId) ? categoryId[index] : categoryId,
+      tags: Array.isArray(tags) ? tags[index] : tags,
     });
+
     youtube.videos.insert(
       {
         part: 'id,snippet,status',
@@ -186,9 +210,14 @@ const sendToYT = (videoQue, files, title, description) => {
             description: Array.isArray(description)
               ? description[index]
               : description,
+            categoryId: Array.isArray(categoryId) ? categoryId[index] : categoryId,
+            tags: Array.isArray(tags) ? tags[index] : tags,
           },
           status: {
-            privacyStatus: 'private',
+            // privacyStatus: 'private',
+            publishAt: Array.isArray(scheduleDate)
+            ? new Date(scheduleDate[index]).toISOString()
+            : new Date(scheduleDate).toISOString(),
           },
         },
         media: {
@@ -208,7 +237,7 @@ const sendToYT = (videoQue, files, title, description) => {
       (err, data) => {
         console.log(err, data);
         console.log('Done');
-        sendToYT(videoQue, files, title, description);
+        sendToYT(videoQue, files, title, description, scheduleDate, categoryId, tags);
       },
     );
   }
@@ -246,9 +275,9 @@ app.get('/oauth2callback', (req, res) => {
           res.send('<script>window.close();</script > ');
 
           if (req.query.state) {
-            const { filename, title, description, videoQue, fileSize } =
+            const { filename, title, description, videoQue, scheduleDate, categoryId, tags } =
               JSON.parse(req.query.state);
-            return sendToYT(videoQue, filename, title, description);
+            return sendToYT(videoQue, filename, title, description, scheduleDate, categoryId, tags);
           }
           return response.data.items[0].contentDetails.relatedPlaylists.uploads;
         },

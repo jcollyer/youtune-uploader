@@ -1,37 +1,26 @@
-import React, { useCallback, useState } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { push } from 'redux-first-history';
-// import * as R from 'ramda';
+import React, { useCallback, useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { push } from 'redux-first-history';
+import * as R from 'ramda';
 import { PlusSquareOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
-
-// const Private = [
-//   { value: 0, label: 'Private' },
-//   { value: 1, label: 'Public' },
-// ];
-
-// const Catogory = [
-//   { value: 0, label: 'Film & Animation' },
-//   { value: 0, label: 'Autos & Vehicles' },
-//   { value: 0, label: 'Music' },
-//   { value: 0, label: 'Pets & Animals' },
-//   { value: 0, label: 'Sports' },
-// ];
+import moment from 'moment';
+import Categories from '../../../services/categories';
 
 export default function UploadPage() {
-  // const dispatch = useDispatch();
-  // const { user } = useSelector(R.pick(['user']));
+  const dispatch = useDispatch();
+  const { user } = useSelector(R.pick(['user']));
 
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   if (R.isEmpty(user)) {
-  //     dispatch(push('/login'));
-  //   } else {
-  //     setLoading(false);
-  //   }
-  // }, [dispatch, user]);
+  useEffect(() => {
+    if (R.isEmpty(user)) {
+      dispatch(push('/login'));
+    } else {
+      setLoading(false);
+    }
+  }, [dispatch, user]);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [videos, setVideos] = useState([]);
@@ -41,7 +30,15 @@ export default function UploadPage() {
       acceptedFiles.forEach((file, index) => {
         setVideos(videos => [
           ...videos,
-          { id: index, file, title: '', description: '' },
+          {
+            id: index,
+            file,
+            title: '',
+            description: '',
+            scheduleDate: '',
+            category: '',
+            tags: '',
+          },
         ]);
       });
     }
@@ -50,6 +47,7 @@ export default function UploadPage() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   const updateInput = (event, inputName) => {
+    console.log('----------event value-->', event.currentTarget.value);
     const updatedCurrentVideo = {
       ...videos[activeIndex],
       [`${inputName}`]: event.currentTarget.value,
@@ -61,22 +59,24 @@ export default function UploadPage() {
     setVideos(updatedVideos);
   };
 
-  // const handleChangeOne = event => {
-  //   setVideo({ ...video, privacy: event.currentTarget.value });
-  // };
-
-  // const handleChangeTwo = event => {
-  //   setVideo({ ...video, categorie: event.currentTarget.value });
-  // };
-
   const onSubmit = event => {
     event.preventDefault();
     if (videos.length) {
       const formData = new FormData();
       videos.forEach(video => {
+        console.log(
+          '----------categorddy-->',
+          Categories.filter(c => c.label === video.category)[0].id,
+        );
         formData.append('file', video.file);
         formData.append('title', video.title);
         formData.append('description', video.description);
+        formData.append('scheduleDate', video.scheduleDate);
+        formData.append(
+          'categoryId',
+          Categories.filter(c => c.label === video.category)[0].id,
+        );
+        formData.append('tags', video.tags);
       });
 
       axios
@@ -94,7 +94,7 @@ export default function UploadPage() {
     }
   };
 
-  // console.log('---------', { videos });
+  console.log('---------', { videos, loading });
   return (
     <div className="flex flex-col max-w-xl m-auto">
       <h3 className="text-center mt-20 text-3xl mb-12">Upload Video</h3>
@@ -129,7 +129,7 @@ export default function UploadPage() {
           {!!videos.length && <h3 className="text-1xl">Upload List:</h3>}
           {videos?.map((video, index) => (
             <div
-              key={video.file?.size}
+              key={video.id}
               className={`${
                 activeIndex === index ? 'active' : ''
               } flex flex-row border-b p-4`}
@@ -137,7 +137,7 @@ export default function UploadPage() {
               <div className="border-r flex-row mr-2 pr-2">
                 <div>{video.file?.name}</div>
 
-                <div>{`${Math.round(video.file?.size) / 1000000}MB`}</div>
+                <div>{`${Math.round(video.file.size / 100000) / 10}MB`}</div>
               </div>
               <div
                 className="flex-row"
@@ -151,6 +151,20 @@ export default function UploadPage() {
                 >
                   <div>{`Title: ${video.title}`}</div>
                   <div>{`Description: ${video.description}`}</div>
+                  <div>
+                    {`Scheduled Date: ${moment(video.scheduleDate).format(
+                      'MM/DD/YYYY',
+                    )}`}
+                  </div>
+                  <div>{`Category: ${video.category}`}</div>
+                  <div>
+                    <span>Tags:</span>
+                    {video.tags.split(', ').map(tag => (
+                      <span key={tag} className="bg-white rounded-lg px-2 ml-2">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
                 <div
                   className={`${
@@ -171,26 +185,39 @@ export default function UploadPage() {
                     value={videos[activeIndex]?.description}
                     placeholder="Description"
                   />
+                  <input
+                    type="date"
+                    onChange={event => updateInput(event, 'scheduleDate')}
+                    className="border-0 outline-0 bg-transparent border-slate-300"
+                    name="scheduleDate"
+                    value={videos[activeIndex]?.scheduleDate}
+                    placeholder="Schedule Date"
+                  />
+                  <select
+                    onChange={event => updateInput(event, 'category')}
+                    className="border-0 outline-0 bg-transparent border-slate-300"
+                    name="category"
+                    value={videos[activeIndex]?.category}
+                    placeholder="Category"
+                  >
+                    {Categories.map(item => (
+                      <option key={item.label} value={item.label}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                  <textarea
+                    name="tags"
+                    className="border-0 outline-0 bg-transparent border-slate-300  h-6"
+                    onChange={event => updateInput(event, 'tags')}
+                    value={videos[activeIndex]?.tags}
+                    placeholder="Tags"
+                  />
                 </div>
               </div>
             </div>
           ))}
         </div>
-
-        {/* <select onChange={handleChangeOne}>
-          {Private.map(item => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </select>
-        <select onChange={handleChangeTwo}>
-          {Catogory.map(item => (
-            <option key={item.label} value={item.label}>
-              {item.label}
-            </option>
-          ))}
-        </select> */}
 
         {!!videos.length && (
           <button
