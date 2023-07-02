@@ -7,8 +7,8 @@ import { useDispatch } from 'react-redux';
 import WelcomePage from '../../pages/WelcomePage';
 import LoginPage from '../../pages/LoginPage';
 import RegisterPage from '../../pages/RegisterPage';
-import HomePage from '../../pages/HomePage';
-import UploadPage from '../../pages/UploadPage';
+import HomePage from '../../pages/HomePage/HomePage';
+import UploadPage from '../../pages/UploadPage/UploadPage';
 import SettingsPage from '../../pages/SettingsPage';
 import LostPage from '../../pages/LostPage';
 
