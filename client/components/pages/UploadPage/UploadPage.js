@@ -229,7 +229,7 @@ export default function UploadPage() {
                       type="file"
                       onChange={event => updateInput(event, 'thumbnail', true)}
                       name="thumbnail"
-                      accept="image/png, image/jpeg"
+                      accept="image/png, image/jpeg, application/octet-stream"
                       placeholder="thumbnail"
                       className="hidden"
                       id="thumbnial"
