@@ -72,7 +72,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex flex-col max-w-xl m-auto text-center">
+    <div className="flex flex-col m-auto text-center">
       {scheduledVideos.length === 0 && (
         <form action="connectYT" method="post">
           <h3 className="text-center mt-20 text-3xl mb-12">

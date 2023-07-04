@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
 import * as R from 'ramda';
-import { PlusSquareOutlined } from '@ant-design/icons';
+import { PlusSquareOutlined, FileAddOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import moment from 'moment';
@@ -38,6 +38,7 @@ export default function UploadPage() {
             scheduleDate: '',
             category: '',
             tags: '',
+            thumbnail: '/images/transparent.png',
           },
         ]);
       });
@@ -46,11 +47,13 @@ export default function UploadPage() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const updateInput = (event, inputName) => {
+  const updateInput = (event, inputName, isImageUpload) => {
     console.log('----------event value-->', event.currentTarget.value);
     const updatedCurrentVideo = {
       ...videos[activeIndex],
-      [`${inputName}`]: event.currentTarget.value,
+      [`${inputName}`]: isImageUpload
+        ? URL.createObjectURL(event.target.files[0])
+        : event.currentTarget.value,
     };
     const updatedVideos = videos.map(video =>
       video.id !== updatedCurrentVideo.id ? video : updatedCurrentVideo,
@@ -77,6 +80,7 @@ export default function UploadPage() {
           Categories.filter(c => c.label === video.category)[0].id,
         );
         formData.append('tags', video.tags);
+        formData.append('thumbnail', video.thumbnail);
       });
 
       axios
@@ -119,11 +123,6 @@ export default function UploadPage() {
               <p>Click to add files</p>
             )}
           </div>
-          {/* {thumbnail !== '' &&
-                <div>
-                    <img src={`http://localhost:5000/${thumbnail}`} alt='haha' />
-                </div>
-            } */}
         </div>
         <div className="my-10">
           {!!videos.length && <h3 className="text-1xl">Upload List:</h3>}
@@ -164,6 +163,9 @@ export default function UploadPage() {
                         {tag}
                       </span>
                     ))}
+                  </div>
+                  <div>
+                    <img src={video.thumbnail} alt="thumbnail" width="35" />
                   </div>
                 </div>
                 <div
@@ -213,6 +215,26 @@ export default function UploadPage() {
                     value={videos[activeIndex]?.tags}
                     placeholder="Tags"
                   />
+
+                  <div className="relative">
+                    <img src={video.thumbnail} alt="thumbnail" width="55" className="opacity-50" />
+
+                    <label htmlFor="thumbnial">
+                      <FileAddOutlined
+                        style={{ fontSize: '30px' }}
+                        className="top-4 left-4 absolute"
+                      />
+                    </label>
+                    <input
+                      type="file"
+                      onChange={event => updateInput(event, 'thumbnail', true)}
+                      name="thumbnail"
+                      accept="image/png, image/jpeg"
+                      placeholder="thumbnail"
+                      className="hidden"
+                      id="thumbnial"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
