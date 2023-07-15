@@ -84,7 +84,8 @@ app.post('/connectYT', (req, res) => {
   res.send(
     oAuth.generateAuthUrl({
       access_type: 'offline',
-      scope: 'https://www.googleapis.com/auth/youtube.readonly',
+      scope:
+        'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
     }),
   );
 });
@@ -114,18 +115,12 @@ app.post('/getUnlisted', (req, res) => {
               const unlistedVideos = videos.filter(
                 video => video.status.privacyStatus === 'private',
               );
-              
-              const scheduledVideos = unlistedVideos.filter(
-                video => {
-                  console.log('------date',video.status.publishAt);
-                  return new Date(video.status.publishAt) >= new Date();
-                }
-              );
 
-              console.log(
-                'scheduledVideos-----------------------------------',
-                scheduledVideos,
-              );
+              const scheduledVideos = unlistedVideos.filter(video => {
+                console.log('------date', video.status.publishAt);
+                return new Date(video.status.publishAt) >= new Date();
+              });
+
               res.send(scheduledVideos);
             },
             err => {
@@ -178,7 +173,15 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   }
 });
 
-const sendToYT = (videoQue, files, title, description, scheduleDate, categoryId, tags) => {
+const sendToYT = (
+  videoQue,
+  files,
+  title,
+  description,
+  scheduleDate,
+  categoryId,
+  tags,
+) => {
   let index = -1;
   if (videoQue === 0) {
     process.exit();
@@ -210,14 +213,16 @@ const sendToYT = (videoQue, files, title, description, scheduleDate, categoryId,
             description: Array.isArray(description)
               ? description[index]
               : description,
-            categoryId: Array.isArray(categoryId) ? categoryId[index] : categoryId,
+            categoryId: Array.isArray(categoryId)
+              ? categoryId[index]
+              : categoryId,
             tags: Array.isArray(tags) ? tags[index] : tags,
           },
           status: {
             // privacyStatus: 'private',
             publishAt: Array.isArray(scheduleDate)
-            ? new Date(scheduleDate[index]).toISOString()
-            : new Date(scheduleDate).toISOString(),
+              ? new Date(scheduleDate[index]).toISOString()
+              : new Date(scheduleDate).toISOString(),
           },
         },
         media: {
@@ -237,7 +242,15 @@ const sendToYT = (videoQue, files, title, description, scheduleDate, categoryId,
       (err, data) => {
         console.log(err, data);
         console.log('Done');
-        sendToYT(videoQue, files, title, description, scheduleDate, categoryId, tags);
+        sendToYT(
+          videoQue,
+          files,
+          title,
+          description,
+          scheduleDate,
+          categoryId,
+          tags,
+        );
       },
     );
   }
@@ -259,15 +272,13 @@ app.get('/oauth2callback', (req, res) => {
       })
       .then(
         response => {
-          // return the uploads playlist id
-          console.log(
-            'Response--------------->',
-            response.data.items[0].contentDetails.relatedPlaylists.uploads,
-          );
           const playlistId =
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
-          // const playlistId = 33333;
           res.cookie('userPlaylistId', playlistId, {
+            maxAge: 900000,
+            httpOnly: false,
+          });
+          res.cookie('tokens', tokens, {
             maxAge: 900000,
             httpOnly: false,
           });
@@ -275,17 +286,58 @@ app.get('/oauth2callback', (req, res) => {
           res.send('<script>window.close();</script > ');
 
           if (req.query.state) {
-            const { filename, title, description, videoQue, scheduleDate, categoryId, tags } =
-              JSON.parse(req.query.state);
-            return sendToYT(videoQue, filename, title, description, scheduleDate, categoryId, tags);
+            const {
+              filename,
+              title,
+              description,
+              videoQue,
+              scheduleDate,
+              categoryId,
+              tags,
+            } = JSON.parse(req.query.state);
+            return sendToYT(
+              videoQue,
+              filename,
+              title,
+              description,
+              scheduleDate,
+              categoryId,
+              tags,
+            );
           }
-          return response.data.items[0].contentDetails.relatedPlaylists.uploads;
         },
         err => {
           console.error('Execute error', err);
         },
       ));
   });
+});
+
+app.post('/getPlaylistId', (req, res) => {
+  const { tokens } = req.body;
+  const jsonTokens = JSON.parse(tokens.split('j:')[1]);
+  oAuth.setCredentials(jsonTokens);
+  return (userPlaylistId = youtube.channels
+    .list({
+      part: ['contentDetails'],
+      mine: true,
+    })
+    .then(
+      response => {
+        // return the uploads playlist id
+        const playlistId =
+          response.data.items[0].contentDetails.relatedPlaylists.uploads;
+        // const playlistId = 33333;
+        res.cookie('userPlaylistId', playlistId, {
+          maxAge: 900000,
+          httpOnly: false,
+        });
+        res.send(playlistId);
+      },
+      err => {
+        console.error('Execute error', err);
+      },
+    ));
 });
 
 configPassport(app, express);

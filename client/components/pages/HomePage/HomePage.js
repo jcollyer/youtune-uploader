@@ -7,20 +7,27 @@ import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
 
 export default function HomePage() {
-  Cookies.set('userPlaylistId', '');
   const dispatch = useDispatch();
   const { user } = useSelector(R.pick(['user']));
-  const [authToken, setAuthToken] = useState(Cookies.get('userPlaylistId'));
+  const [playlistToken, setPlaylistToken] = useState(Cookies.get('userPlaylistId'));
+  const [userTokens] = useState(Cookies.get('tokens'));
   const [scheduledVideos, setscheduledVideos] = useState([]);
+  const [oncePerSession, setOncePerSession] = useState(0);
 
-  if (authToken) {
-    console.log('authToken->', authToken);
-    // const formData = new FormData();
-    // formData.append('playlistId', authToken);
+  // TODO make this a useEffect
+  if (userTokens && playlistToken && oncePerSession < 1) {
+    setOncePerSession(oncePerSession + 1);
+    axios.post('http://localhost:3000/getPlaylistId', { tokens: userTokens });
+  }
+
+  // TODO make this a useEffect
+  if (playlistToken && oncePerSession < 1) {
+    setOncePerSession(oncePerSession + 1);
+    console.log('client playlistToken -->', playlistToken, userTokens);
     axios
-      .post('http://localhost:3000/getUnlisted', { playlistId: authToken })
+      .post('http://localhost:3000/getUnlisted', { playlistId: playlistToken })
       .then(response => {
-        console.log('axios->', response.data);
+        console.log('/getUnlisted response.data -->', response.data);
         setscheduledVideos(response.data);
       });
   }
@@ -31,11 +38,6 @@ export default function HomePage() {
     }
   }, [dispatch, user]);
 
-  // Update token with every render when its value has changed.
-  const userPlaylistIdCookie = Cookies.get('userPlaylistId');
-  if (authToken !== userPlaylistIdCookie) {
-    setAuthToken(userPlaylistIdCookie);
-  }
   const listenCookieChange = (callback, interval = 1000) => {
     let lastCookie = Cookies.get('userPlaylistId');
     setInterval(() => {
@@ -51,18 +53,17 @@ export default function HomePage() {
     }, interval);
   };
 
-  const onSubmit = event => {
+  const onConnectClick = event => {
     event.preventDefault();
 
     listenCookieChange(({ oldValue, newValue }) => {
       console.log(`Cookie changed from "${oldValue}" to "${newValue}"`);
       if (oldValue !== newValue) {
-        setAuthToken(newValue);
+        setPlaylistToken(newValue);
       }
     }, 1000);
 
     axios.post('http://localhost:3000/connectYT').then(response => {
-      console.log('axios->', response.data);
       window.open(
         response.data,
         'oauth window',
@@ -80,14 +81,14 @@ export default function HomePage() {
           </h3>
           <button
             type="submit"
-            onClick={onSubmit}
+            onClick={onConnectClick}
             className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
           >
             CONNECT
           </button>
         </form>
       )}
-      {authToken && <p>authenticated!</p>}
+      {playlistToken && <p>authenticated!</p>}
       {scheduledVideos.length > 0 && (
         <Calendar scheduledVideos={scheduledVideos} />
       )}
