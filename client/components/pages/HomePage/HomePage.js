@@ -23,7 +23,6 @@ export default function HomePage() {
   // TODO make this a useEffect
   if (playlistToken && oncePerSession < 1) {
     setOncePerSession(oncePerSession + 1);
-    console.log('client playlistToken -->', playlistToken, userTokens);
     axios
       .post('http://localhost:3000/getUnlisted', { playlistId: playlistToken })
       .then(response => {

@@ -8,6 +8,8 @@ export function Calendar({ scheduledVideos }) {
   const [month, setMonth] = useState(moment());
   const [selected, setSelected] = useState(moment().startOf('day'));
   const [duck, setDuck] = useState(0);
+  const [editVideoSelected, setEditVideoSelected] = useState({});
+
   const previous = () => {
     setDuck(duck - 1);
     setMonth(month.subtract(1, 'month'));
@@ -23,6 +25,10 @@ export function Calendar({ scheduledVideos }) {
     setMonth(day.date.clone());
   };
 
+  const closeEditVideo = () => {
+    setEditVideoSelected({});
+  };
+
   const renderWeeks = () => {
     const weeks = [];
     let done = false;
@@ -34,6 +40,11 @@ export function Calendar({ scheduledVideos }) {
     let count = 0;
     let monthIndex = date.month();
 
+    const editVideo = ({ id, title }) => {
+      console.log('editVideo videoId -->', id);
+      setEditVideoSelected({ id, title });
+    };
+
     while (!done) {
       weeks.push(
         <Week
@@ -43,6 +54,7 @@ export function Calendar({ scheduledVideos }) {
           select={day => select(day)}
           selected={selected}
           scheduledVideos={scheduledVideos}
+          editVideo={editVideo}
         />,
       );
 
@@ -54,7 +66,7 @@ export function Calendar({ scheduledVideos }) {
 
     return weeks;
   };
-
+  console.log('--------render', !!Object.keys(editVideoSelected).length);
   return (
     <section className="calendar">
       <header className="header">
@@ -80,6 +92,18 @@ export function Calendar({ scheduledVideos }) {
         </div>
       </header>
       {renderWeeks()}
+      {!!Object.keys(editVideoSelected).length && (
+        <div className="edit-video">
+          <button
+            className="edit-video-close-button"
+            onClick={() => closeEditVideo()}
+            type="button"
+          >
+            close
+          </button>
+          <p>{editVideoSelected.title}</p>
+        </div>
+      )}
     </section>
   );
 }

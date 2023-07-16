@@ -1,25 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export function Day({ day, select, selected, videoScheduled }) {
+export function Day({ day, select, selected, videoScheduled, editVideo }) {
   const { date, isCurrentMonth, isToday, number } = day;
-  const editVideo = id => {
-    console.log('editVideo', id);
-  };
-
   if (videoScheduled.length > 0) {
+    const video = videoScheduled[0];
+    const snippent = video.snippet;
     return (
       <div
         className="video-scheduled-day"
         style={{
-          backgroundImage: `url(${videoScheduled[0].snippet.thumbnails.default.url})`,
+          backgroundImage: `url(${snippent.thumbnails.default.url})`,
         }}
       >
         <div className="active-date">{number}</div>
-        <p className="mx-3 font-bold truncate">{videoScheduled[0].snippet.title}</p>
-        <p className="mx-3 truncate">{videoScheduled[0].snippet.description}</p>
+        <p className="mx-3 font-bold truncate">{snippent.title}</p>
+        <p className="mx-3 truncate">{snippent.description}</p>
         <button
-          onClick={() => editVideo(videoScheduled[0].id)}
+          onClick={() => editVideo({ id: video.id, title: snippent.title })}
           type="button"
           className="bg-black bg-opacity-75 p-2 font-bold text-white w-full"
         >
@@ -53,6 +51,7 @@ Day.propTypes = {
   select: PropTypes.func.isRequired,
   selected: PropTypes.object.isRequired,
   videoScheduled: PropTypes.array.isRequired,
+  editVideo: PropTypes.func.isRequired,
 };
 
 export default Day;

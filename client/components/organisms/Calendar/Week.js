@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Day } from './Day';
 
-export function Week({ date, month, select, selected, scheduledVideos }) {
+export function Week({ date, month, select, selected, scheduledVideos, editVideo }) {
   const days = [];
   for (let i = 0; i < 7; i++) {
     const day = {
@@ -25,6 +25,7 @@ export function Week({ date, month, select, selected, scheduledVideos }) {
         select={select}
         key={i}
         videoScheduled={videoScheduled}
+        editVideo={editVideo}
       />,
     );
 
@@ -46,6 +47,7 @@ Week.propTypes = {
   select: PropTypes.func.isRequired,
   selected: PropTypes.object.isRequired,
   scheduledVideos: PropTypes.array.isRequired,
+  editVideo: PropTypes.func.isRequired,
 };
 
 export default Week;
