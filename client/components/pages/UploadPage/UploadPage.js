@@ -6,6 +6,7 @@ import { PlusSquareOutlined, FileAddOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
 import axios from 'axios';
 import moment from 'moment';
+import Cookies from 'js-cookie';
 import Categories from '../../../services/categories';
 
 export default function UploadPage() {
@@ -24,6 +25,10 @@ export default function UploadPage() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [videos, setVideos] = useState([]);
+  const [playlistToken] = useState(
+    Cookies.get('userPlaylistId'),
+  );
+  const [userTokens] = useState(Cookies.get('tokens'));
 
   const onDrop = useCallback(acceptedFiles => {
     if (acceptedFiles.length) {
@@ -65,22 +70,21 @@ export default function UploadPage() {
   const onSubmit = event => {
     event.preventDefault();
     if (videos.length) {
+      console.log('Tokens-->', { playlistToken, userTokens });
       const formData = new FormData();
       videos.forEach(video => {
-        console.log(
-          '----------categorddy-->',
-          Categories.filter(c => c.label === video.category)[0].id,
-        );
         formData.append('file', video.file);
         formData.append('title', video.title);
         formData.append('description', video.description);
         formData.append('scheduleDate', video.scheduleDate);
         formData.append(
           'categoryId',
-          Categories.filter(c => c.label === video.category)[0].id,
+          Categories.filter(c => c.label === video.category)[0]?.id,
         );
         formData.append('tags', video.tags);
         formData.append('thumbnail', video.thumbnail);
+        formData.append('playlistToken', playlistToken);
+        formData.append('userToken', userTokens);
       });
 
       axios
@@ -217,7 +221,12 @@ export default function UploadPage() {
                   />
 
                   <div className="relative">
-                    <img src={video.thumbnail} alt="thumbnail" width="55" className="opacity-50" />
+                    <img
+                      src={video.thumbnail}
+                      alt="thumbnail"
+                      width="55"
+                      className="opacity-50"
+                    />
 
                     <label htmlFor="thumbnial">
                       <FileAddOutlined

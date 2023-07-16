@@ -7,7 +7,6 @@ const uuid = require('uuid').v4;
 const cors = require('cors');
 // const readline = require('readline');
 const multer = require('multer');
-const open = require('open');
 const fs = require('fs');
 const creds = require('../client_secret.json');
 
@@ -135,25 +134,25 @@ app.post('/getUnlisted', (req, res) => {
 });
 
 app.post('/uploadVideo', uploadVideoFile, (req, res) => {
-  console.log('------------uploadVideo--->', {
-    file: req.file,
-    files: req.files,
-    body: req.body,
-  });
-
   if (req.files) {
-    const { title, description, scheduleDate, categoryId, tags } = req.body;
-
-    console.log('------------post--->', {
-      title,
-      description,
-      files: req.files,
-    });
-
+    const { title, description, scheduleDate, categoryId, tags, playlistToken, userToken } =
+      req.body;
     const filename = req.files;
     const videoQue = Object.keys(filename).length;
 
-    // return sendToYT(videoQue, filename, title, description);
+    if (playlistToken !== 'undefined' && userToken !== 'undefined') {
+      const jsonTokens = JSON.parse(userToken.split('j:')[1]);
+      oAuth.setCredentials(jsonTokens);
+      return sendToYT(
+        videoQue,
+        req.files,
+        title,
+        description,
+        scheduleDate,
+        categoryId,
+        tags,
+      );
+    }
     return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
@@ -219,10 +218,10 @@ const sendToYT = (
             tags: Array.isArray(tags) ? tags[index] : tags,
           },
           status: {
-            // privacyStatus: 'private',
-            publishAt: Array.isArray(scheduleDate)
-              ? new Date(scheduleDate[index]).toISOString()
-              : new Date(scheduleDate).toISOString(),
+            privacyStatus: 'private',
+            // publishAt: Array.isArray(scheduleDate)
+            //   ? new Date(scheduleDate[index]).toISOString()
+            //   : new Date(scheduleDate).toISOString(),
           },
         },
         media: {
