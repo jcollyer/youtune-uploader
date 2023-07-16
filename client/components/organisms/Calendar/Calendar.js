@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { Week } from './Week';
 
 export function Calendar({ scheduledVideos }) {
@@ -27,6 +28,26 @@ export function Calendar({ scheduledVideos }) {
 
   const closeEditVideo = () => {
     setEditVideoSelected({});
+  };
+
+  const updateEditVideoSelected = (event, inputName) => {
+    setEditVideoSelected({
+      ...editVideoSelected,
+      [`${inputName}`]: event.currentTarget.value,
+    });
+  };
+
+  const saveEditVideo = () => {
+    console.log('saveEditVideo editVideoSelected -->', editVideoSelected);
+    axios
+      .post('http://localhost:3000/updateVideo', {
+        videoId: editVideoSelected.id,
+        title: editVideoSelected.title,
+      })
+      .then(response => {
+        console.log('updateVideo response.data -->', response.data);
+        setEditVideoSelected({});
+      });
   };
 
   const renderWeeks = () => {
@@ -95,13 +116,27 @@ export function Calendar({ scheduledVideos }) {
       {!!Object.keys(editVideoSelected).length && (
         <div className="edit-video">
           <button
-            className="edit-video-close-button"
+            className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
             onClick={() => closeEditVideo()}
             type="button"
           >
             close
           </button>
           <p>{editVideoSelected.title}</p>
+          <input
+            onChange={event => updateEditVideoSelected(event, 'title')}
+            className="border-0 outline-0 bg-transparent border-b border-slate-300"
+            name="title"
+            value={editVideoSelected.title}
+            placeholder="Title"
+          />
+          <button
+            className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
+            onClick={() => saveEditVideo()}
+            type="button"
+          >
+            save
+          </button>
         </div>
       )}
     </section>
