@@ -287,10 +287,12 @@ app.get('/oauth2callback', (req, res) => {
           res.cookie('userPlaylistId', playlistId, {
             maxAge: 900000,
             httpOnly: false,
+            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : '.localhost',
           });
           res.cookie('tokens', tokens, {
             maxAge: 900000,
             httpOnly: false,
+            domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : '.localhost',
           });
           // hack to close the window
           res.send('<script>window.close();</script > ');
