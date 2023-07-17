@@ -27,7 +27,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://youtune-uploader-collyerdesign-gmailcom.vercel.app', ],
+  origin: [
+    'http://localhost:3000',
+    'https://youtune-uploader-collyerdesign-gmailcom.vercel.app',
+    'https://youtune-uploader.vercel.app',
+  ],
 };
 app.use(cors(corsOptions));
 
@@ -135,8 +139,15 @@ app.post('/getUnlisted', (req, res) => {
 
 app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   if (req.files) {
-    const { title, description, scheduleDate, categoryId, tags, playlistToken, userToken } =
-      req.body;
+    const {
+      title,
+      description,
+      scheduleDate,
+      categoryId,
+      tags,
+      playlistToken,
+      userToken,
+    } = req.body;
     const filename = req.files;
     const videoQue = Object.keys(filename).length;
 
@@ -351,7 +362,7 @@ app.post('/updateVideo', (req, res) => {
         id: videoId,
         snippet: {
           title,
-          "categoryId": 22,
+          categoryId: 22,
         },
       },
     })
