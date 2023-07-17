@@ -284,12 +284,12 @@ app.get('/oauth2callback', (req, res) => {
         response => {
           const playlistId =
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
-          res.cookie('userPlaylistId', playlistId, {
+          res.status(200).cookie('userPlaylistId', playlistId, {
             maxAge: 900000,
             httpOnly: false,
             domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app',
           });
-          res.cookie('tokens', tokens, {
+          res.status(200).cookie('tokens', tokens, {
             maxAge: 900000,
             httpOnly: false,
             domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app',
