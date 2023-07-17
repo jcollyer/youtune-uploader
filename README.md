@@ -1,4 +1,4 @@
-# coffeecake
+# Carrot Cake
 
 ## Quick Start
 
@@ -34,6 +34,12 @@ npm run start:server
 ```bash
 npm run build
 npm start:server
+```
+
+#### for Deployment
+
+```bash
+vercel
 ```
 
 #### Other Commands

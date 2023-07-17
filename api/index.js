@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://youtune-uploader-cwyn.vercel.app'],
+  origin: ['http://localhost:3000', 'https://youtune-uploader-collyerdesign-gmailcom.vercel.app', ],
 };
 app.use(cors(corsOptions));
 
