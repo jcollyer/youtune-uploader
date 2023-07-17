@@ -265,7 +265,7 @@ const sendToYT = (
     );
   }
 };
-console.log('------env-->', process.env.NODE_ENV);
+
 app.get('/oauth2callback', (req, res) => {
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
