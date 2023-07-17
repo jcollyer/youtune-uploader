@@ -265,7 +265,7 @@ const sendToYT = (
     );
   }
 };
-console.log('-------server-->', process.env.NODE_ENV === 'production');
+
 app.get('/oauth2callback', (req, res) => {
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
@@ -288,13 +288,21 @@ app.get('/oauth2callback', (req, res) => {
             maxAge: 900000,
             secure: process.env.NODE_ENV === 'development' ? false : true,
             httpOnly: false,
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app',
+            sameSite: 'none',
+            domain:
+              process.env.NODE_ENV === 'development'
+                ? '.localhost'
+                : '.vercel.app',
           });
           res.status(200).cookie('tokens', tokens, {
             maxAge: 900000,
             secure: process.env.NODE_ENV === 'development' ? false : true,
             httpOnly: false,
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app',
+            sameSite: 'none',
+            domain:
+              process.env.NODE_ENV === 'development'
+                ? '.localhost'
+                : '.vercel.app',
           });
           // hack to close the window
           res.send('<script>window.close();</script > ');
