@@ -8,7 +8,7 @@ const cors = require('cors');
 // const readline = require('readline');
 const multer = require('multer');
 const fs = require('fs');
-const creds = require('../client_secret.json');
+const creds = require('../client-secret.json');
 
 require('../server/config/environment');
 require('../server/database');
