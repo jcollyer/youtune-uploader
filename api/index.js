@@ -41,7 +41,7 @@ app.use((req, res, next) => {
   const origin = req.get('referer');
   const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
   if (isWhitelisted) {
-    res.setHeader('Access-Control-Allow-Origin', 'https://youtune-uploader.vercel.app');
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader(
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, PUT, PATCH, DELETE',
