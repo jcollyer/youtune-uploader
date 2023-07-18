@@ -284,7 +284,7 @@ app.get('/oauth2callback', (req, res) => {
         response => {
           const playlistId =
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
-          res.setHeader('Set-Cookie', ['ck=value; Expires=Tue, 01 Dec 2023 00:00:00 GMT; HttpOnly']);
+          res.setHeader('Set-Cookie', ['ck=value; Expires=7/30/2023, 12:00:00 AM; HttpOnly']);
           res.cookie('userPlaylistId', playlistId, {
             maxAge: 900000,
             secure: process.env.NODE_ENV === 'development' ? false : true,
