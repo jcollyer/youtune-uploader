@@ -288,13 +288,13 @@ app.get('/oauth2callback', (req, res) => {
             maxAge: 900000,
             secure: process.env.NODE_ENV === 'development' ? false : true,
             httpOnly: false,
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app',
+            domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'youtune-uploader.vercel.app',
           });
           res.cookie('tokens', tokens, {
             maxAge: 900000,
             secure: process.env.NODE_ENV === 'development' ? false : true,
             httpOnly: false,
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : '.vercel.app',
+            domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'youtune-uploader.vercel.app',
           });
           // hack to close the window
           res.send('<script>window.close();</script > ');
