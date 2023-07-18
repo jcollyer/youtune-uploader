@@ -32,6 +32,7 @@ const corsOptions = {
     'https://youtune-uploader-collyerdesign-gmailcom.vercel.app',
     'https://youtune-uploader.vercel.app',
   ],
+  credentials: true,
 };
 app.use(cors(corsOptions));
 

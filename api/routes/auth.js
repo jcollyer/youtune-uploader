@@ -1,10 +1,13 @@
 const express = require('express');
+const cors = require('cors');
 const passport = require('passport');
 const { User } = require('../../server/database/schemas');
 
 const router = express.Router();
 
 module.exports = router;
+
+router.all('*', cors());
 
 router.post('/register', async (req, res) => {
   if (!req || !req.body || !req.body.username || !req.body.password) {
