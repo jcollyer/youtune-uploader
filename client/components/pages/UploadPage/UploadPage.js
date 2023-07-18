@@ -88,7 +88,7 @@ export default function UploadPage() {
       });
 
       axios
-        .post('/uploadVideo', formData)
+        .post('http://localhost:3000/uploadVideo', formData)
         .then(response => {
           console.log('axios->', response.data);
           window.open(
