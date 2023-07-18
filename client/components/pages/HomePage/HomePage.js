@@ -41,7 +41,7 @@ export default function HomePage() {
     let lastCookie = Cookies.get('userPlaylistId');
     setInterval(() => {
       const userPlaylistIdCookie = Cookies.get('userPlaylistId');
-
+      console.log('--------------->>', userPlaylistIdCookie);
       if (userPlaylistIdCookie !== lastCookie) {
         try {
           callback({ oldValue: lastCookie, newValue: userPlaylistIdCookie });

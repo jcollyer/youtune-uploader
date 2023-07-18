@@ -284,20 +284,17 @@ app.get('/oauth2callback', (req, res) => {
         response => {
           const playlistId =
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
-
           res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; SameSite=None; Secure']);
           res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true });
           res.cookie('userPlaylistId', playlistId, {
             maxAge: 900000,
             secure: true,
-            httpOnly: false,
             sameSite: 'none',
             domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'youtune-uploader.vercel.app',
           });
           res.cookie('tokens', tokens, {
             maxAge: 900000,
             secure: true,
-            httpOnly: false,
             sameSite: 'none',
             domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'youtune-uploader.vercel.app',
           });
