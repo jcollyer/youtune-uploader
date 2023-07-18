@@ -17,14 +17,14 @@ export default function HomePage() {
 
   useEffect(() => {
     if (userTokens && playlistToken) {
-      axios.post('http://localhost:3000/getPlaylistId', { tokens: userTokens });
+      axios.post('/getPlaylistId', { tokens: userTokens });
     }
   }, [userTokens, playlistToken]);
 
   useEffect(() => {
     if (playlistToken) {
       axios
-        .post('http://localhost:3000/getUnlisted', {
+        .post('/getUnlisted', {
           playlistId: playlistToken,
         })
         .then(response => setscheduledVideos(response.data));
@@ -62,7 +62,7 @@ export default function HomePage() {
       }
     }, 1000);
 
-    axios.post('http://localhost:3000/connectYT').then(response => {
+    axios.post('/connectYT').then(response => {
       window.open(
         response.data,
         'oauth window',

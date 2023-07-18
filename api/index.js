@@ -267,9 +267,7 @@ const sendToYT = (
 };
 console.log('-------server-->', process.env.NODE_ENV === 'development')
 app.get('/oauth2callback', (req, res) => {
-  console.log('-------oauth2callback------>');
   oAuth.getToken(req.query.code, (err, tokens) => {
-    console.log('-------getTokens------>', tokens);
     if (err) {
       console.log('err');
       return;
@@ -299,7 +297,7 @@ app.get('/oauth2callback', (req, res) => {
             domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'youtune-uploader.vercel.app',
           });
           // hack to close the window
-          // res.send('<script>window.close();</script > ');
+          res.send('<script>window.close();</script > ');
 
           if (req.query.state) {
             const {
