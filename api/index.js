@@ -32,7 +32,6 @@ const corsOptions = {
     'https://youtune-uploader-collyerdesign-gmailcom.vercel.app',
     'https://youtune-uploader.vercel.app',
   ],
-  credentials: true,
 };
 app.use(cors(corsOptions));
 
@@ -42,7 +41,7 @@ app.use((req, res, next) => {
   const origin = req.get('referer');
   const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
   if (isWhitelisted) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'https://youtune-uploader.vercel.app');
     res.setHeader(
       'Access-Control-Allow-Methods',
       'GET, POST, OPTIONS, PUT, PATCH, DELETE',
@@ -165,7 +164,7 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
         tags,
       );
     }
-    res.setHeader('Set-Cookie', ['upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly; SameSite=None; Secure']);
+    res.setHeader('Set-Cookie', ['upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;']);
     return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
@@ -287,22 +286,16 @@ app.get('/oauth2callback', (req, res) => {
           const playlistId =
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
 
-          res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly; SameSite=None; Secure']);
-          res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true });
-          res.cookie('userPlaylistId', playlistId, {
-            maxAge: 900000,
-            secure: true,
-            httpOnly: true,
-            sameSite: 'none',
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'youtune-uploader.vercel.app',
-          });
-          res.cookie('tokens', tokens, {
-            maxAge: 900000,
-            secure: true,
-            httpOnly: true,
-            sameSite: 'none',
-            domain: process.env.NODE_ENV === 'development' ? '.localhost' : 'youtune-uploader.vercel.app',
-          });
+          res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
+          res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
+          // res.cookie('userPlaylistId', playlistId, {
+          //   maxAge: 900000,
+          //   domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app',
+          // });
+          // res.cookie('tokens', tokens, {
+          //   maxAge: 900000,
+          //   domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app',
+          // });
           // hack to close the window
           res.send('<script>window.close();</script > ');
 
