@@ -9,27 +9,27 @@ import Calendar from '../../organisms/Calendar/Calendar';
 export default function HomePage() {
   const dispatch = useDispatch();
   const { user } = useSelector(R.pick(['user']));
-  const [playlistToken, setPlaylistToken] = useState(Cookies.get('userPlaylistId'));
+  const [playlistToken, setPlaylistToken] = useState(
+    Cookies.get('userPlaylistId'),
+  );
   const [userTokens] = useState(Cookies.get('tokens'));
   const [scheduledVideos, setscheduledVideos] = useState([]);
-  const [oncePerSession, setOncePerSession] = useState(0);
 
-  // TODO make this a useEffect
-  if (userTokens && playlistToken && oncePerSession < 1) {
-    setOncePerSession(oncePerSession + 1);
-    axios.post('http://localhost:3000/getPlaylistId', { tokens: userTokens });
-  }
+  useEffect(() => {
+    if (userTokens && playlistToken) {
+      axios.post('http://localhost:3000/getPlaylistId', { tokens: userTokens });
+    }
+  }, [userTokens, playlistToken]);
 
-  // TODO make this a useEffect
-  if (playlistToken && oncePerSession < 1) {
-    setOncePerSession(oncePerSession + 1);
-    axios
-      .post('http://localhost:3000/getUnlisted', { playlistId: playlistToken })
-      .then(response => {
-        console.log('/getUnlisted response.data -->', response.data);
-        setscheduledVideos(response.data);
-      });
-  }
+  useEffect(() => {
+    if (playlistToken) {
+      axios
+        .post('http://localhost:3000/getUnlisted', {
+          playlistId: playlistToken,
+        })
+        .then(response => setscheduledVideos(response.data));
+    }
+  }, [playlistToken]);
 
   useEffect(() => {
     if (R.isEmpty(user)) {
