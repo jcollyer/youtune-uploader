@@ -62,7 +62,7 @@ export default function HomePage() {
       }
     }, 1000);
 
-    axios.post('http://localhost:3000/connectYT').then(response => {
+    axios.post('http://localhost:3000/connectYT', { withCredentials: true }).then(response => {
       window.open(
         response.data,
         'oauth window',
