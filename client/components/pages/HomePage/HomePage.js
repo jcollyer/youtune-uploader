@@ -72,21 +72,35 @@ export default function HomePage() {
     });
   };
 
+  const onSetCookieClick = event => {
+    event.preventDefault();
+    axios.post('http://localhost:3000/setCookie').then(response => {
+      console.log('response', response);
+    });
+  };
+
   return (
     <div className="flex flex-col m-auto text-center">
       {scheduledVideos.length === 0 && (
-        <form action="connectYT" method="post">
-          <h3 className="text-center mt-20 text-3xl mb-12">
-            Connect your YouTube account to get started!
-          </h3>
-          <button
-            type="submit"
-            onClick={onConnectClick}
-            className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
-          >
-            CONNECT
-          </button>
-        </form>
+        <div>
+          <form action="connectYT" method="post">
+            <h3 className="text-center mt-20 text-3xl mb-12">
+              Connect your YouTube account to get started!
+            </h3>
+            <button
+              type="submit"
+              onClick={onConnectClick}
+              className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
+            >
+              CONNECT
+            </button>
+          </form>
+          <form action="setCookie" method="post">
+            <button onClick={onSetCookieClick} type="submit">
+              set cookie
+            </button>
+          </form>
+        </div>
       )}
       {playlistToken && <p>authenticated!</p>}
       {scheduledVideos.length > 0 && (

@@ -20,11 +20,9 @@ const assetFolder = path.resolve(__dirname, '../dist/');
 const port = process.env.PORT;
 const app = express();
 
-app.use(express.static(assetFolder));
-// app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.json());
+// app.use(express.json());
 
 const corsOptions = {
   origin: [
@@ -57,11 +55,13 @@ app.use((req, res, next) => {
   else next();
 });
 
-const setContext = (req, res, next) => {
-  if (!req.context) req.context = {};
-  next();
-};
-app.use(setContext);
+// const setContext = (req, res, next) => {
+//   if (!req.context) req.context = {};
+//   next();
+// };
+// app.use(setContext);
+
+app.use(express.static(assetFolder));
 
 const storage = multer.diskStorage({
   destination: './',
@@ -81,6 +81,21 @@ const oAuth = youtube.authenticate({
   client_id: creds.web.client_id,
   client_secret: creds.web.client_secret,
   redirect_url: creds.web.redirect_uris[0],
+});
+
+app.post('/setCookie', (req, res) => {
+  // read cookies
+  console.log(req.cookies);
+
+  let options = {
+    maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+    httpOnly: true, // The cookie only accessible by the web server
+    // signed: true, // Indicates if the cookie should be signed
+  };
+
+  // Set cookie
+  res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
+  res.send('');
 });
 
 app.post('/connectYT', (req, res) => {
@@ -164,7 +179,9 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
         tags,
       );
     }
-    res.setHeader('Set-Cookie', ['upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;']);
+    res.setHeader('Set-Cookie', [
+      'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
+    ]);
     return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
@@ -266,7 +283,7 @@ const sendToYT = (
     // );
   }
 };
-console.log('-------server-->', process.env.NODE_ENV === 'development')
+console.log('-------server-->', process.env.NODE_ENV === 'development');
 app.get('/oauth2callback', (req, res) => {
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
@@ -287,15 +304,21 @@ app.get('/oauth2callback', (req, res) => {
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
 
           // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
-          res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
-          // res.cookie('userPlaylistId', playlistId, {
-          //   maxAge: 900000,
-          //   domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app',
-          // });
-          // res.cookie('tokens', tokens, {
-          //   maxAge: 900000,
-          //   domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app',
-          // });
+          // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
+          res.cookie('userPlaylistId', playlistId, {
+            maxAge: 900000,
+            domain:
+              process.env.NODE_ENV === 'development'
+                ? 'localhost'
+                : 'youtune-uploader.vercel.app',
+          });
+          res.cookie('tokens', tokens, {
+            maxAge: 900000,
+            domain:
+              process.env.NODE_ENV === 'development'
+                ? 'localhost'
+                : 'youtune-uploader.vercel.app',
+          });
           // hack to close the window
           res.send('<script>window.close();</script > ');
 
