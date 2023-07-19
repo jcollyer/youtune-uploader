@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const bodyParser = require('body-parser');
 
 const youtube = require('youtube-api');
 const uuid = require('uuid').v4;
@@ -89,13 +88,14 @@ app.post('/setCookie', (req, res) => {
 
   let options = {
     maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-    httpOnly: true, // The cookie only accessible by the web server
+    // httpOnly: true, // The cookie only accessible by the web server
     // signed: true, // Indicates if the cookie should be signed
   };
 
   // Set cookie
-  res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-  res.send('');
+  // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
+  res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
+  res.send('set cookie?');
 });
 
 app.post('/connectYT', (req, res) => {
