@@ -93,7 +93,7 @@ app.post('/setCookie', (req, res) => {
   // Set cookie
   // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
   // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
-  res.setHeader('Set-Cookie', ['ck=value; MaxAge=Session; HttpOnly']);
+  res.setHeader('Set-Cookie', ['ck=value; HttpOnly; Path=/']);
   res.send('set cookie?');
 });
 
