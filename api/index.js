@@ -38,6 +38,7 @@ app.use((req, res, next) => {
   const origin = req.get('referer');
   const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
   if (isWhitelisted) {
+    console.log('------ request is whitelisted ------>', origin);
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader(
       'Access-Control-Allow-Methods',
@@ -88,13 +89,13 @@ app.post('/setCookie', (req, res) => {
 
   let options = {
     maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-    // httpOnly: true, // The cookie only accessible by the web server
+    httpOnly: false, // The cookie only accessible by the web server
     // signed: true, // Indicates if the cookie should be signed
   };
 
   // Set cookie
-  // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-  res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
+  res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
+  // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly=false;']);
   res.send('set cookie?');
 });
 
