@@ -5,6 +5,7 @@ import axios from 'axios';
 import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
+import { setCookie } from '../../../services/auth';
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -72,13 +73,14 @@ export default function HomePage() {
     });
   };
 
-  const onSetCookieClick = event => {
-    event.preventDefault();
-    axios
-      .post('http://localhost:3000/setCookie', { withCredentials: true })
-      .then(response => {
-        console.log('response', response);
-      });
+  const onSetCookieClick = () => {
+    // event.preventDefault();
+    setCookie({ key: 333, vaule: 4444 });
+    // axios
+    //   .post('http://localhost:3000/setCookie', { withCredentials: true })
+    //   .then(response => {
+    //     console.log('response', response);
+    //   });
   };
 
   return (

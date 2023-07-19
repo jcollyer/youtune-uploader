@@ -2,18 +2,25 @@ import request from 'superagent';
 import { handleSuccess, handleError } from '../utils/api';
 
 export const postRegister = user =>
-  request.post('/api/auth/register')
+  request
+    .post('/api/auth/register')
     .send(user)
     .then(handleSuccess)
     .catch(handleError);
 
 export const postLogin = user =>
-  request.post('/api/auth/login')
+  request
+    .post('/api/auth/login')
     .send(user)
     .then(handleSuccess)
     .catch(handleError);
 
 export const postLogout = () =>
-  request.post('/api/auth/logout')
+  request.post('/api/auth/logout').then(handleSuccess).catch(handleError);
+
+export const setCookie = cookie =>
+  request
+    .put('/api/setCookie')
+    .send(cookie)
     .then(handleSuccess)
     .catch(handleError);
