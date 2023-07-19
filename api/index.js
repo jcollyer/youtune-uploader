@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-
 const youtube = require('youtube-api');
 const uuid = require('uuid').v4;
 const cors = require('cors');
@@ -21,8 +20,6 @@ const app = express();
 
 // app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use(express.json());
-
 const corsOptions = {
   origin: [
     'http://localhost:3000',
@@ -32,24 +29,24 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const whitelist = ['*'];
+// const whitelist = ['*'];
 
 app.use((req, res, next) => {
   const origin = req.get('referer');
-  const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
-  if (isWhitelisted) {
-    console.log('------ request is whitelisted ------>', origin);
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader(
-      'Access-Control-Allow-Methods',
-      'GET, POST, OPTIONS, PUT, PATCH, DELETE',
-    );
-    res.setHeader(
-      'Access-Control-Allow-Headers',
-      'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
-    );
-    res.setHeader('Access-Control-Allow-Credentials', true);
-  }
+  // const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
+  // if (isWhitelisted) {
+  // }
+  console.log('------ request is whitelisted ------>', origin);
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+  );
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+  );
+  res.setHeader('Access-Control-Allow-Credentials', true);
   // Pass to next layer of middleware
   if (req.method === 'OPTIONS') res.sendStatus(200);
   else next();
@@ -60,7 +57,7 @@ app.use((req, res, next) => {
 //   next();
 // };
 // app.use(setContext);
-
+app.use(express.json());
 app.use(express.static(assetFolder));
 
 const storage = multer.diskStorage({
@@ -87,15 +84,16 @@ app.post('/setCookie', (req, res) => {
   // read cookies
   console.log(req.cookies);
 
-  let options = {
-    maxAge: 900000,
-    httpOnly: true, // The cookie only accessible by the web server
-    // signed: true, // Indicates if the cookie should be signed
-  };
+  // let options = {
+  //   maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+  //   httpOnly: true, // The cookie only accessible by the web server
+  //   // signed: true, // Indicates if the cookie should be signed
+  // };
 
   // Set cookie
-  res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-  res.setHeader('Set-Cookie', ['ck=value; Expires=Session; HttpOnly=true;']);
+  // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
+  // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
+  res.setHeader('Set-Cookie', ['ck=value; MaxAge=Session; HttpOnly']);
   res.send('set cookie?');
 });
 
