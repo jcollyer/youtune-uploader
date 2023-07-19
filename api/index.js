@@ -31,13 +31,24 @@ app.use(cors(corsOptions));
 
 // const whitelist = ['*'];
 
+var allowlist = ['https://youtune-uploader.vercel.app', 'http://localhost:3000']
+var corsOptionsDelegate = function (req, callback) {
+  var corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+  } else {
+    corsOptions = { origin: false } // disable CORS for this request
+  }
+  callback(null, corsOptions) // callback expects two parameters: error and options
+}
+
 app.use((req, res, next) => {
   const origin = req.get('referer');
   // const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
   // if (isWhitelisted) {
   // }
   console.log('------ request is whitelisted ------>', origin);
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE',
@@ -80,7 +91,7 @@ const oAuth = youtube.authenticate({
   redirect_url: creds.web.redirect_uris[0],
 });
 
-app.post('/setCookie', (req, res) => {
+app.post('/setCookie', cors(corsOptionsDelegate), (req, res) => {
   // read cookies
   console.log(req.cookies);
 
