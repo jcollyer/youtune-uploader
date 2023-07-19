@@ -88,14 +88,14 @@ app.post('/setCookie', (req, res) => {
   console.log(req.cookies);
 
   let options = {
-    maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-    httpOnly: false, // The cookie only accessible by the web server
+    maxAge: 900000,
+    httpOnly: true, // The cookie only accessible by the web server
     // signed: true, // Indicates if the cookie should be signed
   };
 
   // Set cookie
   res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-  // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly=false;']);
+  res.setHeader('Set-Cookie', ['ck=value; Expires=Session; HttpOnly=true;']);
   res.send('set cookie?');
 });
 
