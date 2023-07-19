@@ -35,6 +35,7 @@ var allowlist = ['https://youtune-uploader.vercel.app', 'http://localhost:3000']
 var corsOptionsDelegate = function (req, callback) {
   var corsOptions;
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    console.log('----------hi', req.header('Origin'));
     corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
   } else {
     corsOptions = { origin: false } // disable CORS for this request
@@ -47,8 +48,11 @@ app.use((req, res, next) => {
   // const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
   // if (isWhitelisted) {
   // }
-  console.log('------ request is whitelisted ------>', origin);
-  // res.setHeader('Access-Control-Allow-Origin', '*');
+
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    res.setHeader('Access-Control-Allow-Origin', req.header('Origin'));
+  }
+  console.log('------ request is whitelisted ------>', allowlist.indexOf(req.header('Origin')));
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE',

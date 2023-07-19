@@ -75,7 +75,7 @@ export default function HomePage() {
   const onSetCookieClick = event => {
     event.preventDefault();
     axios
-      .post('/setCookie', { withCredentials: true })
+      .post('http://localhost:3000/setCookie', { withCredentials: true })
       .then(response => {
         console.log('response', response);
       });
