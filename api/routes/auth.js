@@ -117,6 +117,10 @@ router.post('/someCookie', (req, res) => {
   // res.send({ message: 'Set Cookie' });
 });
 
+router.get('/oauth2callback', (req, res) => {
+  console.log('-----------from /oauth2callback', req.body);
+});
+
 router.post('/connectYouTube', (req, res) => {
   const oAuthUrl = oAuth.generateAuthUrl({
     access_type: 'offline',

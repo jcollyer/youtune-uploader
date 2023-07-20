@@ -30,6 +30,7 @@ export const connectYouTube = () =>
     .post('/api/auth/connectYouTube')
     .then((data) => {
       console.log('--------data from connectYouTube', data.text);
-      window.open(data.text, 'oauth window', 'width=500,height=500');
+      // window.open(data.text, 'oauth window', 'width=500,height=500');
+      window.location.href = data.text;
     })
     .catch(handleError);
