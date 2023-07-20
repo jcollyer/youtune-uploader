@@ -12,7 +12,7 @@ const oAuth = youtube.authenticate({
   type: 'oauth',
   client_id: creds.web.client_id,
   client_secret: creds.web.client_secret,
-  redirect_url: creds.web.redirect_uris[0],
+  redirect_url: creds.web.redirect_uris[1],
 });
 
 router.post('/register', async (req, res) => {
@@ -118,7 +118,37 @@ router.post('/someCookie', (req, res) => {
 });
 
 router.get('/oauth2callback', (req, res) => {
-  console.log('-----------from /oauth2callback', req.body);
+  console.log('-----------from /oauth2callback', req.query.code);
+  oAuth.getToken(req.query.code, (err, tokens) => {
+    if (err) {
+      console.log('err');
+      return;
+    }
+
+    console.log('-------tokens------>', tokens);
+    oAuth.setCredentials(tokens);
+    let options = {
+      maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+      httpOnly: true, // The cookie only accessible by the web server
+      // signed: true, // Indicates if the cookie should be signed
+    };
+
+
+    // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
+    // res.setHeader('Set-Cookie', [
+    //   'ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly',
+    // ]);
+    res.cookie('tokens', tokens, {
+      maxAge: 900000,
+      domain:
+        process.env.NODE_ENV === 'development'
+          ? 'localhost'
+          : 'youtune-uploader.vercel.app',
+    });
+    // res.send(tokens);
+    res.send('<script>window.close();</script > ');
+    // res.redirect('http://localhost:3000/home');
+  });
 });
 
 router.post('/connectYouTube', (req, res) => {

@@ -43,7 +43,8 @@ export default function HomePage() {
     setInterval(() => {
       const userPlaylistIdCookie = Cookies.get('userPlaylistId');
       const cookiename = Cookies.get('cookiename');
-      console.log('--------------->>', { userPlaylistIdCookie, cookiename });
+      const tokens = Cookies.get('tokens');
+      console.log('--------------->>', { userPlaylistIdCookie, cookiename, tokens });
       if (userPlaylistIdCookie !== lastCookie) {
         try {
           callback({ oldValue: lastCookie, newValue: userPlaylistIdCookie });
@@ -79,6 +80,13 @@ export default function HomePage() {
   };
 
   const onConnectYTClick = (event) => {
+    listenCookieChange(({ oldValue, newValue }) => {
+      console.log(`Cookie changed from "${oldValue}" to "${newValue}"`);
+      if (oldValue !== newValue) {
+        setPlaylistToken(newValue);
+      }
+    }, 1000);
+
     event.preventDefault();
     dispatch(attemptConnectYT()).catch(R.identity);
   };

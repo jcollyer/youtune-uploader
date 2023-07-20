@@ -320,6 +320,7 @@ app.get('/oauth2callback', (req, res) => {
           res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
           // hack to close the window
           // res.send('<script>window.close();</script > ');
+          // res.redirect('http//localhost:3000/home');
 
           if (req.query.state) {
             const {
