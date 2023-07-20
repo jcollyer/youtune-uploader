@@ -135,7 +135,7 @@ router.get('/oauth2callback', (req, res) => {
 
 
     res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-    res.setHeader('Set-Cookie', ['cookiename=value; Path=/']);
+    res.setHeader('Set-Cookie', ['cookiename=value; HttpOnly; Path=/']);
     // res.cookie('tokens', tokens, {
     //   maxAge: 900000,
     //   domain:
