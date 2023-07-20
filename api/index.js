@@ -303,20 +303,20 @@ app.get('/oauth2callback', (req, res) => {
           // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
           // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
           res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
-          res.cookie('userPlaylistId', playlistId, {
-            maxAge: 900000,
-            domain:
-              process.env.NODE_ENV === 'development'
-                ? 'localhost'
-                : 'youtune-uploader.vercel.app',
-          });
-          res.cookie('tokens', tokens, {
-            maxAge: 900000,
-            domain:
-              process.env.NODE_ENV === 'development'
-                ? 'localhost'
-                : 'youtune-uploader.vercel.app',
-          });
+          // res.cookie('userPlaylistId', playlistId, {
+          //   maxAge: 900000,
+          //   domain:
+          //     process.env.NODE_ENV === 'development'
+          //       ? 'localhost'
+          //       : 'youtune-uploader.vercel.app',
+          // });
+          // res.cookie('tokens', tokens, {
+          //   maxAge: 900000,
+          //   domain:
+          //     process.env.NODE_ENV === 'development'
+          //       ? 'localhost'
+          //       : 'youtune-uploader.vercel.app',
+          // });
           // hack to close the window
           res.send('<script>window.close();</script > ');
 
