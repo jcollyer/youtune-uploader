@@ -1,10 +1,19 @@
 const express = require('express');
 const passport = require('passport');
 const { User } = require('../../server/database/schemas');
+const youtube = require('youtube-api');
+const creds = require('../../client-secret.json');
 
 const router = express.Router();
 
 module.exports = router;
+
+const oAuth = youtube.authenticate({
+  type: 'oauth',
+  client_id: creds.web.client_id,
+  client_secret: creds.web.client_secret,
+  redirect_url: creds.web.redirect_uris[0],
+});
 
 router.post('/register', async (req, res) => {
   if (!req || !req.body || !req.body.username || !req.body.password) {
@@ -22,7 +31,7 @@ router.post('/register', async (req, res) => {
     if (data[0]) {
       res.status(400).send({ message: 'Username exists' });
     }
-    
+
     newUser.hashPassword().then(() => {
       newUser.save().then((savedUser, err) => {
         if (err || !savedUser) {
@@ -81,11 +90,19 @@ router.post('/logout', (req, res) => {
   });
 });
 
-
 router.post('/someCookie', (req, res) => {
   // read cookies
-  console.log('-----------from /someCookies', req.body);
-  const {key, value} = req.body;
+  const { key, value } = req.body;
+
+  const oAuthUrl = oAuth.generateAuthUrl({
+    access_type: 'offline',
+    scope:
+      'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+  });
+
+  console.log('-----------from /someCookies', oAuthUrl);
+  res.send(oAuthUrl);
+  // window.open(oAuthUrl, 'oauth window', 'width=500,height=500');
 
   // let options = {
   //   maxAge: 1000 * 60 * 15, // would expire after 15 minutes
@@ -96,6 +113,17 @@ router.post('/someCookie', (req, res) => {
   // Set cookie
   // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
   // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
-  res.setHeader('Set-Cookie', [`${key}=${value}; HttpOnly; Path=/`]);
-  res.send({ message: 'Set Cookie' });
+  // res.setHeader('Set-Cookie', [`${key}=${value}; HttpOnly; Path=/`]);
+  // res.send({ message: 'Set Cookie' });
+});
+
+router.post('/connectYouTube', (req, res) => {
+  const oAuthUrl = oAuth.generateAuthUrl({
+    access_type: 'offline',
+    scope:
+      'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+  });
+
+  console.log('-----------from /someCookies', oAuthUrl);
+  res.send(oAuthUrl);
 });

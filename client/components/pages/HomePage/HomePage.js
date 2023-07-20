@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
-import { attemptCookie } from '../../../store/thunks/auth';
+import { attemptCookie, attemptConnectYT } from '../../../store/thunks/auth';
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -78,6 +78,11 @@ export default function HomePage() {
     dispatch(attemptCookie({ key: 333, value: 4444 })).catch(R.identity);
   };
 
+  const onConnectYTClick = (event) => {
+    event.preventDefault();
+    dispatch(attemptConnectYT()).catch(R.identity);
+  };
+
   return (
     <div className="flex flex-col m-auto text-center">
       {scheduledVideos.length === 0 && (
@@ -97,6 +102,11 @@ export default function HomePage() {
           <form action="someCookie" method="post">
             <button onClick={onSetCookieClick} type="submit">
               set cookie
+            </button>
+          </form>
+          <form action="connectYouTube" method="post">
+            <button onClick={onConnectYTClick} type="submit">
+              connect to youtube
             </button>
           </form>
         </div>

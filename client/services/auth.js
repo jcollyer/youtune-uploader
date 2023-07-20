@@ -24,3 +24,12 @@ export const setCookie = cookie =>
     .send(cookie)
     .then(handleSuccess)
     .catch(handleError);
+
+export const connectYouTube = () =>
+  request
+    .post('/api/auth/connectYouTube')
+    .then((data) => {
+      console.log('--------data from connectYouTube', data.text);
+      window.open(data.text, 'oauth window', 'width=500,height=500');
+    })
+    .catch(handleError);

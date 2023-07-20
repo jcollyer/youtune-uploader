@@ -5,6 +5,7 @@ import { push } from 'redux-first-history';
 import { cookieSet, login, logout } from '../actions/user';
 import { dispatchError } from '../../utils/api';
 import {
+  connectYouTube,
   setCookie,
   postRegister,
   postLogin,
@@ -75,7 +76,7 @@ export const attemptLogout = () => dispatch =>
     })
     .catch(dispatchError(dispatch));
 
-export const attemptCookie = (cookie) => dispatch =>
+export const attemptCookie = cookie => dispatch =>
   setCookie(cookie)
     .then(data => {
       dispatch(cookieSet(cookie));
@@ -94,5 +95,12 @@ export const attemptCookie = (cookie) => dispatch =>
 
       dispatch(push('/home'));
       return data;
+    })
+    .catch(dispatchError(dispatch));
+
+export const attemptConnectYT = () => dispatch =>
+  connectYouTube()
+    .then(data => {
+      console.log('----------data-->', data);
     })
     .catch(dispatchError(dispatch));
