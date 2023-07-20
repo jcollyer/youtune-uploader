@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
-import { setCookie } from '../../../services/auth';
+import { attemptCookie } from '../../../store/thunks/auth';
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -73,14 +73,9 @@ export default function HomePage() {
     });
   };
 
-  const onSetCookieClick = () => {
-    // event.preventDefault();
-    setCookie({ key: 333, vaule: 4444 });
-    // axios
-    //   .post('http://localhost:3000/setCookie', { withCredentials: true })
-    //   .then(response => {
-    //     console.log('response', response);
-    //   });
+  const onSetCookieClick = (event) => {
+    event.preventDefault();
+    dispatch(attemptCookie({ key: 333, value: 4444 })).catch(R.identity);
   };
 
   return (
@@ -99,7 +94,7 @@ export default function HomePage() {
               CONNECT
             </button>
           </form>
-          <form action="setCookie" method="post">
+          <form action="someCookie" method="post">
             <button onClick={onSetCookieClick} type="submit">
               set cookie
             </button>

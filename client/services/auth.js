@@ -20,7 +20,7 @@ export const postLogout = () =>
 
 export const setCookie = cookie =>
   request
-    .post('/api/auth/setCookie')
+    .post('/api/auth/someCookie')
     .send(cookie)
     .then(handleSuccess)
     .catch(handleError);

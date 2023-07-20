@@ -82,9 +82,10 @@ router.post('/logout', (req, res) => {
 });
 
 
-router.post('/setCookie', (req, res) => {
+router.post('/someCookie', (req, res) => {
   // read cookies
-  console.log('-----------from /setCookies', req.cookies);
+  console.log('-----------from /someCookies', req.body);
+  const {key, value} = req.body;
 
   // let options = {
   //   maxAge: 1000 * 60 * 15, // would expire after 15 minutes
@@ -95,6 +96,6 @@ router.post('/setCookie', (req, res) => {
   // Set cookie
   // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
   // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
-  res.setHeader('Set-Cookie', ['ck=value; HttpOnly; Path=/']);
-  res.status(200).send({ message: 'set cookie'});
+  res.setHeader('Set-Cookie', [`${key}=${value}; HttpOnly; Path=/`]);
+  res.send({ message: 'Set Cookie' });
 });

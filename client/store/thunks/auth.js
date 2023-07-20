@@ -2,9 +2,14 @@ import { snakeToCamelCase } from 'json-style-converter/es5';
 import { Store as RNC } from 'react-notifications-component';
 import { push } from 'redux-first-history';
 
-import { login, logout } from '../actions/user';
+import { cookieSet, login, logout } from '../actions/user';
 import { dispatchError } from '../../utils/api';
-import { postRegister, postLogin, postLogout } from '../../services/auth';
+import {
+  setCookie,
+  postRegister,
+  postLogin,
+  postLogout,
+} from '../../services/auth';
 
 export const attemptLogin = user => dispatch =>
   postLogin(user)
@@ -66,6 +71,28 @@ export const attemptLogout = () => dispatch =>
       });
 
       dispatch(push('/login'));
+      return data;
+    })
+    .catch(dispatchError(dispatch));
+
+export const attemptCookie = (cookie) => dispatch =>
+  setCookie(cookie)
+    .then(data => {
+      dispatch(cookieSet(cookie));
+
+      RNC.addNotification({
+        title: 'Success!',
+        message: data.message,
+        type: 'success',
+        container: 'top-right',
+        animationIn: ['animated', 'fadeInRight'],
+        animationOut: ['animated', 'fadeOutRight'],
+        dismiss: {
+          duration: 5000,
+        },
+      });
+
+      dispatch(push('/home'));
       return data;
     })
     .catch(dispatchError(dispatch));
