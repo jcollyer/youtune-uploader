@@ -94,27 +94,33 @@ router.post('/someCookie', (req, res) => {
   // read cookies
   const { key, value } = req.body;
 
-  const oAuthUrl = oAuth.generateAuthUrl({
-    access_type: 'offline',
-    scope:
-      'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
-  });
+  // const oAuthUrl = oAuth.generateAuthUrl({
+  //   access_type: 'offline',
+  //   scope:
+  //     'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+  // });
 
-  console.log('-----------from /someCookies', oAuthUrl);
-  res.send(oAuthUrl);
+  // console.log('-----------from /someCookies', oAuthUrl);
+  // res.send(oAuthUrl);
   // window.open(oAuthUrl, 'oauth window', 'width=500,height=500');
 
-  // let options = {
-  //   maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-  //   httpOnly: true, // The cookie only accessible by the web server
-  //   // signed: true, // Indicates if the cookie should be signed
-  // };
+  let options = {
+    maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+    httpOnly: true, // The cookie only accessible by the web server
+    // signed: true, // Indicates if the cookie should be signed
+  };
 
   // Set cookie
   // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-  // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
+  res.setHeader('Set-Cookie', [
+    `ck=value; HttpOnly; Domain=${
+      process.env.NODE_ENV === 'development'
+        ? 'localhost'
+        : 'youtune-uploader.vercel.app'
+    }; Path=/`,
+  ]);
   // res.setHeader('Set-Cookie', [`${key}=${value}; HttpOnly; Path=/`]);
-  // res.send({ message: 'Set Cookie' });
+  res.send({ message: 'Set Cookie' });
 });
 
 router.get('/oauth2callback', (req, res) => {
@@ -132,7 +138,6 @@ router.get('/oauth2callback', (req, res) => {
       httpOnly: true, // The cookie only accessible by the web server
       // signed: true, // Indicates if the cookie should be signed
     };
-
 
     res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
     res.setHeader('Set-Cookie', ['cookiename=value; HttpOnly; Path=/']);
@@ -156,6 +161,6 @@ router.post('/connectYouTube', (req, res) => {
       'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
   });
 
-  console.log('-----------from /someCookies', oAuthUrl);
+  console.log('-----------from /connectYouTube', oAuthUrl);
   res.send(oAuthUrl);
 });
