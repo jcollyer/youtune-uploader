@@ -139,8 +139,8 @@ router.get('/oauth2callback', (req, res) => {
       // signed: true, // Indicates if the cookie should be signed
     };
 
-    res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-    res.setHeader('Set-Cookie', ['cookiename=value; HttpOnly; Path=/']);
+    // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
+    // res.setHeader('Set-Cookie', ['cookiename=value; HttpOnly; Path=/']);
     // res.cookie('tokens', tokens, {
     //   maxAge: 900000,
     //   domain:
@@ -149,6 +149,13 @@ router.get('/oauth2callback', (req, res) => {
     //       : 'youtune-uploader.vercel.app',
     // });
     // res.send(tokens);
+    res.setHeader('Set-Cookie', [
+      `tokens=value; HttpOnly; Domain=${
+        process.env.NODE_ENV === 'development'
+          ? 'localhost'
+          : 'youtune-uploader.vercel.app'
+      }; Path=/`,
+    ]);
     res.send('<script>window.close();</script > ');
     // res.redirect('http://localhost:3000/home');
   });
