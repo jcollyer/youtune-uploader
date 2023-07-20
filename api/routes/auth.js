@@ -134,17 +134,15 @@ router.get('/oauth2callback', (req, res) => {
     };
 
 
-    // res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
-    // res.setHeader('Set-Cookie', [
-    //   'ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly',
-    // ]);
-    res.cookie('tokens', tokens, {
-      maxAge: 900000,
-      domain:
-        process.env.NODE_ENV === 'development'
-          ? 'localhost'
-          : 'youtune-uploader.vercel.app',
-    });
+    res.cookie('cookieFromEndpoint', 'cookieValueFromEndpoint', options); // options is optional
+    res.setHeader('Set-Cookie', ['cookiename=value; Path=/']);
+    // res.cookie('tokens', tokens, {
+    //   maxAge: 900000,
+    //   domain:
+    //     process.env.NODE_ENV === 'development'
+    //       ? 'localhost'
+    //       : 'youtune-uploader.vercel.app',
+    // });
     // res.send(tokens);
     res.send('<script>window.close();</script > ');
     // res.redirect('http://localhost:3000/home');
