@@ -8,11 +8,13 @@ const router = express.Router();
 
 module.exports = router;
 
+const isDev = process.env.NODE_ENV === 'development';
+
 const oAuth = youtube.authenticate({
   type: 'oauth',
   client_id: creds.web.client_id,
   client_secret: creds.web.client_secret,
-  redirect_url: creds.web.redirect_uris[2],
+  redirect_url: isDev ? creds.web.redirect_uris[1] : creds.web.redirect_uris[2],
 });
 
 router.post('/register', async (req, res) => {
@@ -149,11 +151,10 @@ router.get('/oauth2callback', (req, res) => {
     //       : 'youtune-uploader.vercel.app',
     // });
     // res.send(tokens);
+    console.log('---oauth2callback NODE_ENV----->', process.env.NODE_ENV);
     res.setHeader('Set-Cookie', [
       `tokens=value; HttpOnly; Domain=${
-        process.env.NODE_ENV === 'development'
-          ? 'localhost'
-          : 'youtune-uploader.vercel.app'
+        isDev ? 'localhost' : 'youtune-uploader.vercel.app'
       }; Path=/`,
     ]);
     res.send('<script>window.close();</script > ');
