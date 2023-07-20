@@ -152,11 +152,16 @@ router.get('/oauth2callback', (req, res) => {
     // });
     // res.send(tokens);
     console.log('---oauth2callback NODE_ENV----->', process.env.NODE_ENV);
-    res.setHeader('Set-Cookie', [
-      `tokens=value; HttpOnly; Domain=${
-        isDev ? 'localhost' : 'youtune-uploader.vercel.app'
-      }; Path=/`,
-    ]);
+    // res.setHeader('Set-Cookie', [
+    //   `tokens=value; HttpOnly; Domain=${
+    //     isDev ? 'localhost' : 'youtune-uploader.vercel.app'
+    //   }; Path=/`,
+    // ]);
+    res.cookie('tokens', tokens, {
+      maxAge: 900000,
+      domain: isDev ? 'localhost' : 'youtune-uploader.vercel.app',
+      httpOnly: false,
+    });
     res.send('<script>window.close();</script > ');
     // res.redirect('http://localhost:3000/home');
   });
