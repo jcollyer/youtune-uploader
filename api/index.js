@@ -1,8 +1,6 @@
 const express = require('express');
 const path = require('path');
-const uuid = require('uuid').v4;
 const cors = require('cors');
-const multer = require('multer');
 const fs = require('fs');
 
 require('../server/config/environment');
@@ -48,150 +46,150 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.static(assetFolder));
 
-const storage = multer.diskStorage({
-  destination: './',
-  filename(req, file, cb) {
-    console.log('------storage------>', file);
-    const newFilename = `${uuid()}-${file.originalname}`;
-    cb(null, newFilename);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: './',
+//   filename(req, file, cb) {
+//     console.log('------storage------>', file);
+//     const newFilename = `${uuid()}-${file.originalname}`;
+//     cb(null, newFilename);
+//   },
+// });
 
-const uploadVideoFile = multer({
-  storage,
-}).array('file');
+// const uploadVideoFile = multer({
+//   storage,
+// }).array('file');
 
-app.post('/uploadVideo', uploadVideoFile, (req, res) => {
-  if (req.files) {
-    const {
-      title,
-      description,
-      scheduleDate,
-      categoryId,
-      tags,
-      playlistToken,
-      userToken,
-    } = req.body;
-    const filename = req.files;
-    const videoQue = Object.keys(filename).length;
+// app.post('/uploadVideo', uploadVideoFile, (req, res) => {
+//   if (req.files) {
+//     const {
+//       title,
+//       description,
+//       scheduleDate,
+//       categoryId,
+//       tags,
+//       playlistToken,
+//       userToken,
+//     } = req.body;
+//     const filename = req.files;
+//     const videoQue = Object.keys(filename).length;
 
-    if (playlistToken !== 'undefined' && userToken !== 'undefined') {
-      const jsonTokens = JSON.parse(userToken.split('j:')[1]);
-      oAuth.setCredentials(jsonTokens);
-      return sendToYT(
-        videoQue,
-        req.files,
-        title,
-        description,
-        scheduleDate,
-        categoryId,
-        tags,
-      );
-    }
-    res.setHeader('Set-Cookie', [
-      'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
-    ]);
-    return res.send(
-      oAuth.generateAuthUrl({
-        access_type: 'offline',
-        scope:
-          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
-        state: JSON.stringify({
-          filename: req.files,
-          title,
-          description,
-          scheduleDate,
-          categoryId,
-          tags,
-          videoQue,
-        }),
-      }),
-    );
-  }
-});
+//     if (playlistToken !== 'undefined' && userToken !== 'undefined') {
+//       const jsonTokens = JSON.parse(userToken.split('j:')[1]);
+//       oAuth.setCredentials(jsonTokens);
+//       return sendToYT(
+//         videoQue,
+//         req.files,
+//         title,
+//         description,
+//         scheduleDate,
+//         categoryId,
+//         tags,
+//       );
+//     }
+//     res.setHeader('Set-Cookie', [
+//       'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
+//     ]);
+//     return res.send(
+//       oAuth.generateAuthUrl({
+//         access_type: 'offline',
+//         scope:
+//           'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
+//         state: JSON.stringify({
+//           filename: req.files,
+//           title,
+//           description,
+//           scheduleDate,
+//           categoryId,
+//           tags,
+//           videoQue,
+//         }),
+//       }),
+//     );
+//   }
+// });
 
-const sendToYT = (
-  videoQue,
-  files,
-  title,
-  description,
-  scheduleDate,
-  categoryId,
-  tags,
-) => {
-  let index = -1;
-  if (videoQue === 0) {
-    process.exit();
-  } else {
-    index++;
-    videoQue--;
-    console.log('---------sendToYT--->', {
-      videoQue,
-      files,
-      index,
-      description: Array.isArray(description)
-        ? description[index]
-        : description,
-      title: Array.isArray(title) ? title[index] : title,
-      scheduleDate: Array.isArray(scheduleDate)
-        ? new Date(scheduleDate[index])?.toISOString()
-        : new Date(scheduleDate)?.toISOString(),
-      categoryId: Array.isArray(categoryId) ? categoryId[index] : categoryId,
-      tags: Array.isArray(tags) ? tags[index] : tags,
-    });
+// const sendToYT = (
+//   videoQue,
+//   files,
+//   title,
+//   description,
+//   scheduleDate,
+//   categoryId,
+//   tags,
+// ) => {
+//   let index = -1;
+//   if (videoQue === 0) {
+//     process.exit();
+//   } else {
+//     index++;
+//     videoQue--;
+//     console.log('---------sendToYT--->', {
+//       videoQue,
+//       files,
+//       index,
+//       description: Array.isArray(description)
+//         ? description[index]
+//         : description,
+//       title: Array.isArray(title) ? title[index] : title,
+//       scheduleDate: Array.isArray(scheduleDate)
+//         ? new Date(scheduleDate[index])?.toISOString()
+//         : new Date(scheduleDate)?.toISOString(),
+//       categoryId: Array.isArray(categoryId) ? categoryId[index] : categoryId,
+//       tags: Array.isArray(tags) ? tags[index] : tags,
+//     });
 
-    // youtube.videos.insert(
-    //   {
-    //     part: 'id,snippet,status',
-    //     notifySubscribers: false,
-    //     requestBody: {
-    //       snippet: {
-    //         title: Array.isArray(title) ? title[index] : title,
-    //         description: Array.isArray(description)
-    //           ? description[index]
-    //           : description,
-    //         categoryId: Array.isArray(categoryId)
-    //           ? categoryId[index]
-    //           : categoryId,
-    //         tags: Array.isArray(tags) ? tags[index] : tags,
-    //       },
-    //       status: {
-    //         privacyStatus: 'private',
-    //         // publishAt: Array.isArray(scheduleDate)
-    //         //   ? new Date(scheduleDate[index]).toISOString()
-    //         //   : new Date(scheduleDate).toISOString(),
-    //       },
-    //     },
-    //     media: {
-    //       body: fs.createReadStream(files[index].filename),
-    //     },
-    //   },
-    //   // {
-    //   //   // Use the `onUploadProgress` event from Axios to track the
-    //   //   // number of bytes uploaded to this point.
-    //   //   onUploadProgress: evt => {
-    //   //     const progress = (evt.bytesRead / fileSize) * 100;
-    //   //     readline.clearLine(process.stdout, 0);
-    //   //     readline.cursorTo(process.stdout, 0, null);
-    //   //     process.stdout.write(`${Math.round(progress)}% complete`);
-    //   //   },
-    //   // },
-    //   (err, data) => {
-    //     console.log(err, data);
-    //     console.log('Done');
-    //     sendToYT(
-    //       videoQue,
-    //       files,
-    //       title,
-    //       description,
-    //       scheduleDate,
-    //       categoryId,
-    //       tags,
-    //     );
-    //   },
-    // );
-  }
-};
+//     // youtube.videos.insert(
+//     //   {
+//     //     part: 'id,snippet,status',
+//     //     notifySubscribers: false,
+//     //     requestBody: {
+//     //       snippet: {
+//     //         title: Array.isArray(title) ? title[index] : title,
+//     //         description: Array.isArray(description)
+//     //           ? description[index]
+//     //           : description,
+//     //         categoryId: Array.isArray(categoryId)
+//     //           ? categoryId[index]
+//     //           : categoryId,
+//     //         tags: Array.isArray(tags) ? tags[index] : tags,
+//     //       },
+//     //       status: {
+//     //         privacyStatus: 'private',
+//     //         // publishAt: Array.isArray(scheduleDate)
+//     //         //   ? new Date(scheduleDate[index]).toISOString()
+//     //         //   : new Date(scheduleDate).toISOString(),
+//     //       },
+//     //     },
+//     //     media: {
+//     //       body: fs.createReadStream(files[index].filename),
+//     //     },
+//     //   },
+//     //   // {
+//     //   //   // Use the `onUploadProgress` event from Axios to track the
+//     //   //   // number of bytes uploaded to this point.
+//     //   //   onUploadProgress: evt => {
+//     //   //     const progress = (evt.bytesRead / fileSize) * 100;
+//     //   //     readline.clearLine(process.stdout, 0);
+//     //   //     readline.cursorTo(process.stdout, 0, null);
+//     //   //     process.stdout.write(`${Math.round(progress)}% complete`);
+//     //   //   },
+//     //   // },
+//     //   (err, data) => {
+//     //     console.log(err, data);
+//     //     console.log('Done');
+//     //     sendToYT(
+//     //       videoQue,
+//     //       files,
+//     //       title,
+//     //       description,
+//     //       scheduleDate,
+//     //       categoryId,
+//     //       tags,
+//     //     );
+//     //   },
+//     // );
+//   }
+// };
 
 app.post('/updateVideo', (req, res) => {
   const { videoId, title } = req.body;

@@ -3,6 +3,7 @@ const passport = require('passport');
 const { User } = require('../../server/database/schemas');
 const youtube = require('youtube-api');
 const creds = require('../../client-secret.json');
+const {sendToYT, uploadVideoFile, storage} = require('../utils/youtube');
 
 const router = express.Router();
 
@@ -150,6 +151,7 @@ router.get('/oauth2callback', (req, res) => {
               tags,
             } = JSON.parse(req.query.state);
             return sendToYT(
+              youtube,
               videoQue,
               filename,
               title,
@@ -219,3 +221,54 @@ router.post('/getUnlisted', (req, res) => {
       },
     );
 });
+
+router.post('/uploadVideo', uploadVideoFile, (req, res) => {
+  if (req.files) {
+    const {
+      title,
+      description,
+      scheduleDate,
+      categoryId,
+      tags,
+      playlistToken,
+      userToken,
+    } = req.body;
+    const filename = req.files;
+    const videoQue = Object.keys(filename).length;
+
+    if (playlistToken !== 'undefined' && userToken !== 'undefined') {
+      const jsonTokens = JSON.parse(userToken.split('j:')[1]);
+      oAuth.setCredentials(jsonTokens);
+      return sendToYT(
+        youtube,
+        videoQue,
+        req.files,
+        title,
+        description,
+        scheduleDate,
+        categoryId,
+        tags,
+      );
+    }
+    res.setHeader('Set-Cookie', [
+      'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
+    ]);
+    return res.send(
+      oAuth.generateAuthUrl({
+        access_type: 'offline',
+        scope:
+          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
+        state: JSON.stringify({
+          filename: req.files,
+          title,
+          description,
+          scheduleDate,
+          categoryId,
+          tags,
+          videoQue,
+        }),
+      }),
+    );
+  }
+});
+
