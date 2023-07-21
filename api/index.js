@@ -1,12 +1,9 @@
 const express = require('express');
 const path = require('path');
-// const youtube = require('youtube-api');
 const uuid = require('uuid').v4;
 const cors = require('cors');
-// const readline = require('readline');
 const multer = require('multer');
 const fs = require('fs');
-// const creds = require('../client-secret.json');
 
 require('../server/config/environment');
 require('../server/database');
@@ -18,8 +15,6 @@ const assetFolder = path.resolve(__dirname, '../dist/');
 const port = process.env.PORT;
 const app = express();
 
-// app.use(bodyParser.urlencoded({ extended: true }));
-
 const corsOptions = {
   origin: [
     'http://localhost:3000',
@@ -27,28 +22,15 @@ const corsOptions = {
     'https://youtune-uploader.vercel.app',
   ],
 };
+
 app.use(cors(corsOptions));
 
-// const whitelist = ['*'];
-
-var allowlist = ['https://youtune-uploader.vercel.app', 'http://localhost:3000']
-var corsOptionsDelegate = function (req, callback) {
-  var corsOptions;
-  if (allowlist.indexOf(req.header('Origin')) !== -1) {
-    console.log('----------hi', req.header('Origin'));
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
-}
+const allowlist = ['https://youtune-uploader.vercel.app', 'http://localhost:3000'];
 
 app.use((req, res, next) => {
-
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
     res.setHeader('Access-Control-Allow-Origin', req.header('Origin'));
   }
-  console.log('------ request is whitelisted ------>', allowlist.indexOf(req.header('Origin')));
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE',
@@ -63,11 +45,6 @@ app.use((req, res, next) => {
   else next();
 });
 
-// const setContext = (req, res, next) => {
-//   if (!req.context) req.context = {};
-//   next();
-// };
-// app.use(setContext);
 app.use(express.json());
 app.use(express.static(assetFolder));
 
@@ -83,67 +60,6 @@ const storage = multer.diskStorage({
 const uploadVideoFile = multer({
   storage,
 }).array('file');
-
-// const oAuth = youtube.authenticate({
-//   type: 'oauth',
-//   client_id: creds.web.client_id,
-//   client_secret: creds.web.client_secret,
-//   redirect_url: creds.web.redirect_uris[0],
-// });
-
-app.post('/connectYT', (req, res) => {
-  res.send(
-    oAuth.generateAuthUrl({
-      access_type: 'offline',
-      scope:
-        'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
-    }),
-  );
-});
-
-// app.post('/getUnlisted', (req, res) => {
-//   console.log('--------------getunlisted------------->', req.body);
-//   const { playlistId } = req.body;
-//   youtube.playlistItems
-//     .list({
-//       part: ['status, id, contentDetails'],
-//       playlistId: playlistId,
-//     })
-//     .then(
-//       response => {
-//         const playlistItems = response.data.items;
-//         const videoIds = playlistItems.map(
-//           pItem => pItem.contentDetails.videoId,
-//         );
-//         youtube.videos
-//           .list({
-//             part: ['status', 'snippet'],
-//             id: videoIds,
-//           })
-//           .then(
-//             response => {
-//               const videos = response.data.items;
-//               const unlistedVideos = videos.filter(
-//                 video => video.status.privacyStatus === 'private',
-//               );
-
-//               const scheduledVideos = unlistedVideos.filter(video => {
-//                 console.log('------date', video.status.publishAt);
-//                 return new Date(video.status.publishAt) >= new Date();
-//               });
-
-//               res.send(scheduledVideos);
-//             },
-//             err => {
-//               console.error('Execute error', err);
-//             },
-//           );
-//       },
-//       err => {
-//         console.error('Execute error', err);
-//       },
-//     );
-// });
 
 app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   if (req.files) {
@@ -276,103 +192,6 @@ const sendToYT = (
     // );
   }
 };
-console.log('-------server-->', process.env.NODE_ENV === 'development');
-// app.get('/oauth2callback', (req, res) => {
-//   oAuth.getToken(req.query.code, (err, tokens) => {
-//     if (err) {
-//       console.log('err');
-//       return;
-//     }
-
-//     console.log('-------tokens------>', tokens);
-//     oAuth.setCredentials(tokens);
-//     return (userPlaylistId = youtube.channels
-//       .list({
-//         part: ['contentDetails'],
-//         mine: true,
-//       })
-//       .then(
-//         response => {
-//           const playlistId =
-//             response.data.items[0].contentDetails.relatedPlaylists.uploads;
-
-//           // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
-//           // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
-//           // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
-//           res.cookie('userPlaylistId', playlistId, {
-//             maxAge: 900000,
-//             domain:
-//               process.env.NODE_ENV === 'development'
-//                 ? 'localhost'
-//                 : 'youtune-uploader.vercel.app',
-//           });
-//           res.cookie('tokens', tokens, {
-//             maxAge: 900000,
-//             domain:
-//               process.env.NODE_ENV === 'development'
-//                 ? 'localhost'
-//                 : 'youtune-uploader.vercel.app',
-//           });
-//           // res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
-//           // hack to close the window
-//           res.send('<script>window.close();</script>');
-//           // res.redirect('http//localhost:3000/home');
-
-//           if (req.query.state) {
-//             const {
-//               filename,
-//               title,
-//               description,
-//               videoQue,
-//               scheduleDate,
-//               categoryId,
-//               tags,
-//             } = JSON.parse(req.query.state);
-//             return sendToYT(
-//               videoQue,
-//               filename,
-//               title,
-//               description,
-//               scheduleDate,
-//               categoryId,
-//               tags,
-//             );
-//           }
-//         },
-//         err => {
-//           console.error('Execute error', err);
-//         },
-//       ));
-//   });
-// });
-
-// app.post('/getPlaylistId', (req, res) => {
-//   const { tokens } = req.body;
-//   const jsonTokens = JSON.parse(tokens.split('j:')[1]);
-//   console.log('-----------ddd----->>>', tokens)
-//   oAuth.setCredentials(jsonTokens);
-//   return (userPlaylistId = youtube.channels
-//     .list({
-//       part: ['contentDetails'],
-//       mine: true,
-//     })
-//     .then(
-//       response => {
-//         // return the uploads playlist id
-//         const playlistId =
-//           response.data.items[0].contentDetails.relatedPlaylists.uploads;
-//         // const playlistId = 33333;
-//         res.cookie('userPlaylistId', playlistId, {
-//           maxAge: 900000,
-//           httpOnly: false,
-//         });
-//         res.send(playlistId);
-//       },
-//       err => {
-//         console.error('Execute error', err);
-//       },
-//     ));
-// });
 
 app.post('/updateVideo', (req, res) => {
   const { videoId, title } = req.body;

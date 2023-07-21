@@ -18,23 +18,6 @@ export const postLogin = user =>
 export const postLogout = () =>
   request.post('/api/auth/logout').then(handleSuccess).catch(handleError);
 
-export const setCookie = cookie =>
-  request
-    .post('/api/auth/someCookie')
-    .send(cookie)
-    .then(handleSuccess)
-    .catch(handleError);
-
-export const connectYouTube = () =>
-  request
-    .post('/api/auth/connectYouTube')
-    .then((data) => {
-      console.log('--------data from connectYouTube', data.text);
-      window.open(data.text, 'oauth window', 'width=500,height=500');
-      // window.location.href = data.text;
-    })
-    .catch(handleError);
-
 export const getPlaylist = () =>
   request
     .post('/api/auth/getPlaylist')

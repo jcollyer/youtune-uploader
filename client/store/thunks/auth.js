@@ -2,12 +2,9 @@ import { snakeToCamelCase } from 'json-style-converter/es5';
 import { Store as RNC } from 'react-notifications-component';
 import { push } from 'redux-first-history';
 
-import { cookieSet, login, logout } from '../actions/user';
+import { login, logout } from '../actions/user';
 import { dispatchError } from '../../utils/api';
 import {
-  connectYouTube,
-  getPlaylist,
-  setCookie,
   postRegister,
   postLogin,
   postLogout,
@@ -74,41 +71,5 @@ export const attemptLogout = () => dispatch =>
 
       dispatch(push('/login'));
       return data;
-    })
-    .catch(dispatchError(dispatch));
-
-export const attemptCookie = cookie => dispatch =>
-  setCookie(cookie)
-    .then(data => {
-      dispatch(cookieSet(cookie));
-
-      RNC.addNotification({
-        title: 'Success!',
-        message: data.message,
-        type: 'success',
-        container: 'top-right',
-        animationIn: ['animated', 'fadeInRight'],
-        animationOut: ['animated', 'fadeOutRight'],
-        dismiss: {
-          duration: 5000,
-        },
-      });
-
-      dispatch(push('/home'));
-      return data;
-    })
-    .catch(dispatchError(dispatch));
-
-export const attemptConnectYT = () => dispatch =>
-  connectYouTube()
-    .then(data => {
-      console.log('----------data-->', data);
-    })
-    .catch(dispatchError(dispatch));
-
-export const attemptGetPlaylist = () => dispatch =>
-  getPlaylist()
-    .then(data => {
-      console.log('----------data-->', data);
     })
     .catch(dispatchError(dispatch));

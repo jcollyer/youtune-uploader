@@ -92,21 +92,6 @@ router.post('/logout', (req, res) => {
   });
 });
 
-router.post('/someCookie', (req, res) => {
-  // read cookies
-  const { key, value } = req.body;
-
-  res.setHeader('Set-Cookie', [
-    `ck=value; HttpOnly; Domain=${
-      process.env.NODE_ENV === 'development'
-        ? 'localhost'
-        : 'youtune-uploader.vercel.app'
-    }; Path=/`,
-  ]);
-  // res.setHeader('Set-Cookie', [`${key}=${value}; HttpOnly; Path=/`]);
-  res.send({ message: 'Set Cookie' });
-});
-
 router.post('/connectYouTube', (req, res) => {
   const oAuthUrl = oAuth.generateAuthUrl({
     access_type: 'offline',

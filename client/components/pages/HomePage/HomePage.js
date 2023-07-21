@@ -5,7 +5,6 @@ import axios from 'axios';
 import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
-import { attemptCookie, attemptConnectYT } from '../../../store/thunks/auth';
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -13,14 +12,7 @@ export default function HomePage() {
   const [playlistToken, setPlaylistToken] = useState(
     Cookies.get('userPlaylistId'),
   );
-  const [userTokens] = useState(Cookies.get('tokens'));
   const [scheduledVideos, setscheduledVideos] = useState([]);
-
-  useEffect(() => {
-    if (userTokens && playlistToken) {
-      // axios.post('http://localhost:3000/getPlaylistId', { tokens: userTokens });
-    }
-  }, [userTokens, playlistToken]);
 
   useEffect(() => {
     if (playlistToken) {
@@ -55,31 +47,8 @@ export default function HomePage() {
     }, interval);
   };
 
-  const onConnectClick = event => {
-    event.preventDefault();
-
-    listenCookieChange(({ oldValue, newValue }) => {
-      console.log(`Cookie changed from "${oldValue}" to "${newValue}"`);
-      if (oldValue !== newValue) {
-        setPlaylistToken(newValue);
-      }
-    }, 1000);
-
-    axios.post('http://localhost:3000/connectYT').then(response => {
-      window.open(
-        response.data,
-        'oauth window',
-        'width=672,height=660,modal=yes,alwaysRaised=yes',
-      );
-    });
-  };
-
-  const onSetCookieClick = (event) => {
-    event.preventDefault();
-    dispatch(attemptCookie({ key: 333, value: 4444 })).catch(R.identity);
-  };
-
   const onConnectYTClick = (event) => {
+    event.preventDefault();
     listenCookieChange(({ oldValue, newValue }) => {
       console.log(`Cookie changed from "${oldValue}" to "${newValue}"`);
       if (oldValue !== newValue) {
@@ -87,34 +56,26 @@ export default function HomePage() {
       }
     }, 1000);
 
-    event.preventDefault();
-    dispatch(attemptConnectYT()).catch(R.identity);
+    axios.post('/api/auth/connectYouTube').then(response => {
+      console.log('--------data from connectYouTube', response.data);
+      window.open(response.data, 'oauth window', 'width=500,height=500');
+    });
   };
 
   return (
     <div className="flex flex-col m-auto text-center">
       {scheduledVideos.length === 0 && (
         <div>
-          <form action="connectYT" method="post">
+          <form action="connectYouTube" method="post">
             <h3 className="text-center mt-20 text-3xl mb-12">
               Connect your YouTube account to get started!
             </h3>
             <button
               type="submit"
-              onClick={onConnectClick}
+              onClick={onConnectYTClick}
               className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
             >
               CONNECT
-            </button>
-          </form>
-          <form action="someCookie" method="post">
-            <button onClick={onSetCookieClick} type="submit">
-              set cookie
-            </button>
-          </form>
-          <form action="connectYouTube" method="post">
-            <button onClick={onConnectYTClick} type="submit">
-              connect to youtube
             </button>
           </form>
         </div>

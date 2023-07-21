@@ -1,5 +1,5 @@
 import update from 'immutability-helper';
-import { COOKIE, LOGIN_USER, LOGOUT_USER, UPDATE_USER } from '../actions/user';
+import { LOGIN_USER, LOGOUT_USER, UPDATE_USER } from '../actions/user';
 
 export default function user(state = {}, action) {
   switch (action.type) {
@@ -9,8 +9,6 @@ export default function user(state = {}, action) {
       return {};
     case UPDATE_USER:
       return update(state, { $merge: action.user });
-    case COOKIE:
-      return action.cookie;
     default:
       return state;
   }
