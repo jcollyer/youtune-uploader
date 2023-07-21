@@ -1,12 +1,12 @@
 const express = require('express');
 const path = require('path');
-const youtube = require('youtube-api');
+// const youtube = require('youtube-api');
 const uuid = require('uuid').v4;
 const cors = require('cors');
 // const readline = require('readline');
 const multer = require('multer');
 const fs = require('fs');
-const creds = require('../client-secret.json');
+// const creds = require('../client-secret.json');
 
 require('../server/config/environment');
 require('../server/database');
@@ -84,12 +84,12 @@ const uploadVideoFile = multer({
   storage,
 }).array('file');
 
-const oAuth = youtube.authenticate({
-  type: 'oauth',
-  client_id: creds.web.client_id,
-  client_secret: creds.web.client_secret,
-  redirect_url: creds.web.redirect_uris[0],
-});
+// const oAuth = youtube.authenticate({
+//   type: 'oauth',
+//   client_id: creds.web.client_id,
+//   client_secret: creds.web.client_secret,
+//   redirect_url: creds.web.redirect_uris[0],
+// });
 
 app.post('/connectYT', (req, res) => {
   res.send(
@@ -101,49 +101,49 @@ app.post('/connectYT', (req, res) => {
   );
 });
 
-app.post('/getUnlisted', (req, res) => {
-  console.log('--------------getunlisted------------->', req.body);
-  const { playlistId } = req.body;
-  youtube.playlistItems
-    .list({
-      part: ['status, id, contentDetails'],
-      playlistId: playlistId,
-    })
-    .then(
-      response => {
-        const playlistItems = response.data.items;
-        const videoIds = playlistItems.map(
-          pItem => pItem.contentDetails.videoId,
-        );
-        youtube.videos
-          .list({
-            part: ['status', 'snippet'],
-            id: videoIds,
-          })
-          .then(
-            response => {
-              const videos = response.data.items;
-              const unlistedVideos = videos.filter(
-                video => video.status.privacyStatus === 'private',
-              );
+// app.post('/getUnlisted', (req, res) => {
+//   console.log('--------------getunlisted------------->', req.body);
+//   const { playlistId } = req.body;
+//   youtube.playlistItems
+//     .list({
+//       part: ['status, id, contentDetails'],
+//       playlistId: playlistId,
+//     })
+//     .then(
+//       response => {
+//         const playlistItems = response.data.items;
+//         const videoIds = playlistItems.map(
+//           pItem => pItem.contentDetails.videoId,
+//         );
+//         youtube.videos
+//           .list({
+//             part: ['status', 'snippet'],
+//             id: videoIds,
+//           })
+//           .then(
+//             response => {
+//               const videos = response.data.items;
+//               const unlistedVideos = videos.filter(
+//                 video => video.status.privacyStatus === 'private',
+//               );
 
-              const scheduledVideos = unlistedVideos.filter(video => {
-                console.log('------date', video.status.publishAt);
-                return new Date(video.status.publishAt) >= new Date();
-              });
+//               const scheduledVideos = unlistedVideos.filter(video => {
+//                 console.log('------date', video.status.publishAt);
+//                 return new Date(video.status.publishAt) >= new Date();
+//               });
 
-              res.send(scheduledVideos);
-            },
-            err => {
-              console.error('Execute error', err);
-            },
-          );
-      },
-      err => {
-        console.error('Execute error', err);
-      },
-    );
-});
+//               res.send(scheduledVideos);
+//             },
+//             err => {
+//               console.error('Execute error', err);
+//             },
+//           );
+//       },
+//       err => {
+//         console.error('Execute error', err);
+//       },
+//     );
+// });
 
 app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   if (req.files) {
@@ -346,33 +346,33 @@ console.log('-------server-->', process.env.NODE_ENV === 'development');
 //   });
 // });
 
-app.post('/getPlaylistId', (req, res) => {
-  const { tokens } = req.body;
-  const jsonTokens = JSON.parse(tokens.split('j:')[1]);
-  console.log('-----------ddd----->>>', tokens)
-  oAuth.setCredentials(jsonTokens);
-  return (userPlaylistId = youtube.channels
-    .list({
-      part: ['contentDetails'],
-      mine: true,
-    })
-    .then(
-      response => {
-        // return the uploads playlist id
-        const playlistId =
-          response.data.items[0].contentDetails.relatedPlaylists.uploads;
-        // const playlistId = 33333;
-        res.cookie('userPlaylistId', playlistId, {
-          maxAge: 900000,
-          httpOnly: false,
-        });
-        res.send(playlistId);
-      },
-      err => {
-        console.error('Execute error', err);
-      },
-    ));
-});
+// app.post('/getPlaylistId', (req, res) => {
+//   const { tokens } = req.body;
+//   const jsonTokens = JSON.parse(tokens.split('j:')[1]);
+//   console.log('-----------ddd----->>>', tokens)
+//   oAuth.setCredentials(jsonTokens);
+//   return (userPlaylistId = youtube.channels
+//     .list({
+//       part: ['contentDetails'],
+//       mine: true,
+//     })
+//     .then(
+//       response => {
+//         // return the uploads playlist id
+//         const playlistId =
+//           response.data.items[0].contentDetails.relatedPlaylists.uploads;
+//         // const playlistId = 33333;
+//         res.cookie('userPlaylistId', playlistId, {
+//           maxAge: 900000,
+//           httpOnly: false,
+//         });
+//         res.send(playlistId);
+//       },
+//       err => {
+//         console.error('Execute error', err);
+//       },
+//     ));
+// });
 
 app.post('/updateVideo', (req, res) => {
   const { videoId, title } = req.body;

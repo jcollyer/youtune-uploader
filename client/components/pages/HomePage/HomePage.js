@@ -5,7 +5,7 @@ import axios from 'axios';
 import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
-import { attemptCookie, attemptConnectYT, attemptGetPlaylist } from '../../../store/thunks/auth';
+import { attemptCookie, attemptConnectYT } from '../../../store/thunks/auth';
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -18,14 +18,14 @@ export default function HomePage() {
 
   useEffect(() => {
     if (userTokens && playlistToken) {
-      axios.post('http://localhost:3000/getPlaylistId', { tokens: userTokens });
+      // axios.post('http://localhost:3000/getPlaylistId', { tokens: userTokens });
     }
   }, [userTokens, playlistToken]);
 
   useEffect(() => {
     if (playlistToken) {
       axios
-        .post('http://localhost:3000/getUnlisted', {
+        .post('/api/auth/getUnlisted', {
           playlistId: playlistToken,
         })
         .then(response => setscheduledVideos(response.data));
@@ -41,15 +41,15 @@ export default function HomePage() {
   const listenCookieChange = (callback, interval = 1000) => {
     let lastCookie = Cookies.get('userPlaylistId');
     setInterval(() => {
-      const userPlaylistIdCookie = Cookies.get('userPlaylistId');
+      const userPlaylistId = Cookies.get('userPlaylistId');
       const cookiename = Cookies.get('cookiename');
       const tokens = Cookies.get('tokens');
-      console.log('--------------->>', { userPlaylistIdCookie, cookiename, tokens });
-      if (userPlaylistIdCookie !== lastCookie) {
+      console.log('--------------->>', { userPlaylistId, cookiename, tokens });
+      if (userPlaylistId !== lastCookie) {
         try {
-          callback({ oldValue: lastCookie, newValue: userPlaylistIdCookie });
+          callback({ oldValue: lastCookie, newValue: userPlaylistId });
         } finally {
-          lastCookie = userPlaylistIdCookie;
+          lastCookie = userPlaylistId;
         }
       }
     }, interval);
@@ -91,11 +91,6 @@ export default function HomePage() {
     dispatch(attemptConnectYT()).catch(R.identity);
   };
 
-  const onGetPlaylist = (event) => {
-    event.preventDefault();
-    dispatch(attemptGetPlaylist()).catch(R.identity);
-  };
-
   return (
     <div className="flex flex-col m-auto text-center">
       {scheduledVideos.length === 0 && (
@@ -120,11 +115,6 @@ export default function HomePage() {
           <form action="connectYouTube" method="post">
             <button onClick={onConnectYTClick} type="submit">
               connect to youtube
-            </button>
-          </form>
-          <form action="getPlaylist" method="post">
-            <button onClick={onGetPlaylist} type="submit">
-              get playlist
             </button>
           </form>
         </div>

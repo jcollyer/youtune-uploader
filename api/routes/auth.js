@@ -123,17 +123,65 @@ router.get('/oauth2callback', (req, res) => {
           ? 'localhost'
           : 'youtune-uploader.vercel.app',
     });
-    res.send('<script>window.close();</script>');
-    
+    return (userPlaylistId = youtube.channels
+      .list({
+        part: ['contentDetails'],
+        mine: true,
+      })
+      .then(
+        response => {
+          const playlistId =
+            response.data.items[0].contentDetails.relatedPlaylists.uploads;
+
+          // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
+          // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
+          // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
+          res.cookie('userPlaylistId', playlistId, {
+            maxAge: 900000,
+            domain:
+              process.env.NODE_ENV === 'development'
+                ? 'localhost'
+                : 'youtune-uploader.vercel.app',
+          });
+          // res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
+          // hack to close the window
+          res.send('<script>window.close();</script>');
+          // res.redirect('http//localhost:3000/home');
+
+          if (req.query.state) {
+            const {
+              filename,
+              title,
+              description,
+              videoQue,
+              scheduleDate,
+              categoryId,
+              tags,
+            } = JSON.parse(req.query.state);
+            return sendToYT(
+              videoQue,
+              filename,
+              title,
+              description,
+              scheduleDate,
+              categoryId,
+              tags,
+            );
+          }
+        },
+        err => {
+          console.error('Execute error', err);
+        },
+      ));
   });
 });
 
 router.post('/getPlaylist', (req, res) => {
-  const tokens = req.headers.cookie.split("; ")[2];
-  const jsonTokens = JSON.parse(decodeURIComponent(tokens.split('=j%3A')[1]))
+  const tokens = req.headers.cookie.split('; ')[2];
+  const jsonTokens = JSON.parse(decodeURIComponent(tokens.split('=j%3A')[1]));
   console.log('-------------------ss-->', jsonTokens);
   oAuth.setCredentials(jsonTokens);
-  // oAuth.setCredentials(tokens);
+
   return (userPlaylistId = youtube.channels
     .list({
       part: ['contentDetails'],
@@ -141,44 +189,15 @@ router.post('/getPlaylist', (req, res) => {
     })
     .then(
       response => {
+        // return the uploads playlist id
         const playlistId =
           response.data.items[0].contentDetails.relatedPlaylists.uploads;
-
-        // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
-        // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
-        // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
+        // const playlistId = 33333;
         res.cookie('userPlaylistId', playlistId, {
           maxAge: 900000,
-          domain:
-            process.env.NODE_ENV === 'development'
-              ? 'localhost'
-              : 'youtune-uploader.vercel.app',
+          httpOnly: false,
         });
-        // res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
-        // hack to close the window
-        res.send('<script>window.close();</script>');
-        // res.redirect('http//localhost:3000/home');
-
-        if (req.query.state) {
-          const {
-            filename,
-            title,
-            description,
-            videoQue,
-            scheduleDate,
-            categoryId,
-            tags,
-          } = JSON.parse(req.query.state);
-          return sendToYT(
-            videoQue,
-            filename,
-            title,
-            description,
-            scheduleDate,
-            categoryId,
-            tags,
-          );
-        }
+        res.send(playlistId);
       },
       err => {
         console.error('Execute error', err);
@@ -195,4 +214,54 @@ router.post('/connectYouTube', (req, res) => {
 
   console.log('-----------from /connectYouTube', oAuthUrl);
   res.send(oAuthUrl);
+});
+
+router.post('/getUnlisted', (req, res) => {
+  const tokens = req.headers.cookie.split('; ')[2];
+  const jsonTokens = JSON.parse(decodeURIComponent(tokens.split('=j%3A')[1]));
+  console.log('-------------------ss-->', jsonTokens);
+  oAuth.setCredentials(jsonTokens);
+
+  
+  console.log('--------------getunlisted------------->', req.body);
+  const { playlistId } = req.body;
+  youtube.playlistItems
+    .list({
+      part: ['status, id, contentDetails'],
+      playlistId: playlistId,
+    })
+    .then(
+      response => {
+        const playlistItems = response.data.items;
+        const videoIds = playlistItems.map(
+          pItem => pItem.contentDetails.videoId,
+        );
+        youtube.videos
+          .list({
+            part: ['status', 'snippet'],
+            id: videoIds,
+          })
+          .then(
+            response => {
+              const videos = response.data.items;
+              const unlistedVideos = videos.filter(
+                video => video.status.privacyStatus === 'private',
+              );
+
+              const scheduledVideos = unlistedVideos.filter(video => {
+                console.log('------date', video.status.publishAt);
+                return new Date(video.status.publishAt) >= new Date();
+              });
+
+              res.send(scheduledVideos);
+            },
+            err => {
+              console.error('Execute error', err);
+            },
+          );
+      },
+      err => {
+        console.error('Execute error', err);
+      },
+    );
 });
