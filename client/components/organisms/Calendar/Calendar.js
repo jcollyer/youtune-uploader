@@ -40,7 +40,7 @@ export function Calendar({ scheduledVideos }) {
   const saveEditVideo = () => {
     console.log('saveEditVideo editVideoSelected -->', editVideoSelected);
     axios
-      .post('/updateVideo', {
+      .post('/api/auth/updateVideo', {
         videoId: editVideoSelected.id,
         title: editVideoSelected.title,
       })

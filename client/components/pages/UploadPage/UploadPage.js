@@ -28,7 +28,7 @@ export default function UploadPage() {
   const [playlistToken] = useState(
     Cookies.get('userPlaylistId'),
   );
-  const [userTokens] = useState(Cookies.get('tokens'));
+  const [tokens] = useState(Cookies.get('tokens'));
 
   const onDrop = useCallback(acceptedFiles => {
     if (acceptedFiles.length) {
@@ -70,7 +70,7 @@ export default function UploadPage() {
   const onSubmit = event => {
     event.preventDefault();
     if (videos.length) {
-      console.log('Tokens-->', { playlistToken, userTokens });
+      console.log('Tokens-->', { playlistToken, tokens });
       const formData = new FormData();
       videos.forEach(video => {
         formData.append('file', video.file);
@@ -84,11 +84,11 @@ export default function UploadPage() {
         formData.append('tags', video.tags);
         formData.append('thumbnail', video.thumbnail);
         formData.append('playlistToken', playlistToken);
-        formData.append('userToken', userTokens);
+        formData.append('userToken', tokens);
       });
 
       axios
-        .post('api/auth/uploadVideo', formData)
+        .post('/api/auth/uploadVideo', formData)
         .then(response => {
           console.log('axios->', response.data);
           window.open(

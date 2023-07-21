@@ -231,13 +231,13 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
       categoryId,
       tags,
       playlistToken,
-      userToken,
+      tokens,
     } = req.body;
     const filename = req.files;
     const videoQue = Object.keys(filename).length;
 
-    if (playlistToken !== 'undefined' && userToken !== 'undefined') {
-      const jsonTokens = JSON.parse(userToken.split('j:')[1]);
+    if (playlistToken !== 'undefined' && tokens !== 'undefined') {
+      const jsonTokens = JSON.parse(tokens.split('j:')[1]);
       oAuth.setCredentials(jsonTokens);
       return sendToYT(
         youtube,
@@ -257,7 +257,7 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
       oAuth.generateAuthUrl({
         access_type: 'offline',
         scope:
-          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
+          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
         state: JSON.stringify({
           filename: req.files,
           title,
@@ -270,5 +270,39 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
       }),
     );
   }
+});
+
+router.post('/updateVideo', (req, res) => {
+  const { videoId, title } = req.body;
+  const { cookie } = req.headers;
+  const jsTokenCookie = cookie.split('; ').find(token => {
+    return token.startsWith('tokens=');
+  });
+  const jsonTokens = JSON.parse(
+    decodeURIComponent(jsTokenCookie.split('tokens=j%3A')[1]),
+  );
+  console.log('-------------------/updateVideo-->', jsonTokens);
+  oAuth.setCredentials(jsonTokens);
+  console.log('--------/updateVideo--->', videoId, title);
+  return youtube.videos
+    .update({
+      part: 'id,snippet,status',
+      requestBody: {
+        id: videoId,
+        snippet: {
+          title,
+          categoryId: 22,
+        },
+      },
+    })
+    .then(
+      response => {
+        console.log('updateVideo response.data -->', response.data);
+        res.send(response.data);
+      },
+      err => {
+        console.error('Execute error', err);
+      },
+    );
 });
 

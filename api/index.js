@@ -191,32 +191,32 @@ app.use(express.static(assetFolder));
 //   }
 // };
 
-app.post('/updateVideo', (req, res) => {
-  const { videoId, title } = req.body;
-  // const jsonTokens = JSON.parse(userTokens.split('j:')[1]);
-  // oAuth.setCredentials(jsonTokens);
-  console.log('--------/updateVideo--->', videoId, title);
-  return youtube.videos
-    .update({
-      part: 'id,snippet,status',
-      requestBody: {
-        id: videoId,
-        snippet: {
-          title,
-          categoryId: 22,
-        },
-      },
-    })
-    .then(
-      response => {
-        console.log('updateVideo response.data -->', response.data);
-        res.send(response.data);
-      },
-      err => {
-        console.error('Execute error', err);
-      },
-    );
-});
+// app.post('/updateVideo', (req, res) => {
+//   const { videoId, title } = req.body;
+//   // const jsonTokens = JSON.parse(userTokens.split('j:')[1]);
+//   // oAuth.setCredentials(jsonTokens);
+//   console.log('--------/updateVideo--->', videoId, title);
+//   return youtube.videos
+//     .update({
+//       part: 'id,snippet,status',
+//       requestBody: {
+//         id: videoId,
+//         snippet: {
+//           title,
+//           categoryId: 22,
+//         },
+//       },
+//     })
+//     .then(
+//       response => {
+//         console.log('updateVideo response.data -->', response.data);
+//         res.send(response.data);
+//       },
+//       err => {
+//         console.error('Execute error', err);
+//       },
+//     );
+// });
 
 configPassport(app, express);
 
