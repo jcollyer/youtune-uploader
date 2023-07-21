@@ -44,10 +44,6 @@ var corsOptionsDelegate = function (req, callback) {
 }
 
 app.use((req, res, next) => {
-  const origin = req.get('referer');
-  // const isWhitelisted = whitelist.find(w => origin && origin.includes(w));
-  // if (isWhitelisted) {
-  // }
 
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
     res.setHeader('Access-Control-Allow-Origin', req.header('Origin'));
@@ -302,7 +298,7 @@ app.get('/oauth2callback', (req, res) => {
 
           // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
           // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
-          res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
+          // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
           res.cookie('userPlaylistId', playlistId, {
             maxAge: 900000,
             domain:
@@ -317,9 +313,9 @@ app.get('/oauth2callback', (req, res) => {
                 ? 'localhost'
                 : 'youtune-uploader.vercel.app',
           });
-          res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
+          // res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
           // hack to close the window
-          // res.send('<script>window.close();</script > ');
+          res.send('<script>window.close();</script > ');
           // res.redirect('http//localhost:3000/home');
 
           if (req.query.state) {
