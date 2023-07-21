@@ -6,6 +6,7 @@ import { cookieSet, login, logout } from '../actions/user';
 import { dispatchError } from '../../utils/api';
 import {
   connectYouTube,
+  getPlaylist,
   setCookie,
   postRegister,
   postLogin,
@@ -100,6 +101,13 @@ export const attemptCookie = cookie => dispatch =>
 
 export const attemptConnectYT = () => dispatch =>
   connectYouTube()
+    .then(data => {
+      console.log('----------data-->', data);
+    })
+    .catch(dispatchError(dispatch));
+
+export const attemptGetPlaylist = () => dispatch =>
+  getPlaylist()
     .then(data => {
       console.log('----------data-->', data);
     })

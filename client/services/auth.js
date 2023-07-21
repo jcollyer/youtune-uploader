@@ -34,3 +34,9 @@ export const connectYouTube = () =>
       // window.location.href = data.text;
     })
     .catch(handleError);
+
+export const getPlaylist = () =>
+  request
+    .post('/api/auth/getPlaylist')
+    .then(handleSuccess)
+    .catch(handleError);

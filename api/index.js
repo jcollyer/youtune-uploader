@@ -277,78 +277,79 @@ const sendToYT = (
   }
 };
 console.log('-------server-->', process.env.NODE_ENV === 'development');
-app.get('/oauth2callback', (req, res) => {
-  oAuth.getToken(req.query.code, (err, tokens) => {
-    if (err) {
-      console.log('err');
-      return;
-    }
+// app.get('/oauth2callback', (req, res) => {
+//   oAuth.getToken(req.query.code, (err, tokens) => {
+//     if (err) {
+//       console.log('err');
+//       return;
+//     }
 
-    console.log('-------tokens------>', tokens);
-    oAuth.setCredentials(tokens);
-    return (userPlaylistId = youtube.channels
-      .list({
-        part: ['contentDetails'],
-        mine: true,
-      })
-      .then(
-        response => {
-          const playlistId =
-            response.data.items[0].contentDetails.relatedPlaylists.uploads;
+//     console.log('-------tokens------>', tokens);
+//     oAuth.setCredentials(tokens);
+//     return (userPlaylistId = youtube.channels
+//       .list({
+//         part: ['contentDetails'],
+//         mine: true,
+//       })
+//       .then(
+//         response => {
+//           const playlistId =
+//             response.data.items[0].contentDetails.relatedPlaylists.uploads;
 
-          // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
-          // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
-          // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
-          res.cookie('userPlaylistId', playlistId, {
-            maxAge: 900000,
-            domain:
-              process.env.NODE_ENV === 'development'
-                ? 'localhost'
-                : 'youtune-uploader.vercel.app',
-          });
-          res.cookie('tokens', tokens, {
-            maxAge: 900000,
-            domain:
-              process.env.NODE_ENV === 'development'
-                ? 'localhost'
-                : 'youtune-uploader.vercel.app',
-          });
-          // res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
-          // hack to close the window
-          res.send('<script>window.close();</script > ');
-          // res.redirect('http//localhost:3000/home');
+//           // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
+//           // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
+//           // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
+//           res.cookie('userPlaylistId', playlistId, {
+//             maxAge: 900000,
+//             domain:
+//               process.env.NODE_ENV === 'development'
+//                 ? 'localhost'
+//                 : 'youtune-uploader.vercel.app',
+//           });
+//           res.cookie('tokens', tokens, {
+//             maxAge: 900000,
+//             domain:
+//               process.env.NODE_ENV === 'development'
+//                 ? 'localhost'
+//                 : 'youtune-uploader.vercel.app',
+//           });
+//           // res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
+//           // hack to close the window
+//           res.send('<script>window.close();</script>');
+//           // res.redirect('http//localhost:3000/home');
 
-          if (req.query.state) {
-            const {
-              filename,
-              title,
-              description,
-              videoQue,
-              scheduleDate,
-              categoryId,
-              tags,
-            } = JSON.parse(req.query.state);
-            return sendToYT(
-              videoQue,
-              filename,
-              title,
-              description,
-              scheduleDate,
-              categoryId,
-              tags,
-            );
-          }
-        },
-        err => {
-          console.error('Execute error', err);
-        },
-      ));
-  });
-});
+//           if (req.query.state) {
+//             const {
+//               filename,
+//               title,
+//               description,
+//               videoQue,
+//               scheduleDate,
+//               categoryId,
+//               tags,
+//             } = JSON.parse(req.query.state);
+//             return sendToYT(
+//               videoQue,
+//               filename,
+//               title,
+//               description,
+//               scheduleDate,
+//               categoryId,
+//               tags,
+//             );
+//           }
+//         },
+//         err => {
+//           console.error('Execute error', err);
+//         },
+//       ));
+//   });
+// });
 
 app.post('/getPlaylistId', (req, res) => {
   const { tokens } = req.body;
   const jsonTokens = JSON.parse(tokens.split('j:')[1]);
+  console.log('-----------ddd----->>>', tokens)
   oAuth.setCredentials(jsonTokens);
   return (userPlaylistId = youtube.channels
     .list({
