@@ -107,6 +107,17 @@ router.post('/someCookie', (req, res) => {
   res.send({ message: 'Set Cookie' });
 });
 
+router.post('/connectYouTube', (req, res) => {
+  const oAuthUrl = oAuth.generateAuthUrl({
+    access_type: 'offline',
+    scope:
+      'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+  });
+
+  console.log('-----------from /connectYouTube', oAuthUrl);
+  res.send(oAuthUrl);
+});
+
 router.get('/oauth2callback', (req, res) => {
   oAuth.getToken(req.query.code, (err, tokens) => {
     if (err) {
@@ -133,9 +144,6 @@ router.get('/oauth2callback', (req, res) => {
           const playlistId =
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
 
-          // res.setHeader('Set-Cookie', ['ck=value; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly']);
-          // res.cookie('cookiename', 'cookievalue', { maxAge: 900000, httpOnly: true, secure: true, domain: process.env.NODE_ENV === 'development' ? 'localhost' : 'youtune-uploader.vercel.app' });
-          // res.setHeader('Set-Cookie', ['ck=value; Expires="Session"; HttpOnly=true;']);
           res.cookie('userPlaylistId', playlistId, {
             maxAge: 900000,
             domain:
@@ -143,10 +151,8 @@ router.get('/oauth2callback', (req, res) => {
                 ? 'localhost'
                 : 'youtune-uploader.vercel.app',
           });
-          // res.json({my_token: 'asdfgh-anything-jw-token-qwerty'})
           // hack to close the window
           res.send('<script>window.close();</script>');
-          // res.redirect('http//localhost:3000/home');
 
           if (req.query.state) {
             const {
@@ -176,55 +182,18 @@ router.get('/oauth2callback', (req, res) => {
   });
 });
 
-router.post('/getPlaylist', (req, res) => {
-  const tokens = req.headers.cookie.split('; ')[2];
-  const jsonTokens = JSON.parse(decodeURIComponent(tokens.split('=j%3A')[1]));
-  console.log('-------------------ss-->', jsonTokens);
-  oAuth.setCredentials(jsonTokens);
-
-  return (userPlaylistId = youtube.channels
-    .list({
-      part: ['contentDetails'],
-      mine: true,
-    })
-    .then(
-      response => {
-        // return the uploads playlist id
-        const playlistId =
-          response.data.items[0].contentDetails.relatedPlaylists.uploads;
-        // const playlistId = 33333;
-        res.cookie('userPlaylistId', playlistId, {
-          maxAge: 900000,
-          httpOnly: false,
-        });
-        res.send(playlistId);
-      },
-      err => {
-        console.error('Execute error', err);
-      },
-    ));
-});
-
-router.post('/connectYouTube', (req, res) => {
-  const oAuthUrl = oAuth.generateAuthUrl({
-    access_type: 'offline',
-    scope:
-      'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
-  });
-
-  console.log('-----------from /connectYouTube', oAuthUrl);
-  res.send(oAuthUrl);
-});
-
 router.post('/getUnlisted', (req, res) => {
-  const tokens = req.headers.cookie.split('; ')[2];
-  const jsonTokens = JSON.parse(decodeURIComponent(tokens.split('=j%3A')[1]));
-  console.log('-------------------ss-->', jsonTokens);
+  const { playlistId } = req.body;
+  const { cookie } = req.headers;
+  const jsTokenCookie = cookie.split('; ').find(token => {
+    return token.startsWith('tokens=');
+  });
+  const jsonTokens = JSON.parse(
+    decodeURIComponent(jsTokenCookie.split('tokens=j%3A')[1]),
+  );
+  console.log('-------------------/getUnlisted-->', jsonTokens);
   oAuth.setCredentials(jsonTokens);
 
-  
-  console.log('--------------getunlisted------------->', req.body);
-  const { playlistId } = req.body;
   youtube.playlistItems
     .list({
       part: ['status, id, contentDetails'],
