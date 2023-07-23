@@ -3,7 +3,7 @@ const multer = require('multer');
 const fs = require('fs');
 
 const storage = multer.diskStorage({
-    destination: './tmp',
+    destination: './',
     filename(req, file, cb) {
       console.log('------storage------>', file);
       const newFilename = `${uuid()}-${file.originalname}`;
