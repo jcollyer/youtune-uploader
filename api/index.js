@@ -8,10 +8,24 @@ require('../server/database');
 
 const routes = require('./routes/index.js');
 const configPassport = require('../server/passport/config');
+const youtube = require('youtube-api');
+const creds = require('../client-secret.json');
+const {sendToYT, uploadVideoFile} = require('./utils/youtube');
+
 
 const assetFolder = path.resolve(__dirname, '../dist/');
 const port = process.env.PORT;
 const app = express();
+
+const isDev = process.env.NODE_ENV === 'development';
+
+
+const oAuth = youtube.authenticate({
+  type: 'oauth',
+  client_id: creds.web.client_id,
+  client_secret: creds.web.client_secret,
+  redirect_url: isDev ? creds.web.redirect_uris[0] : creds.web.redirect_uris[2],
+});
 
 const corsOptions = {
   origin: [
@@ -46,67 +60,121 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.static(assetFolder));
 
-// const storage = multer.diskStorage({
-//   destination: './',
-//   filename(req, file, cb) {
-//     console.log('------storage------>', file);
-//     const newFilename = `${uuid()}-${file.originalname}`;
-//     cb(null, newFilename);
-//   },
-// });
+app.post('/uploadVideo', uploadVideoFile, (req, res) => {
+  if (req.files) {
+    const {
+      title,
+      description,
+      scheduleDate,
+      categoryId,
+      tags,
+      playlistToken,
+      userToken,
+    } = req.body;
+    const filename = req.files;
+    const videoQue = Object.keys(filename).length;
 
-// const uploadVideoFile = multer({
-//   storage,
-// }).array('file');
+    if (playlistToken !== 'undefined' && userToken !== 'undefined') {
+      console.log('--------------server, has playlistToken and userToken');
+      const jsonTokens = JSON.parse(userToken.split('j:')[1]);
+      oAuth.setCredentials(jsonTokens);
+      return sendToYT(
+        youtube,
+        videoQue,
+        req.files,
+        title,
+        description,
+        scheduleDate,
+        categoryId,
+        tags,
+      );
+    }
+    res.setHeader('Set-Cookie', [
+      'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
+    ]);
+    return res.send(
+      oAuth.generateAuthUrl({
+        access_type: 'offline',
+        scope:
+          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
+        state: JSON.stringify({
+          filename: req.files,
+          title,
+          description,
+          scheduleDate,
+          categoryId,
+          tags,
+          videoQue,
+        }),
+      }),
+    );
+  }
+});
 
-// app.post('/uploadVideo', uploadVideoFile, (req, res) => {
-//   if (req.files) {
-//     const {
-//       title,
-//       description,
-//       scheduleDate,
-//       categoryId,
-//       tags,
-//       playlistToken,
-//       userToken,
-//     } = req.body;
-//     const filename = req.files;
-//     const videoQue = Object.keys(filename).length;
+app.get('/oauth2callback', (req, res) => {
+  oAuth.getToken(req.query.code, (err, tokens) => {
+    if (err) {
+      console.log('err');
+      return;
+    }
 
-//     if (playlistToken !== 'undefined' && userToken !== 'undefined') {
-//       const jsonTokens = JSON.parse(userToken.split('j:')[1]);
-//       oAuth.setCredentials(jsonTokens);
-//       return sendToYT(
-//         videoQue,
-//         req.files,
-//         title,
-//         description,
-//         scheduleDate,
-//         categoryId,
-//         tags,
-//       );
-//     }
-//     res.setHeader('Set-Cookie', [
-//       'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
-//     ]);
-//     return res.send(
-//       oAuth.generateAuthUrl({
-//         access_type: 'offline',
-//         scope:
-//           'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload',
-//         state: JSON.stringify({
-//           filename: req.files,
-//           title,
-//           description,
-//           scheduleDate,
-//           categoryId,
-//           tags,
-//           videoQue,
-//         }),
-//       }),
-//     );
-//   }
-// });
+    console.log('-------tokens------>', tokens.refresh_token);
+    oAuth.setCredentials(tokens);
+    res.cookie('tokens', tokens, {
+      maxAge: 900000,
+      domain:
+        process.env.NODE_ENV === 'development'
+          ? 'localhost'
+          : 'youtune-uploader.vercel.app',
+    });
+    return (userPlaylistId = youtube.channels
+      .list({
+        part: ['contentDetails'],
+        mine: true,
+      })
+      .then(
+        response => {
+          const playlistId =
+            response.data.items[0].contentDetails.relatedPlaylists.uploads;
+
+          res.cookie('userPlaylistId', playlistId, {
+            maxAge: 900000,
+            domain:
+              process.env.NODE_ENV === 'development'
+                ? 'localhost'
+                : 'youtune-uploader.vercel.app',
+          });
+          // hack to close the window
+          res.send('<script>window.close();</script>');
+
+          if (req.query.state) {
+            const {
+              filename,
+              title,
+              description,
+              videoQue,
+              scheduleDate,
+              categoryId,
+              tags,
+            } = JSON.parse(req.query.state);
+            return sendToYT(
+              youtube,
+              videoQue,
+              filename,
+              title,
+              description,
+              scheduleDate,
+              categoryId,
+              tags,
+            );
+          }
+        },
+        err => {
+          console.error('Execute error', err);
+        },
+      ));
+  });
+});
 
 // const sendToYT = (
 //   videoQue,
