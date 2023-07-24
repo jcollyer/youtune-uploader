@@ -94,9 +94,7 @@ app.post('/uploadVideo', uploadVideoFile, (req, res) => {
         tags,
       );
     }
-    res.setHeader('Set-Cookie', [
-      'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
-    ]);
+
     return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
