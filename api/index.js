@@ -24,7 +24,7 @@ const oAuth = youtube.authenticate({
   type: 'oauth',
   client_id: creds.web.client_id,
   client_secret: creds.web.client_secret,
-  redirect_url: isDev ? creds.web.redirect_uris[0] : creds.web.redirect_uris[2],
+  redirect_url: isDev ? creds.web.redirect_uris[0] : creds.web.redirect_uris[0],
 });
 
 const corsOptions = {
