@@ -40,6 +40,7 @@ app.use(cors(corsOptions));
 const allowlist = ['https://youtune-uploader.vercel.app', 'http://localhost:3000'];
 
 app.use((req, res, next) => {
+  console.log('------------------>>', req.header('Origin'))
   if (allowlist.indexOf(req.header('Origin')) !== -1) {
     res.setHeader('Access-Control-Allow-Origin', req.header('Origin'));
   }
