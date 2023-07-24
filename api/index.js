@@ -60,6 +60,11 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.static(assetFolder));
 
+app.post('/helloworld', (req, res) => {
+  console.log('--------helloworld----->', req.body);
+  res.send('Hello World!');
+});
+
 app.post('/uploadVideo', uploadVideoFile, (req, res) => {
   if (req.files) {
     const {

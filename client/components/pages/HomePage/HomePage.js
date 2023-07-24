@@ -62,6 +62,13 @@ export default function HomePage() {
     });
   };
 
+  const onConnectHW = (event) => {
+    event.preventDefault();
+    axios.post('http://localhost:3000/helloworld').then(response => {
+      console.log('--------data from helloworld', response.data);
+    });
+  };
+
   return (
     <div className="flex flex-col m-auto text-center">
       {scheduledVideos.length === 0 && (
@@ -76,6 +83,15 @@ export default function HomePage() {
               className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
             >
               CONNECT
+            </button>
+          </form>
+          <form action="helloworld" method="post">
+            <button
+              type="submit"
+              onClick={onConnectHW}
+              className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
+            >
+              hello world
             </button>
           </form>
         </div>
