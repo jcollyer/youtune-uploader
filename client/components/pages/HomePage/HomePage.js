@@ -64,7 +64,7 @@ export default function HomePage() {
 
   const onConnectHW = (event) => {
     event.preventDefault();
-    axios.post('http://localhost:3000/helloworld').then(response => {
+    axios.post('/helloworld').then(response => {
       console.log('--------data from helloworld', response.data);
     });
   };
