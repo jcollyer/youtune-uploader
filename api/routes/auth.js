@@ -93,16 +93,16 @@ router.post('/logout', (req, res) => {
   });
 });
 
-router.post('/connectYouTube', (req, res) => {
-  const oAuthUrl = oAuth.generateAuthUrl({
-    access_type: 'offline',
-    scope:
-      'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
-  });
+// router.post('/connectYouTube', (req, res) => {
+//   const oAuthUrl = oAuth.generateAuthUrl({
+//     access_type: 'offline',
+//     scope:
+//       'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+//   });
 
-  console.log('-----------from /connectYouTube', oAuthUrl);
-  res.send(oAuthUrl);
-});
+//   console.log('-----------from /connectYouTube', oAuthUrl);
+//   res.send(oAuthUrl);
+// });
 
 // router.get('/oauth2callback', (req, res) => {
 //   oAuth.getToken(req.query.code, (err, tokens) => {
@@ -179,7 +179,7 @@ router.post('/getUnlisted', (req, res) => {
     decodeURIComponent(jsTokenCookie.split('tokens=j%3A')[1]),
   );
   console.log('-------------------/getUnlisted-->', jsonTokens);
-  oAuth.setCredentials(jsonTokens);
+  // oAuth.setCredentials(jsonTokens);
 
   youtube.playlistItems
     .list({
@@ -282,7 +282,7 @@ router.post('/updateVideo', (req, res) => {
     decodeURIComponent(jsTokenCookie.split('tokens=j%3A')[1]),
   );
   console.log('-------------------/updateVideo-->', jsonTokens);
-  oAuth.setCredentials(jsonTokens);
+  // oAuth.setCredentials(jsonTokens);
   console.log('--------/updateVideo--->', videoId, title);
   return youtube.videos
     .update({
