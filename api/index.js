@@ -10,15 +10,13 @@ const routes = require('./routes/index.js');
 const configPassport = require('../server/passport/config');
 const youtube = require('youtube-api');
 const creds = require('../client-secret.json');
-const {sendToYT, uploadVideoFile} = require('./utils/youtube');
-
+const { sendToYT, uploadVideoFile } = require('./utils/youtube');
 
 const assetFolder = path.resolve(__dirname, '../dist/');
 const port = process.env.PORT;
 const app = express();
 
 const isDev = process.env.NODE_ENV === 'development';
-
 
 const oAuth = youtube.authenticate({
   type: 'oauth',
@@ -37,17 +35,18 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-const allowlist = ['https://youtune-uploader.vercel.app', 'http://localhost:3000'];
+const allowlist = [
+  'https://youtune-uploader.vercel.app',
+  'http://localhost:3000',
+];
 
 app.use((req, res, next) => {
-  if (req.header('Origin')) {
-    const headerOrigin = req.headers.referer.split('/').slice(0, 3).join('/');
-    console.log('---------- header origin -------->>', headerOrigin )
-    if (allowlist.indexOf(headerOrigin) !== -1) {
-      res.setHeader('Access-Control-Allow-Origin', req.header('Origin'));
-    }
-
+  const headerOrigin = req.headers.referer?.split('/')?.slice(0, 3)?.join('/');
+  console.log('---------- header origin -------->>', headerOrigin);
+  if (allowlist.indexOf(headerOrigin) !== -1) {
+    res.setHeader('Access-Control-Allow-Origin', headerOrigin);
   }
+
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, OPTIONS, PUT, PATCH, DELETE',
