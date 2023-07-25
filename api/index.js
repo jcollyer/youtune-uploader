@@ -54,4 +54,7 @@ configPassport(app, express);
 
 app.use('/', routes);
 
+app.use(express.static(__dirname + '/tmp'));
+app.use('/tmp', express.static('tmp'));
+
 app.listen(port, () => console.log(`Server is listening on port ${port}`));
