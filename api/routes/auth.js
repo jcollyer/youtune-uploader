@@ -1,9 +1,9 @@
 const express = require('express');
 const passport = require('passport');
 const { User } = require('../../server/database/schemas');
-// const youtube = require('youtube-api');
-// const creds = require('../../client-secret.json');
-const {sendToYT, uploadVideoFile, storage} = require('../utils/youtube');
+const youtube = require('youtube-api');
+const creds = require('../../client-secret.json');
+const { sendToYT, uploadVideoFile } = require('../utils/youtube');
 
 const router = express.Router();
 
@@ -11,12 +11,12 @@ module.exports = router;
 
 const isDev = process.env.NODE_ENV === 'development';
 
-// const oAuth = youtube.authenticate({
-//   type: 'oauth',
-//   client_id: creds.web.client_id,
-//   client_secret: creds.web.client_secret,
-//   redirect_url: isDev ? creds.web.redirect_uris[1] : creds.web.redirect_uris[2],
-// });
+const oAuth = youtube.authenticate({
+  type: 'oauth',
+  client_id: creds.web.client_id,
+  client_secret: creds.web.client_secret,
+  redirect_url: isDev ? creds.web.redirect_uris[1] : creds.web.redirect_uris[2],
+});
 
 router.post('/register', async (req, res) => {
   if (!req || !req.body || !req.body.username || !req.body.password) {
@@ -104,70 +104,70 @@ router.post('/connectYouTube', (req, res) => {
   res.send(oAuthUrl);
 });
 
-// router.get('/oauth2callback', (req, res) => {
-//   oAuth.getToken(req.query.code, (err, tokens) => {
-//     if (err) {
-//       console.log('err');
-//       return;
-//     }
+router.get('/oauth2callback', (req, res) => {
+  oAuth.getToken(req.query.code, (err, tokens) => {
+    if (err) {
+      console.log('err');
+      return;
+    }
 
-//     console.log('-------tokens------>', tokens.refresh_token);
-//     oAuth.setCredentials(tokens);
-//     res.cookie('tokens', tokens, {
-//       maxAge: 900000,
-//       domain:
-//         process.env.NODE_ENV === 'development'
-//           ? 'localhost'
-//           : 'youtune-uploader.vercel.app',
-//     });
-//     return (userPlaylistId = youtube.channels
-//       .list({
-//         part: ['contentDetails'],
-//         mine: true,
-//       })
-//       .then(
-//         response => {
-//           const playlistId =
-//             response.data.items[0].contentDetails.relatedPlaylists.uploads;
+    console.log('-------tokens------>', tokens.refresh_token);
+    oAuth.setCredentials(tokens);
+    res.cookie('tokens', tokens, {
+      maxAge: 900000,
+      domain:
+        process.env.NODE_ENV === 'development'
+          ? 'localhost'
+          : 'youtune-uploader.vercel.app',
+    });
+    return (userPlaylistId = youtube.channels
+      .list({
+        part: ['contentDetails'],
+        mine: true,
+      })
+      .then(
+        response => {
+          const playlistId =
+            response.data.items[0].contentDetails.relatedPlaylists.uploads;
 
-//           res.cookie('userPlaylistId', playlistId, {
-//             maxAge: 900000,
-//             domain:
-//               process.env.NODE_ENV === 'development'
-//                 ? 'localhost'
-//                 : 'youtune-uploader.vercel.app',
-//           });
-//           // hack to close the window
-//           res.send('<script>window.close();</script>');
+          res.cookie('userPlaylistId', playlistId, {
+            maxAge: 900000,
+            domain:
+              process.env.NODE_ENV === 'development'
+                ? 'localhost'
+                : 'youtune-uploader.vercel.app',
+          });
+          // hack to close the window
+          res.send('<script>window.close();</script>');
 
-//           if (req.query.state) {
-//             const {
-//               filename,
-//               title,
-//               description,
-//               videoQue,
-//               scheduleDate,
-//               categoryId,
-//               tags,
-//             } = JSON.parse(req.query.state);
-//             return sendToYT(
-//               youtube,
-//               videoQue,
-//               filename,
-//               title,
-//               description,
-//               scheduleDate,
-//               categoryId,
-//               tags,
-//             );
-//           }
-//         },
-//         err => {
-//           console.error('Execute error', err);
-//         },
-//       ));
-//   });
-// });
+          if (req.query.state) {
+            const {
+              filename,
+              title,
+              description,
+              videoQue,
+              scheduleDate,
+              categoryId,
+              tags,
+            } = JSON.parse(req.query.state);
+            return sendToYT(
+              youtube,
+              videoQue,
+              filename,
+              title,
+              description,
+              scheduleDate,
+              categoryId,
+              tags,
+            );
+          }
+        },
+        err => {
+          console.error('Execute error', err);
+        },
+      ));
+  });
+});
 
 router.post('/getUnlisted', (req, res) => {
   const { playlistId } = req.body;
@@ -222,55 +222,60 @@ router.post('/getUnlisted', (req, res) => {
     );
 });
 
-// router.post('/uploadVideo', uploadVideoFile, (req, res) => {
-//   if (req.files) {
-//     const {
-//       title,
-//       description,
-//       scheduleDate,
-//       categoryId,
-//       tags,
-//       playlistToken,
-//       tokens,
-//     } = req.body;
-//     const filename = req.files;
-//     const videoQue = Object.keys(filename).length;
+router.post('/uploadVideo', uploadVideoFile, (req, res) => {
+  if (req.files) {
+    const {
+      title,
+      description,
+      scheduleDate,
+      categoryId,
+      tags,
+      playlistToken,
+      tokens,
+    } = req.body;
+    const filename = req.files;
+    const videoQue = Object.keys(filename).length;
 
-//     if (!!playlistToken && !!tokens) {
-//       const jsonTokens = JSON.parse(tokens.split('j:')[1]);
-//       oAuth.setCredentials(jsonTokens);
-//       return sendToYT(
-//         youtube,
-//         videoQue,
-//         req.files,
-//         title,
-//         description,
-//         scheduleDate,
-//         categoryId,
-//         tags,
-//       );
-//     }
-//     res.setHeader('Set-Cookie', [
-//       'upload=video; Expires=Wed, 19 Jul 2023 12:55:17 GMT; HttpOnly;',
-//     ]);
-//     return res.send(
-//       oAuth.generateAuthUrl({
-//         access_type: 'offline',
-//         scope:
-//           'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
-//         state: JSON.stringify({
-//           filename: req.files,
-//           title,
-//           description,
-//           scheduleDate,
-//           categoryId,
-//           tags,
-//           videoQue,
-//         }),
-//       }),
-//     );
-//   }
-// });
+    if (!!playlistToken && !!tokens) {
+      const jsonTokens = JSON.parse(tokens.split('j:')[1]);
+      oAuth.setCredentials(jsonTokens);
+      return sendToYT(
+        youtube,
+        videoQue,
+        req.files,
+        title,
+        description,
+        scheduleDate,
+        categoryId,
+        tags,
+      );
+    }
+    res.cookie('upload', 'video', {
+      maxAge: 900000,
+      domain:
+        process.env.NODE_ENV === 'development'
+          ? 'localhost'
+          : 'youtune-uploader.vercel.app',
+    });
+
+    return res.send(
+      oAuth.generateAuthUrl({
+        access_type: 'offline',
+        scope:
+          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+        state: JSON.stringify({
+          filename: req.files,
+          title,
+          description,
+          scheduleDate,
+          categoryId,
+          tags,
+          videoQue,
+        }),
+      }),
+    );
+  }
+});
 
 router.post('/updateVideo', (req, res) => {
   const { videoId, title } = req.body;
