@@ -43,7 +43,7 @@ export default function UploadPage() {
             scheduleDate: '',
             category: '',
             tags: '',
-            thumbnail: '/images/transparent.png',
+            // thumbnail: '/images/transparent.png',
           },
         ]);
       });
@@ -82,9 +82,9 @@ export default function UploadPage() {
           Categories.filter(c => c.label === video.category)[0]?.id,
         );
         formData.append('tags', video.tags);
-        formData.append('thumbnail', video.thumbnail);
+        // formData.append('thumbnail', video.thumbnail);
         formData.append('playlistToken', playlistToken);
-        formData.append('userToken', tokens);
+        formData.append('tokens', tokens);
       });
 
       axios
