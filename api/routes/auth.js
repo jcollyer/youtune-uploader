@@ -12,7 +12,7 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const oAuth = youtube.authenticate({
   type: 'oauth',
-  client_id: process.env.DATABASE_URL,
+  client_id: process.env.CLIENT_ID,
   client_secret: process.env.CLIENT_SECRET,
   redirect_url: isDev ? process.env.REDIRECT_URIS_LOCAL : process.env.REDIRECT_URIS_PROD,
 });
