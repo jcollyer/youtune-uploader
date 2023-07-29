@@ -17,14 +17,14 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',
     'https://youtune-uploader-collyerdesign-gmailcom.vercel.app',
-    'https://youtune-uploader.vercel.app',
+    'https://mern-yt-uploader-5be9c88deb19.herokuapp.com',
   ],
 };
 
 app.use(cors(corsOptions));
 
 const allowlist = [
-  'https://youtune-uploader.vercel.app',
+  'https://mern-yt-uploader-5be9c88deb19.herokuapp.com',
   'http://localhost:3000',
 ];
 

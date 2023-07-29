@@ -2,7 +2,6 @@ const express = require('express');
 const passport = require('passport');
 const { User } = require('../../server/database/schemas');
 const youtube = require('youtube-api');
-const creds = require('../../client-secret.json');
 const { sendToYT, uploadVideoFile } = require('../utils/youtube');
 
 const router = express.Router();
@@ -13,9 +12,9 @@ const isDev = process.env.NODE_ENV === 'development';
 
 const oAuth = youtube.authenticate({
   type: 'oauth',
-  client_id: creds.web.client_id,
-  client_secret: creds.web.client_secret,
-  redirect_url: isDev ? creds.web.redirect_uris[1] : creds.web.redirect_uris[2],
+  client_id: process.env.DATABASE_URL,
+  client_secret: process.env.CLIENT_SECRET,
+  redirect_url: isDev ? process.env.REDIRECT_URIS_LOCAL : process.env.REDIRECT_URIS_PROD,
 });
 
 router.post('/register', async (req, res) => {
@@ -118,7 +117,7 @@ router.get('/oauth2callback', (req, res) => {
       domain:
         process.env.NODE_ENV === 'development'
           ? 'localhost'
-          : 'youtune-uploader.vercel.app',
+          : 'mern-yt-uploader-5be9c88deb19.herokuapp.com',
     });
     return (userPlaylistId = youtube.channels
       .list({
@@ -135,7 +134,7 @@ router.get('/oauth2callback', (req, res) => {
             domain:
               process.env.NODE_ENV === 'development'
                 ? 'localhost'
-                : 'youtune-uploader.vercel.app',
+                : 'mern-yt-uploader-5be9c88deb19.herokuapp.com',
           });
           // hack to close the window
           res.send('<script>window.close();</script>');
@@ -255,7 +254,7 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
       domain:
         process.env.NODE_ENV === 'development'
           ? 'localhost'
-          : 'youtune-uploader.vercel.app',
+          : 'mern-yt-uploader-5be9c88deb19.herokuapp.com',
     });
 
     return res.send(
