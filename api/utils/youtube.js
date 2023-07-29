@@ -29,7 +29,8 @@ const sendToYT = (
 ) => {
   let index = -1;
   if (videoQue === 0) {
-    process.exit();
+    // process.exit();
+    res.status(200).send('ok');
   } else {
     index++;
     videoQue--;

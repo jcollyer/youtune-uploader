@@ -235,8 +235,8 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
     } = req.body;
     const filename = req.files;
     const videoQue = Object.keys(filename).length;
-    console.log('---->------------------', playlistToken, tokens)
-    if (!!playlistToken && !!tokens) {
+
+    if (playlistToken !== 'undefined' && tokens !== 'undefined') {
       const jsonTokens = JSON.parse(tokens.split('j:')[1]);
       oAuth.setCredentials(jsonTokens);
       return sendToYT(
