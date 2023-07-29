@@ -12,7 +12,6 @@
     "start:client": "./scripts/watch-dev.sh",
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
-    "server": "nodemon ./api/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "./scripts/test.sh",
