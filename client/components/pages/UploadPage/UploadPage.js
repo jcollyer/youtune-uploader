@@ -25,10 +25,19 @@ export default function UploadPage() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [videos, setVideos] = useState([]);
-  const [playlistToken] = useState(
-    Cookies.get('userPlaylistId'),
-  );
+  const [playlistToken] = useState(Cookies.get('userPlaylistId'));
   const [tokens] = useState(Cookies.get('tokens'));
+  const [progress, setProgress] = useState(0);
+
+  const uploadConfig = {
+    onUploadProgress: progressEvent => {
+      const percentCompleted = Math.round(
+        (progressEvent.loaded * 100) / progressEvent.total,
+      );
+
+      setProgress(percentCompleted);
+    },
+  };
 
   const onDrop = useCallback(acceptedFiles => {
     if (acceptedFiles.length) {
@@ -87,16 +96,16 @@ export default function UploadPage() {
         formData.append('tokens', tokens);
       });
 
-      axios
-        .post('api/auth/uploadVideo', formData)
-        .then(response => {
-          console.log('axios->', response.data);
+      axios.post('api/auth/uploadVideo', formData, uploadConfig).then(response => {
+        console.log('axios->', response.data);
+        if (!tokens) {
           window.open(
             response.data,
             'SomeAuthentication',
             'width=672,height=660,modal=yes,alwaysRaised=yes',
           );
-        });
+        }
+      });
 
       setVideos([]);
     }
@@ -260,6 +269,12 @@ export default function UploadPage() {
           </button>
         )}
       </form>
+      <div className="w-full h-4 mb-4 bg-gray-200 rounded-full dark:bg-gray-700">
+        <div
+          className="h-4 bg-gray-400 rounded-full dark:bg-gray-600"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
     </div>
   );
 }

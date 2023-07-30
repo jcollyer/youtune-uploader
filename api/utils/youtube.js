@@ -18,6 +18,7 @@ const uploadVideoFile = multer({
 }).array('file');
 
 const sendToYT = (
+  res,
   youtube,
   videoQue,
   files,
@@ -29,7 +30,7 @@ const sendToYT = (
 ) => {
   let index = -1;
   if (videoQue === 0) {
-    // process.exit();
+    console.log('return 200');
     res.status(200).send('ok');
   } else {
     index++;
@@ -42,64 +43,55 @@ const sendToYT = (
         ? description[index]
         : description,
       title: Array.isArray(title) ? title[index] : title,
-      // scheduleDate: Array.isArray(scheduleDate)
-      //   ? new Date(scheduleDate[index])?.toISOString()
-      //   : new Date(scheduleDate)?.toISOString(),
-      categoryId: Array.isArray(categoryId) ? categoryId[index] : categoryId,
+      scheduleDate: Array.isArray(scheduleDate)
+        ? new Date(scheduleDate[index])?.toISOString() || new Date().toISOString()
+        : new Date(scheduleDate)?.toISOString() || new Date().toISOString(),
+      categoryId: Array.isArray(categoryId) ? categoryId[index] || 1 : categoryId || 1,
       tags: Array.isArray(tags) ? tags[index] : tags,
     });
 
-    youtube.videos.insert(
-      {
-        part: 'id,snippet,status',
-        notifySubscribers: false,
-        requestBody: {
-          snippet: {
-            title: Array.isArray(title) ? title[index] : title,
-            description: Array.isArray(description)
-              ? description[index]
-              : description,
-            categoryId: Array.isArray(categoryId)
-              ? categoryId[index]
-              : categoryId,
-            tags: Array.isArray(tags) ? tags[index] : tags,
-          },
-          status: {
-            privacyStatus: 'private',
-            // publishAt: Array.isArray(scheduleDate)
-            //   ? new Date(scheduleDate[index]).toISOString()
-            //   : new Date(scheduleDate).toISOString(),
-          },
-        },
-        media: {
-          body: fs.createReadStream(`/tmp/${files[index].filename}`),
-        },
-      },
-      // {
-      //   // Use the `onUploadProgress` event from Axios to track the
-      //   // number of bytes uploaded to this point.
-      //   onUploadProgress: evt => {
-      //     const progress = (evt.bytesRead / fileSize) * 100;
-      //     readline.clearLine(process.stdout, 0);
-      //     readline.cursorTo(process.stdout, 0, null);
-      //     process.stdout.write(`${Math.round(progress)}% complete`);
-      //   },
-      // },
-      (err, data) => {
-        console.log(err, data);
-        console.log('Done');
-        sendToYT(
-          youtube,
-          videoQue,
-          files,
-          title,
-          description,
-          scheduleDate,
-          categoryId,
-          tags,
-        );
-      },
-    );
+    // youtube.videos.insert(
+    //   {
+    //     part: 'id,snippet,status',
+    //     notifySubscribers: false,
+    //     requestBody: {
+    //       snippet: {
+    //         title: Array.isArray(title) ? title[index] : title,
+    //         description: Array.isArray(description)
+    //           ? description[index] || ''
+    //           : description || '',
+    //         categoryId: Array.isArray(categoryId)
+    //           ? categoryId[index] || 1
+    //           : categoryId || 1,
+    //         tags: Array.isArray(tags) ? tags[index] : tags,
+    //       },
+    //       status: {
+    //         privacyStatus: 'private',
+    //         // publishAt: Array.isArray(scheduleDate)
+    //         //   ? new Date(scheduleDate[index]).toISOString()
+    //         //   : new Date(scheduleDate).toISOString(),
+    //       },
+    //     },
+    //     media: {
+    //       body: fs.createReadStream(`/tmp/${files[index].filename}`),
+    //     },
+    //   },
+    //   (err, data) => {
+    //     console.log(err, data);
+    //     console.log('Done');
+    //     sendToYT(
+    //       res,
+    //       youtube,
+    //       videoQue,
+    //       files,
+    //       title,
+    //       description,
+    //       scheduleDate,
+    //       categoryId,
+    //       tags,
+    //     );
+    //   },
+    // );
   }
 };
 
