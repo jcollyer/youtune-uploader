@@ -9,6 +9,8 @@ import moment from 'moment';
 import Cookies from 'js-cookie';
 import Categories from '../../../services/categories';
 
+const transparentImage = require('../../../assets/images/transparent.png');
+
 export default function UploadPage() {
   const dispatch = useDispatch();
   const { user } = useSelector(R.pick(['user']));
@@ -52,7 +54,7 @@ export default function UploadPage() {
             scheduleDate: '',
             category: '',
             tags: '',
-            // thumbnail: '/images/transparent.png',
+            thumbnail: transparentImage,
           },
         ]);
       });
@@ -83,18 +85,18 @@ export default function UploadPage() {
       const formData = new FormData();
       videos.forEach(video => {
         formData.append('file', video.file);
-        formData.append('title', video.title);
-        formData.append('description', video.description);
-        formData.append('scheduleDate', video.scheduleDate);
+        formData.append('title', video.title || '');
+        formData.append('description', video.description || '');
+        formData.append('scheduleDate', video.scheduleDate || new Date().toDateString());
         formData.append(
           'categoryId',
-          Categories.filter(c => c.label === video.category)[0]?.id,
+          Categories.filter(c => c.label === video.category)[0]?.id || 1,
         );
         formData.append('tags', video.tags);
-        // formData.append('thumbnail', video.thumbnail);
-        formData.append('playlistToken', playlistToken);
-        formData.append('tokens', tokens);
+        formData.append('thumbnail', video.thumbnail);
       });
+      formData.append('playlistToken', playlistToken);
+      formData.append('tokens', tokens);
 
       axios.post('api/auth/uploadVideo', formData, uploadConfig).then(response => {
         console.log('axios->', response.data);

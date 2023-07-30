@@ -150,7 +150,6 @@ router.get('/oauth2callback', (req, res) => {
               tags,
             } = JSON.parse(req.query.state);
             return sendToYT(
-              res,
               youtube,
               videoQue,
               filename,
@@ -232,10 +231,10 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
     const videoQue = Object.keys(filename).length;
 
     if (playlistToken !== 'undefined' && tokens !== 'undefined') {
+      console.log('----------tokens----->', tokens)
       const jsonTokens = JSON.parse(tokens.split('j:')[1]);
       oAuth.setCredentials(jsonTokens);
       return sendToYT(
-        res,
         youtube,
         videoQue,
         req.files,
