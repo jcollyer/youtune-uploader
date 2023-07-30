@@ -3,12 +3,14 @@ const passport = require('passport');
 const { User } = require('../../server/database/schemas');
 const youtube = require('youtube-api');
 const { sendToYT, uploadVideoFile } = require('../utils/youtube');
+require('dotenv').config()
 
 const router = express.Router();
 
 module.exports = router;
 
 const isDev = process.env.NODE_ENV === 'development';
+const scope = 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube';
 
 const oAuth = youtube.authenticate({
   type: 'oauth',
@@ -95,11 +97,9 @@ router.post('/logout', (req, res) => {
 router.post('/connectYouTube', (req, res) => {
   const oAuthUrl = oAuth.generateAuthUrl({
     access_type: 'offline',
-    scope:
-      'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+    scope,
   });
 
-  console.log('-----------from /connectYouTube', oAuthUrl);
   res.send(oAuthUrl);
 });
 
@@ -177,7 +177,7 @@ router.post('/getUnlisted', (req, res) => {
   const jsonTokens = JSON.parse(
     decodeURIComponent(jsTokenCookie.split('tokens=j%3A')[1]),
   );
-  console.log('-------------------/getUnlisted-->', jsonTokens);
+
   oAuth.setCredentials(jsonTokens);
 
   youtube.playlistItems
@@ -199,15 +199,10 @@ router.post('/getUnlisted', (req, res) => {
           .then(
             response => {
               const videos = response.data.items;
-              const unlistedVideos = videos.filter(
-                video => video.status.privacyStatus === 'private',
-              );
-
-              const scheduledVideos = unlistedVideos.filter(video => {
-                console.log('------date', video.status.publishAt);
-                return new Date(video.status.publishAt) >= new Date();
+              // Get scheduled and published videos
+              const scheduledVideos = videos.filter(video => {
+                return new Date(video.status.publishAt) >= new Date() || new Date(video.snippet.publishedAt) <= new Date();
               });
-
               res.send(scheduledVideos);
             },
             err => {
@@ -260,8 +255,7 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
     return res.send(
       oAuth.generateAuthUrl({
         access_type: 'offline',
-        scope:
-          'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube',
+        scope,
         state: JSON.stringify({
           filename: req.files,
           title,

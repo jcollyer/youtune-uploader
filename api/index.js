@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const fs = require('fs');
 
 require('../server/config/environment');
 require('../server/database');
@@ -16,7 +15,6 @@ const app = express();
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://youtune-uploader-collyerdesign-gmailcom.vercel.app',
     'https://mern-yt-uploader-5be9c88deb19.herokuapp.com',
   ],
 };
@@ -24,8 +22,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const allowlist = [
-  'https://mern-yt-uploader-5be9c88deb19.herokuapp.com',
   'http://localhost:3000',
+  'https://mern-yt-uploader-5be9c88deb19.herokuapp.com',
 ];
 
 app.use((req, res, next) => {

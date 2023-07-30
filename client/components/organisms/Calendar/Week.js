@@ -14,8 +14,15 @@ export function Week({ date, month, select, selected, scheduledVideos, editVideo
     };
     const videoScheduled = scheduledVideos.filter(
     /* eslint-disable */ 
-      video =>
-        video.status.publishAt.split('T')[0] === date.format('YYYY-MM-DD'),
+      video => {
+        if (video.status.publishAt) {
+          return video.status.publishAt.split('T')[0] === date.format('YYYY-MM-DD');
+        };
+
+        if(video.snippet.publishedAt) {
+          return video.snippet.publishedAt.split('T')[0] === date.format('YYYY-MM-DD');
+        };
+      }
     );
 
     days.push(
