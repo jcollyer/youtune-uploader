@@ -1,7 +1,9 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
-const { requireAuth } = require('./middleware');
 const { User } = require('../../server/database/schemas');
+
+const requireAuth = (req, res, next) =>
+  req.isAuthenticated() ? next() : res.status(401).send({ message: 'User not authenticated' });
 
 const router = express.Router();
 

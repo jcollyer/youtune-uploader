@@ -55,4 +55,9 @@ app.use('/', routes);
 app.use(express.static(__dirname + '/tmp'));
 app.use('/tmp', express.static('tmp'));
 
+app.use(function (err, req, res) {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
+
 app.listen(port, () => console.log(`Server is listening on port ${port}`));

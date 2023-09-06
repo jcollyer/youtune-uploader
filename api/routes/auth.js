@@ -3,20 +3,23 @@ const passport = require('passport');
 const { User } = require('../../server/database/schemas');
 const youtube = require('youtube-api');
 const { sendToYT, uploadVideoFile } = require('../utils/youtube');
-require('dotenv').config()
+require('dotenv').config();
 
 const router = express.Router();
 
 module.exports = router;
 
 const isDev = process.env.NODE_ENV === 'development';
-const scope = 'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube';
+const scope =
+  'https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube';
 
 const oAuth = youtube.authenticate({
   type: 'oauth',
   client_id: process.env.CLIENT_ID,
   client_secret: process.env.CLIENT_SECRET,
-  redirect_url: isDev ? process.env.REDIRECT_URIS_LOCAL : process.env.REDIRECT_URIS_PROD,
+  redirect_url: isDev
+    ? process.env.REDIRECT_URIS_LOCAL
+    : process.env.REDIRECT_URIS_PROD,
 });
 
 router.post('/register', async (req, res) => {
@@ -113,7 +116,8 @@ router.get('/oauth2callback', (req, res) => {
     console.log('-------tokens------>', tokens.refresh_token);
     oAuth.setCredentials(tokens);
     res.cookie('tokens', tokens, {
-      maxAge: 900000,
+      // set cookie for a year
+      maxAge: new Date(Date.now() + 2592000),
       domain:
         process.env.NODE_ENV === 'development'
           ? 'localhost'
@@ -130,7 +134,8 @@ router.get('/oauth2callback', (req, res) => {
             response.data.items[0].contentDetails.relatedPlaylists.uploads;
 
           res.cookie('userPlaylistId', playlistId, {
-            maxAge: 900000,
+            // set cookie for a year
+            maxAge: new Date(Date.now() + 2592000),
             domain:
               process.env.NODE_ENV === 'development'
                 ? 'localhost'
@@ -201,7 +206,10 @@ router.post('/getUnlisted', (req, res) => {
               const videos = response.data.items;
               // Get scheduled and published videos
               const scheduledVideos = videos.filter(video => {
-                return new Date(video.status.publishAt) >= new Date() || new Date(video.snippet.publishedAt) <= new Date();
+                return (
+                  new Date(video.status.publishAt) >= new Date() ||
+                  new Date(video.snippet.publishedAt) <= new Date()
+                );
               });
               res.send(scheduledVideos);
             },
@@ -231,7 +239,7 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
     const videoQue = Object.keys(filename).length;
 
     if (playlistToken !== 'undefined' && tokens !== 'undefined') {
-      console.log('----------tokens----->', tokens)
+      console.log('----------tokens----->', tokens);
       const jsonTokens = JSON.parse(tokens.split('j:')[1]);
       oAuth.setCredentials(jsonTokens);
       return sendToYT(
@@ -272,7 +280,8 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
 });
 
 router.post('/updateVideo', (req, res) => {
-  const { videoId, title } = req.body;
+  const { videoId, title, description, categoryId, scheduleDate, tags } =
+    req.body;
   const { cookie } = req.headers;
   const jsTokenCookie = cookie.split('; ').find(token => {
     return token.startsWith('tokens=');
@@ -280,9 +289,7 @@ router.post('/updateVideo', (req, res) => {
   const jsonTokens = JSON.parse(
     decodeURIComponent(jsTokenCookie.split('tokens=j%3A')[1]),
   );
-  console.log('-------------------/updateVideo-->', jsonTokens);
   oAuth.setCredentials(jsonTokens);
-  console.log('--------/updateVideo--->', videoId, title);
   return youtube.videos
     .update({
       part: 'id,snippet,status',
@@ -290,7 +297,13 @@ router.post('/updateVideo', (req, res) => {
         id: videoId,
         snippet: {
           title,
-          categoryId: 22,
+          description,
+          categoryId,
+          tags,
+        },
+        status: {
+          privacyStatus: 'private',
+          publishAt: scheduleDate,
         },
       },
     })
@@ -304,4 +317,3 @@ router.post('/updateVideo', (req, res) => {
       },
     );
 });
-
