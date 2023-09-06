@@ -8,38 +8,38 @@
 npm install
 
 # Install MongoDB
-brew tap mongodb/brew
-brew install mongodb-community
+$ brew tap mongodb/brew
+$ brew install mongodb-community
 ```
 
 Start the database
 ```bash
-brew services start mongodb-community
+$ brew services start mongodb-community
 ```
 
 #### for Development
 
 Start the client
 ```bash
-npm run start:client
+$ npm run start:client
 ```
 
 Start the server
 ```bash
-npm run start:server
+$ npm run start:server
 ```
 
 #### for Production
 
 ```bash
-npm run build
-npm start:server
+$ npm run build
+$ npm start:server
 ```
 
-#### for Deployment
+#### for Deployment to Heroku
 
 ```bash
-vercel
+$ git push heroku master
 ```
 
 #### Other Commands
