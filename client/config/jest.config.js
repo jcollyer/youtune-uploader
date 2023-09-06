@@ -13,15 +13,13 @@ module.exports = {
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
   rootDir: path.join(__dirname, '../..'),
-  setupFilesAfterEnv: [
-    '<rootDir>/client/config/jest.setup.js',
-  ],
+  setupFilesAfterEnv: ['<rootDir>/client/config/jest.setup.js'],
   testEnvironment: 'jsdom',
   testMatch: [path.join(__dirname, '../../**/?(*.)+(spec|test).[tj]s?(x)')],
   transform: {
     '^.+\\.[tj]sx?$': 'babel-jest',
-    // eslint-disable-next-line
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/client/config/assetsTransformer.js',
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
+      '<rootDir>/client/config/assetsTransformer.js',
   },
   transformIgnorePatterns: [
     '[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$',
