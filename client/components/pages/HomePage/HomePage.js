@@ -34,9 +34,6 @@ export default function HomePage() {
     let lastCookie = Cookies.get('userPlaylistId');
     setInterval(() => {
       const userPlaylistId = Cookies.get('userPlaylistId');
-      const cookiename = Cookies.get('cookiename');
-      const tokens = Cookies.get('tokens');
-      console.log('--------------->>', { userPlaylistId, cookiename, tokens });
       if (userPlaylistId !== lastCookie) {
         try {
           callback({ oldValue: lastCookie, newValue: userPlaylistId });
@@ -47,7 +44,7 @@ export default function HomePage() {
     }, interval);
   };
 
-  const onConnectYTClick = (event) => {
+  const onConnectYTClick = event => {
     event.preventDefault();
     listenCookieChange(({ oldValue, newValue }) => {
       console.log(`Cookie changed from "${oldValue}" to "${newValue}"`);
@@ -56,10 +53,11 @@ export default function HomePage() {
       }
     }, 1000);
 
-    axios.post('/api/auth/connectYouTube').then(response => {
-      console.log('--------data from connectYouTube', response.data);
-      window.open(response.data, 'oauth window', 'width=500,height=500');
-    });
+    axios
+      .post('/api/auth/connectYouTube')
+      .then(response =>
+        window.open(response.data, 'oauth window', 'width=500,height=500'),
+      );
   };
 
   return (
@@ -73,16 +71,18 @@ export default function HomePage() {
             <button
               type="submit"
               onClick={onConnectYTClick}
-              className="bg-orange-500 rounded font-bold text-white mx-auto p-4"
+              className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
             >
               CONNECT
             </button>
           </form>
         </div>
       )}
-      {playlistToken && <p>authenticated!</p>}
       {scheduledVideos.length > 0 && (
-        <Calendar scheduledVideos={scheduledVideos} />
+        <Calendar
+          scheduledVideos={scheduledVideos}
+          setLocallScheduledVideoData={setscheduledVideos}
+        />
       )}
     </div>
   );

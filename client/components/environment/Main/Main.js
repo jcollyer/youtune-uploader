@@ -49,7 +49,6 @@ export default function Main() {
             <Route path="login" element={<LoginPage />} />
             <Route path="register" element={<RegisterPage />} />
             <Route path="home" element={<HomePage />} />
-            {/* <Route path="todo" element={<TodoPage />} /> */}
             <Route path="upload" element={<UploadPage />} />
             <Route path="settings/*" element={<SettingsPage />} />
             <Route path="*" element={<LostPage />} />

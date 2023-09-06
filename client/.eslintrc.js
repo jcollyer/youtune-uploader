@@ -54,6 +54,8 @@ module.exports = {
     'react/destructuring-assignment': 0,
     'react/forbid-prop-types': 0,
     'react/jsx-boolean-value': 0,
+    ' react/jsx-curly-newline': 0,
+    'react/jsx-curly-brace-presence': 0,
     'react/jsx-props-no-spreading': 0,
     'react/state-in-constructor': 0,
     'react/static-property-placement': 0,

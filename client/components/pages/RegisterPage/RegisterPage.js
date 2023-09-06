@@ -160,7 +160,7 @@ export default function RegisterPage() {
       <br />
       <div className="has-text-right">
         <button
-          className="bg-orange-500 p-2 rounded font-bold text-white w-full"
+          className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
           onClick={register}
           disabled={!passwordValid || !usernameAvailable}
           type="button"

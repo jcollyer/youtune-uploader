@@ -4,7 +4,7 @@ export default function FooterComponent() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="p-6 bg-gray-300 text-center">
+    <footer className="p-10 bg-slate-800 text-center text-white">
       <p>{`Copyright Ⓒ ${year} Carrot Cake. All Rights Reserved.`}</p>
     </footer>
   );

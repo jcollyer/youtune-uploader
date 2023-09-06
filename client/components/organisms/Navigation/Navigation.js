@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import * as R from 'ramda';
 
@@ -10,7 +10,6 @@ import Title from 'react-bulma-companion/lib/Title';
 import UserDropdown from '../../molecules/UserDropdown';
 
 export default function Navigation() {
-  const { pathname } = useLocation();
   const { user } = useSelector(R.pick(['user']));
 
   const [auth, setAuth] = useState(!R.isEmpty(user));
@@ -34,6 +33,13 @@ export default function Navigation() {
         >
           <img src="/images/icon.png" width="36" height="36" alt="icon" />
         </Navbar.Item>
+        <Navbar.Item
+          to={auth ? '/upload' : '/'}
+          aria-label="main navigation"
+          component={Link}
+        >
+          <img src="/images/yt-shorts-logo.png" width="25" height="25" alt="icon" />
+        </Navbar.Item>
         <div className="navbar-brand-right">
           {!auth && (
             <Navbar.Item
@@ -51,7 +57,7 @@ export default function Navigation() {
               component={Link}
             >
               <button
-                className="bg-orange-500 p-2 rounded font-bold text-white"
+                className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
                 type="button"
               >
                 Sign Up
@@ -80,26 +86,6 @@ export default function Navigation() {
 
       {auth ? (
         <Navbar.Menu className="bg-gray-800">
-          <Navbar.Start>
-            <Navbar.Item
-              className="is-hidden-mobile"
-              to="/home"
-              active={pathname === '/home'}
-              tab
-              component={Link}
-            >
-              <Title size="6">Home</Title>
-            </Navbar.Item>
-            <Navbar.Item
-              className="is-hidden-mobile"
-              to="/settings"
-              active={pathname === '/settings'}
-              tab
-              component={Link}
-            >
-              <Title size="6">Settings</Title>
-            </Navbar.Item>
-          </Navbar.Start>
           <Navbar.End>
             <Navbar.Item
               onClick={toggleDropdown}
@@ -125,7 +111,7 @@ export default function Navigation() {
             </Navbar.Item>
             <Navbar.Item to="/register" component={Link}>
               <button
-                className="bg-orange-500 p-2 rounded font-bold text-white"
+                className="font-bold py-2 px-4 rounded border bg-orange-500 border-orange-500 text-white"
                 type="button"
               >
                 Sign Up

@@ -17,6 +17,6 @@
         "react"
     ],
     "rules": {
-        "import/no-relative-packages": "warn"
+        "import/no-relative-packages": "warn",
     }
 }

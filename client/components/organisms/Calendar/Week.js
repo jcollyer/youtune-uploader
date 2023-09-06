@@ -2,7 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Day } from './Day';
 
-export function Week({ date, month, select, selected, scheduledVideos, editVideo }) {
+export function Week({
+  date,
+  month,
+  select,
+  selected,
+  scheduledVideos,
+  editVideo,
+}) {
   const days = [];
   for (let i = 0; i < 7; i++) {
     const day = {
@@ -13,16 +20,21 @@ export function Week({ date, month, select, selected, scheduledVideos, editVideo
       date,
     };
     const videoScheduled = scheduledVideos.filter(
-    /* eslint-disable */ 
+      /* eslint-disable */
       video => {
         if (video.status.publishAt) {
-          return video.status.publishAt.split('T')[0] === date.format('YYYY-MM-DD');
-        };
+          return (
+            video.status.publishAt.split('T')[0] === date.format('YYYY-MM-DD')
+          );
+        }
 
-        if(video.snippet.publishedAt) {
-          return video.snippet.publishedAt.split('T')[0] === date.format('YYYY-MM-DD');
-        };
-      }
+        if (video.snippet.publishedAt) {
+          return (
+            video.snippet.publishedAt.split('T')[0] ===
+            date.format('YYYY-MM-DD')
+          );
+        }
+      },
     );
 
     days.push(
@@ -36,7 +48,6 @@ export function Week({ date, month, select, selected, scheduledVideos, editVideo
       />,
     );
 
-    /* eslint-disable */
     date = date.clone();
     date.add(1, 'day');
   }

@@ -9,7 +9,7 @@ import Container from 'react-bulma-companion/lib/Container';
 import Columns from 'react-bulma-companion/lib/Columns';
 import Column from 'react-bulma-companion/lib/Column';
 
-import SettingsMenu from './SettingsMenu';
+import SettingsMenu from './SettingsMenu/SettingsMenu';
 import ProfileSettings from './ProfileSettings';
 import AccountSettings from './AccountSettings';
 

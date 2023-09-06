@@ -83,7 +83,7 @@ export default function LoginPage() {
       <br />
       <Control className="is-clearfix">
         <button
-          className="bg-orange-500 p-2 rounded font-bold text-white w-full"
+          className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
           type="button"
           onClick={login}
         >
