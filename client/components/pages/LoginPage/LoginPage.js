@@ -56,46 +56,48 @@ export default function LoginPage() {
   const updatePassword = e => setPassword(e.target.value);
 
   return (
-    <section className="bg-white w-96 mx-auto mt-64 py-8 px-12 rounded-xl">
-      <h3 className="mb-8 text-5xl">Login</h3>
-      <p>
-        Not Registered Yet?&nbsp;
-        <Link to="/register">Create an account.</Link>
-      </p>
-      <br />
-      <FormInput
-        onChange={updateUsername}
-        placeholder="Username"
-        value={username}
-        leftIcon={faUser}
-        style={{ height: '33px' }}
-      />
-      <FormInput
-        onChange={updatePassword}
-        placeholder="Password"
-        value={password}
-        leftIcon={faLock}
-        type="password"
-      />
-      <p>
-        <Link to="/recovery">Forgot your password?</Link>
-      </p>
-      <br />
-      <Control className="is-clearfix">
-        <button
-          className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
-          type="button"
-          onClick={login}
-        >
-          Login
-        </button>
+    <section className="pt-64">
+      <div className="bg-white w-96 mx-auto py-8 px-12 rounded-xl">
+        <h3 className="mb-8 text-5xl">Login</h3>
+        <p>
+          Not Registered Yet?&nbsp;
+          <Link to="/register">Create an account.</Link>
+        </p>
         <br />
+        <FormInput
+          onChange={updateUsername}
+          placeholder="Username"
+          value={username}
+          leftIcon={faUser}
+          style={{ height: '33px' }}
+        />
+        <FormInput
+          onChange={updatePassword}
+          placeholder="Password"
+          value={password}
+          leftIcon={faLock}
+          type="password"
+        />
+        <p>
+          <Link to="/recovery">Forgot your password?</Link>
+        </p>
         <br />
-        <Checkbox>
-          <input type="checkbox" onChange={rememberMe} checked={remember} />
-          <span>&nbsp; Remember me</span>
-        </Checkbox>
-      </Control>
+        <Control className="is-clearfix">
+          <button
+            className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
+            type="button"
+            onClick={login}
+          >
+            Login
+          </button>
+          <br />
+          <br />
+          <Checkbox>
+            <input type="checkbox" onChange={rememberMe} checked={remember} />
+            <span>&nbsp; Remember me</span>
+          </Checkbox>
+        </Control>
+      </div>
     </section>
   );
 }

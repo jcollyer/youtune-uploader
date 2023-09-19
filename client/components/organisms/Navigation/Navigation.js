@@ -25,7 +25,7 @@ export default function Navigation() {
 
   return (
     <Navbar fixed="top">
-      <Navbar.Brand className="bg-gray-800">
+      <Navbar.Brand>
         <Navbar.Item
           to={auth ? '/home' : '/'}
           aria-label="main navigation"
@@ -85,7 +85,7 @@ export default function Navigation() {
       </Navbar.Brand>
 
       {auth ? (
-        <Navbar.Menu className="bg-gray-800">
+        <Navbar.Menu>
           <Navbar.End>
             <Navbar.Item
               onClick={toggleDropdown}
@@ -104,7 +104,7 @@ export default function Navigation() {
           </Navbar.End>
         </Navbar.Menu>
       ) : (
-        <Navbar.Menu className="bg-gray-800">
+        <Navbar.Menu>
           <Navbar.End>
             <Navbar.Item to="/login" component={Link}>
               <Title size="6">Login</Title>

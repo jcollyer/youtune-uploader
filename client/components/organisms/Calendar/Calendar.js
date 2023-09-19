@@ -123,7 +123,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
   };
 
   return (
-    <section className="calendar mt-6">
+    <section className="calendar">
       <header className="header">
         <div className="month-display row">
           <CaretLeftOutlined

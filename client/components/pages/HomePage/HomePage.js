@@ -63,7 +63,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col m-auto text-center">
       {scheduledVideos.length === 0 && (
-        <div>
+        <div className="pt-64">
           <form action="connectYouTube" method="post">
             <h3 className="text-center mt-20 text-3xl mb-12">
               Connect your YouTube account to get started!

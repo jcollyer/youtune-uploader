@@ -42,8 +42,8 @@ export default function Main() {
     !loading && (
       <React.Fragment>
         <ReactNotifications />
-        <Navigation />
         <div className={styles.root}>
+          <Navigation />
           <Routes>
             <Route path="/" element={<WelcomePage />} />
             <Route path="login" element={<LoginPage />} />

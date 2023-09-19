@@ -16,6 +16,7 @@ export default function UploadPage() {
   const { user } = useSelector(R.pick(['user']));
 
   const [loading, setLoading] = useState(true);
+  console.log(loading, 'loading');
 
   useEffect(() => {
     if (R.isEmpty(user)) {
@@ -155,12 +156,11 @@ export default function UploadPage() {
     }
   };
 
-  console.log('---------', { videos, loading });
   return (
     <div className="flex flex-col max-w-xl m-auto">
       <h3 className="text-center mt-20 text-3xl mb-12">Upload Video</h3>
       <form action="uploadVideo" method="post" encType="multipart/form-data">
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: 'rgba(255,255,255,0.4)' }}>
           <div
             style={{
               width: '100%',
@@ -204,9 +204,10 @@ export default function UploadPage() {
               key={video.id}
               className={`${
                 activeIndex === index ? 'active bg-gray-100' : ''
-              } flex flex-row p-4 border-b border-slate-300`}
+              } flex flex-row p-4 border-b border-slate-400`}
+              style={{ background: 'rgba(255,255,255, 0.4)' }}
             >
-              <div className="border-r flex-row mr-2 pr-2">
+              <div className="border-r border-slate-400 flex-row mr-2 pr-2">
                 <div>{video.file?.name}</div>
 
                 <div>{`${Math.round(video.file.size / 100000) / 10}MB`}</div>
@@ -286,7 +287,7 @@ export default function UploadPage() {
                     <p className="text-slate-400 mr-2">Category:</p>
                     <select
                       onChange={event => updateInput(event, 'category')}
-                      className="outline-0 bg-transparent border-slate-300 rounded"
+                      className="outline-0 bg-transparent border-slate-400 rounded"
                       name="category"
                       value={videos[activeIndex]?.category}
                       placeholder="Category"

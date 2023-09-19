@@ -89,84 +89,86 @@ export default function RegisterPage() {
   useKeyPress('Enter', register);
 
   return (
-    <section className="bg-white w-96 mx-auto mt-64 py-8 px-12 rounded-xl">
-      <h3 className="mb-8 text-5xl">Sign Up</h3>
-      <p>
-        Already a member?&nbsp;
-        <Link to="/login">Login</Link>
-      </p>
-      <br />
-      <Field>
-        <Label htmlFor="username">Username</Label>
-        <Control iconsRight>
-          <Input
-            id="username"
-            placeholder="Username"
-            color={
-              username ? (usernameAvailable ? 'success' : 'danger') : undefined
-            }
-            value={username}
-            onChange={handleUsernameChange}
-          />
+    <section className="pt-64">
+      <div className="bg-white w-96 mx-auto py-8 px-12 rounded-xl">
+        <h3 className="mb-8 text-5xl">Sign Up</h3>
+        <p>
+          Already a member?&nbsp;
+          <Link to="/login">Login</Link>
+        </p>
+        <br />
+        <Field>
+          <Label htmlFor="username">Username</Label>
+          <Control iconsRight>
+            <Input
+              id="username"
+              placeholder="Username"
+              color={
+                username ? (usernameAvailable ? 'success' : 'danger') : undefined
+              }
+              value={username}
+              onChange={handleUsernameChange}
+            />
+            {username && (
+              <Icon
+                size="small"
+                align="right"
+                color={usernameAvailable ? 'success' : 'danger'}
+              >
+                <FontAwesomeIcon
+                  icon={usernameAvailable ? faCheck : faTriangleExclamation}
+                />
+              </Icon>
+            )}
+          </Control>
           {username && (
-            <Icon
-              size="small"
-              align="right"
-              color={usernameAvailable ? 'success' : 'danger'}
-            >
-              <FontAwesomeIcon
-                icon={usernameAvailable ? faCheck : faTriangleExclamation}
-              />
-            </Icon>
+            <Help color={usernameAvailable ? 'success' : 'danger'}>
+              {usernameMessage}
+            </Help>
           )}
-        </Control>
-        {username && (
-          <Help color={usernameAvailable ? 'success' : 'danger'}>
-            {usernameMessage}
-          </Help>
-        )}
-      </Field>
-      <Field>
-        <Label htmlFor="password">Password</Label>
-        <Control iconsRight>
-          <Input
-            id="password"
-            placeholder="Password"
-            type="password"
-            color={
-              password ? (passwordValid ? 'success' : 'danger') : undefined
-            }
-            value={password}
-            onChange={handlePasswordChange}
-          />
+        </Field>
+        <Field>
+          <Label htmlFor="password">Password</Label>
+          <Control iconsRight>
+            <Input
+              id="password"
+              placeholder="Password"
+              type="password"
+              color={
+                password ? (passwordValid ? 'success' : 'danger') : undefined
+              }
+              value={password}
+              onChange={handlePasswordChange}
+            />
+            {password && (
+              <Icon
+                size="small"
+                align="right"
+                color={passwordValid ? 'success' : 'danger'}
+              >
+                <FontAwesomeIcon
+                  icon={passwordValid ? faCheck : faTriangleExclamation}
+                />
+              </Icon>
+            )}
+          </Control>
           {password && (
-            <Icon
-              size="small"
-              align="right"
-              color={passwordValid ? 'success' : 'danger'}
-            >
-              <FontAwesomeIcon
-                icon={passwordValid ? faCheck : faTriangleExclamation}
-              />
-            </Icon>
+            <Help color={passwordValid ? 'success' : 'danger'}>
+              {passwordMessage}
+            </Help>
           )}
-        </Control>
-        {password && (
-          <Help color={passwordValid ? 'success' : 'danger'}>
-            {passwordMessage}
-          </Help>
-        )}
-      </Field>
-      <br />
-      <div className="has-text-right">
-        <button
-          className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
-          onClick={register}
-          disabled={!passwordValid || !usernameAvailable}
-          type="button"
-        >
-          Create Account
-        </button>
+        </Field>
+        <br />
+        <div className="has-text-right">
+          <button
+            className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
+            onClick={register}
+            disabled={!passwordValid || !usernameAvailable}
+            type="button"
+          >
+            Create Account
+          </button>
+        </div>
       </div>
     </section>
   );

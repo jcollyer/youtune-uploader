@@ -15,7 +15,7 @@ export default function WelcomePage() {
 
   return (
     <div className="flex flex-col">
-      <h1 className="text-8xl text-center pt-20 text-orange-400">
+      <h1 className="text-8xl text-center pt-40 text-white">
         Carrot Cake
       </h1>
       <div
