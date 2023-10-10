@@ -1,0 +1,48 @@
+.info-block {
+    display: flex;
+}
+
+.fancy-text {
+    margin: 90px auto 0;
+    float: left;
+    color: mix(#fff, #FA873E, 85%);
+    font-size: calc(1em + 10vw);
+    font-weight: 900;
+    text-shadow:-22.0075em 0.0075em 0 #F5C456, 
+    0.005em 0.005em 0 #FED3A6, 
+    0.01em 0.01em 0 #F6823A, 
+    0.015em 0.015em #FA873E, 
+    0.02em 0.02em 0 #FA853C, 
+    0.025em 0.025em 0 #F9813B, 
+    0.03em 0.03em 0 #F6A466, 
+    0.035em 0.035em 0 #F5AD62;
+}
+
+.info {
+    margin: 70px auto 100px;
+    width: 420px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+}
+
+.info-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 25px 0;
+}
+
+.description-block {
+    width: 360px;
+}
+
+.info-icon {
+    float: left;
+}
+
+.info-description {
+    font-size: 23px;
+    margin: 1px 0px 0 8px;
+    font-weight: 600;
+    color: white;
+}
