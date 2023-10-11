@@ -7,7 +7,6 @@ const storage = multer.diskStorage({
     cb(null, '/tmp');
   },
   filename(req, file, cb) {
-    console.log('------storage------>', file);
     const newFilename = `${uuid()}-${file.originalname}`;
     cb(null, newFilename);
   },

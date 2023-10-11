@@ -108,12 +108,8 @@ router.post('/connectYouTube', (req, res) => {
 
 router.get('/oauth2callback', (req, res) => {
   oAuth.getToken(req.query.code, (err, tokens) => {
-    if (err) {
-      console.log('err');
-      return;
-    }
+    if (err) throw Error(err);
 
-    console.log('-------tokens------>', tokens.refresh_token);
     oAuth.setCredentials(tokens);
     res.cookie('tokens', tokens, {
       // set cookie for a year
@@ -239,7 +235,6 @@ router.post('/uploadVideo', uploadVideoFile, (req, res) => {
     const videoQue = Object.keys(filename).length;
 
     if (playlistToken !== 'undefined' && tokens !== 'undefined') {
-      console.log('----------tokens----->', tokens);
       const jsonTokens = JSON.parse(tokens.split('j:')[1]);
       oAuth.setCredentials(jsonTokens);
       return sendToYT(
@@ -309,7 +304,6 @@ router.post('/updateVideo', (req, res) => {
     })
     .then(
       response => {
-        console.log('updateVideo response.data -->', response.data);
         res.send(response.data);
       },
       err => {

@@ -10,7 +10,6 @@ import { getUser } from '../../services/getUser';
 export const attemptGetUser = () => dispatch =>
   getUser()
     .then(data => {
-      console.log('--------', data, '--------');
       dispatch(updateUser(snakeToCamelCase(data.user)));
       return data.user;
     })
