@@ -16,8 +16,6 @@ import Navigation from '../../organisms/Navigation';
 import Footer from '../../organisms/Footer';
 import { attemptGetUser } from '../../../store/thunks/user';
 
-import styles from './styles.module.css';
-
 export default function Main() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
@@ -42,7 +40,7 @@ export default function Main() {
     !loading && (
       <React.Fragment>
         <ReactNotifications />
-        <div className={styles.root}>
+        <div className="root">
           <Navigation />
           <Routes>
             <Route path="/" element={<WelcomePage />} />
