@@ -1,12 +1,11 @@
 import { snakeToCamelCase } from 'json-style-converter/es5';
 import * as R from 'ramda';
-
 import { setTodos, addTodo, toggleCompleteTodo, updateTodo, removeTodo } from '../actions/todos';
-
 import { dispatchError } from '../../utils/api';
 import { getTodos, postTodo, putToggleCompleteTodo, putTodo, deleteTodo } from '../../services/todos';
+import { AppDispatch } from '..';
 
-export const attemptGetTodos = () => dispatch =>
+export const attemptGetTodos = () => (dispatch:AppDispatch) =>
   getTodos()
     .then(data => {
       const todos = R.map(todo =>
@@ -17,17 +16,17 @@ export const attemptGetTodos = () => dispatch =>
     })
     .catch(dispatchError(dispatch));
 
-export const attemptAddTodo = text => dispatch =>
+export const attemptAddTodo = (text:string) => (dispatch:AppDispatch) =>
   postTodo({ text })
     .then(data => {
-      const todo = R.omit(['Id'], R.assoc('id', data.todo._id, snakeToCamelCase(data.todo)));
+      const todo = <any>R.omit(['Id'], R.assoc('id', data.todo._id, snakeToCamelCase(data.todo)));
 
       dispatch(addTodo(todo));
       return data.user;
     })
     .catch(dispatchError(dispatch));
 
-export const attemptToggleCompleteTodo = id => dispatch =>
+export const attemptToggleCompleteTodo = (id:number) => (dispatch:AppDispatch) =>
   putToggleCompleteTodo({ id })
     .then(data => {
       dispatch(toggleCompleteTodo(id));
@@ -35,7 +34,7 @@ export const attemptToggleCompleteTodo = id => dispatch =>
     })
     .catch(dispatchError(dispatch));
 
-export const attemptUpdateTodo = (id, text) => dispatch =>
+export const attemptUpdateTodo = (id:number, text:string) => (dispatch:AppDispatch) =>
   putTodo({ id, text })
     .then(data => {
       dispatch(updateTodo({ id, text, updatedAt: data.todo.updated_at }));
@@ -43,7 +42,7 @@ export const attemptUpdateTodo = (id, text) => dispatch =>
     })
     .catch(dispatchError(dispatch));
 
-export const attemptDeleteTodo = id => dispatch =>
+export const attemptDeleteTodo = (id:number) => (dispatch:AppDispatch) =>
   deleteTodo({ id })
     .then(data => {
       dispatch(removeTodo(id));

@@ -22,7 +22,7 @@ export default function AddTodo() {
 
   useKeyPress('Enter', handleAddTodo);
 
-  const updateText = e => setText(e.target.value);
+  const updateText = (e:React.ChangeEvent<HTMLInputElement>) => setText(e.target.value);
 
   return (
     <Columns className="add-todo" gapless>

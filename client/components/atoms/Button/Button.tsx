@@ -1,14 +1,39 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export default function Button(props) {
+type Props = {
+  className: string,
+  style: any,
+  label: string,
+  type: string,
+  size: string,
+  onClick: () => any,
+  outlined: boolean,
+  inverted: boolean,
+  rounded: boolean,
+  hovered: boolean,
+  focused: boolean,
+  active: boolean,
+  loading: boolean,
+  static: boolean,
+  disabled: boolean,
+};
+
+type typeMapProps = {
+  [key: string]: string,
+};
+
+type sizeMapProps = {
+  [key: string]: string,
+};
+
+export default function Button(props:Props) {
   const {
     className, onClick, label, style, type, size, outlined,
     inverted, rounded, hovered, focused, active, loading, disabled,
   } = props;
 
-  const typeMap = {
+  const typeMap:typeMapProps = {
     info: 'is-info',
     primary: 'is-primary',
     success: 'is-success',
@@ -16,7 +41,7 @@ export default function Button(props) {
     danger: 'is-danger',
   };
 
-  const sizeMap = {
+  const sizeMap:sizeMapProps = {
     small: 'is-small',
     normal: '',
     medium: 'is-medium',
@@ -53,39 +78,3 @@ export default function Button(props) {
     </button>
   );
 }
-
-Button.propTypes = {
-  className: PropTypes.string,
-  style: PropTypes.object,
-  onClick: PropTypes.func,
-  label: PropTypes.string,
-  type: PropTypes.string,
-  size: PropTypes.string,
-  outlined: PropTypes.bool,
-  inverted: PropTypes.bool,
-  rounded: PropTypes.bool,
-  hovered: PropTypes.bool,
-  focused: PropTypes.bool,
-  active: PropTypes.bool,
-  loading: PropTypes.bool,
-  static: PropTypes.bool,
-  disabled: PropTypes.bool,
-};
-
-Button.defaultProps = {
-  className: '',
-  style: {},
-  label: '',
-  type: 'info',
-  size: 'normal',
-  onClick: () => {},
-  outlined: false,
-  inverted: false,
-  rounded: false,
-  hovered: false,
-  focused: false,
-  active: false,
-  loading: false,
-  static: false,
-  disabled: false,
-};
