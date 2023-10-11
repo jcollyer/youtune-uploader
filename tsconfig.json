@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "target": "es5",
+    // "lib": [],                                  
+    "jsx": "react",
+    "module": "es6",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+  },
+  "exclude": [
+    "../node_modules",
+  ],
+  "include": [
+    "client/**/*.ts",
+    "client/**/*.tsx",
+    "index.d.ts",
+  ]
+}

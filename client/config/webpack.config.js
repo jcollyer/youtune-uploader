@@ -42,6 +42,11 @@ module.exports = {
         include: [resolve('client')],
       },
       {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        include: [resolve('client')],
+      },
+      {
         test: /\.module.css$/,
         use: [
           isDev ? 'style-loader' : MiniCssExtractPlugin.loader,
@@ -98,5 +103,8 @@ module.exports = {
   ],
   performance: {
     hints: false,
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.json']
   },
 };

@@ -5,10 +5,11 @@ import axios from 'axios';
 import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
+import type { User } from '../../../types/user';
 
 export default function HomePage() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((state) => state.user);
   const [playlistToken, setPlaylistToken] = useState(
     Cookies.get('userPlaylistId'),
   );

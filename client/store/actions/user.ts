@@ -3,6 +3,7 @@ export const LOGOUT_USER = 'LOGOUT_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 
 export function login(user) {
+  console.log('user', user);
   return {
     type: LOGIN_USER,
     user,

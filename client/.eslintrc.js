@@ -1,7 +1,8 @@
 module.exports = {
   root: true,
-  extends: ['airbnb', 'airbnb/hooks'],
-  parser: '@babel/eslint-parser',
+  extends: ['airbnb', 'airbnb/hooks', 'plugin:@typescript-eslint/recommended'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
   env: {
     browser: true,
     jest: true,
@@ -23,14 +24,27 @@ module.exports = {
     'max-len': [2, { code: 120, tabWidth: 2, ignoreUrls: true }],
     'newline-per-chained-call': [2, { ignoreChainWithDepth: 4 }],
     'no-cond-assign': [2, 'except-parens'],
-    'no-multi-spaces': [2, { exceptions: {
-      ImportDeclaration: true,
-      Property: true,
-      VariableDeclarator: true,
-    } }],
+    'no-multi-spaces': [2, {
+      exceptions: {
+        ImportDeclaration: true,
+        Property: true,
+        VariableDeclarator: true,
+      },
+    }],
     'quote-props': [2, 'consistent-as-needed'],
-    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-fragments': [2, 'element'],
+    '@typescript-eslint/no-explicit-any': ['off'],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        js: 'never',
+        jsx: 'never',
+        ts: 'never',
+        tsx: 'never',
+      },
+    ],
 
     // disable rules
     'arrow-parens': 0,

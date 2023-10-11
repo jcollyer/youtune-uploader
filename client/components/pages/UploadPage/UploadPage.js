@@ -9,8 +9,7 @@ import Cookies from 'js-cookie';
 import Categories from '../../../utils/categories';
 import generateVideoThumbnail from '../../../utils/generateThumb';
 import { uploadVideo } from '../../../services/video';
-
-const transparentImage = require('../../../assets/images/transparent.png');
+import transparentImage from '../../../assets/images/transparent.png';
 
 export default function UploadPage() {
   const dispatch = useDispatch();

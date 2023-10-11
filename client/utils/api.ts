@@ -3,9 +3,9 @@ import { Store as RNC } from 'react-notifications-component';
 
 import { logout } from '../store/actions/user';
 
-export const handleSuccess = resp => resp.body;
+export const handleSuccess = (resp:any) => resp.body;
 
-export const handleError = error => {
+export const handleError = (error:any) => {
   if (error.response) {
     throw error.response;
   } else {
@@ -14,7 +14,7 @@ export const handleError = error => {
   }
 };
 
-export const dispatchError = dispatch => res => {
+export const dispatchError = (dispatch:any) => (res:any) => {
   if (res.status === 401) {
     dispatch(logout());
     dispatch(push('/login'));

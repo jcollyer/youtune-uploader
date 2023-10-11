@@ -1,0 +1,1 @@
+declare module 'json-style-converter/es5';
