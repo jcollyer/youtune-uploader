@@ -1,0 +1,14 @@
+.drag-drop-container { 
+    display: flex;
+    justify-content: space-between;
+    background-color: rgba(255,255,255,0.4);
+}
+
+.drag-drop {
+    width: 100%;
+    height: 180px;
+    border: 1px solid lightgray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

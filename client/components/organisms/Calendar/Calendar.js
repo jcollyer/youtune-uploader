@@ -4,7 +4,7 @@ import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Week } from './Week';
-import Categories from '../../../services/categories';
+import Categories from '../../../utils/categories';
 
 export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
   const [month, setMonth] = useState(moment());
@@ -127,12 +127,12 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
       <header className="header">
         <div className="month-display row">
           <CaretLeftOutlined
-            style={{ fontSize: '3rem' }}
+            className="text-5xl"
             onClick={() => previous()}
           />
           <span className="month-label">{month.format('MMMM YYYY')}</span>
           <CaretRightOutlined
-            style={{ fontSize: '3rem' }}
+            className="text-5xl"
             onClick={() => next()}
           />
         </div>

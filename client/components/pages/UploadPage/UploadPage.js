@@ -4,10 +4,11 @@ import { push } from 'redux-first-history';
 import * as R from 'ramda';
 import { PlusSquareOutlined, FileAddOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
-import axios from 'axios';
 import moment from 'moment';
 import Cookies from 'js-cookie';
-import Categories from '../../../services/categories';
+import Categories from '../../../utils/categories';
+import generateVideoThumbnail from '../../../utils/generateThumb';
+import { uploadVideo } from '../../../services/video';
 
 const transparentImage = require('../../../assets/images/transparent.png');
 
@@ -42,28 +43,6 @@ export default function UploadPage() {
       setProgress(percentCompleted);
     },
   };
-
-  const generateVideoThumbnail = file =>
-    new Promise(resolve => {
-      const canvas = document.createElement('canvas');
-      const video = document.createElement('video');
-
-      // this is important
-      video.autoplay = true;
-      video.muted = true;
-      video.src = URL.createObjectURL(file);
-
-      video.onloadeddata = () => {
-        const ctx = canvas.getContext('2d');
-
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-
-        ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
-        video.pause();
-        return resolve(canvas.toDataURL('image/png'));
-      };
-    });
 
   const onDrop = useCallback(acceptedFiles => {
     if (acceptedFiles.length) {
@@ -119,7 +98,6 @@ export default function UploadPage() {
   const onSubmit = event => {
     event.preventDefault();
     if (videos.length) {
-      console.log('Tokens-->', { playlistToken, tokens });
       const formData = new FormData();
       videos.forEach(video => {
         formData.append('file', video.file);
@@ -139,18 +117,7 @@ export default function UploadPage() {
       formData.append('playlistToken', playlistToken);
       formData.append('tokens', tokens);
 
-      axios
-        .post('api/auth/uploadVideo', formData, uploadConfig)
-        .then(response => {
-          console.log('axios->', response.data);
-          if (!tokens) {
-            window.open(
-              response.data,
-              'SomeAuthentication',
-              'width=672,height=660,modal=yes,alwaysRaised=yes',
-            );
-          }
-        });
+      uploadVideo(formData, uploadConfig, tokens);
 
       setVideos([]);
     }
@@ -160,20 +127,13 @@ export default function UploadPage() {
     <div className="flex flex-col max-w-xl m-auto">
       <h3 className="text-center mt-20 text-3xl mb-12">Upload Video</h3>
       <form action="uploadVideo" method="post" encType="multipart/form-data">
-        <div style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: 'rgba(255,255,255,0.4)' }}>
+        <div className="drag-drop-container">
           <div
-            style={{
-              width: '100%',
-              height: '180px',
-              border: '1px solid lightgray',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="drag-drop"
             {...getRootProps()}
           >
             <input {...getInputProps()} name="file" />
-            <PlusSquareOutlined style={{ fontSize: '3rem' }} className="mr-4" />
+            <PlusSquareOutlined className="mr-4 text-5xl" />
             {isDragActive ? (
               <p>Drop the files here ...</p>
             ) : (
@@ -194,7 +154,7 @@ export default function UploadPage() {
             <input
               type="checkbox"
               onClick={() => setAllActive(!allActive)}
-              style={{ width: '17px', height: '17px' }}
+              className="h4 w-4"
             />
           </div>
         )}
@@ -221,10 +181,7 @@ export default function UploadPage() {
                   />
 
                   <label htmlFor="thumbnial">
-                    <FileAddOutlined
-                      style={{ fontSize: '30px' }}
-                      className="top-12 left-4 absolute"
-                    />
+                    <FileAddOutlined className="top-12 left-4 absolute text-3xl" />
                   </label>
                   <input
                     type="file"

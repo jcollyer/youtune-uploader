@@ -132,11 +132,13 @@ $background: $white;
     }
     .active-date {
         background: $secondary;
-        color: $white;
         border-radius: 50%;
+        color: $white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 30px;
         height: 30px;
-        padding: 4px 5px;
         margin: 5px;
     }
 
