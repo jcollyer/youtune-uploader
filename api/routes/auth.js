@@ -108,7 +108,10 @@ router.post('/connectYouTube', (req, res) => {
 
 router.get('/oauth2callback', (req, res) => {
   oAuth.getToken(req.query.code, (err, tokens) => {
-    if (err) throw Error(err);
+    if (err) {
+      console.log('err');
+      return;
+    }
 
     oAuth.setCredentials(tokens);
     res.cookie('tokens', tokens, {

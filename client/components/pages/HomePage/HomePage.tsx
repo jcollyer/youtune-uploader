@@ -6,14 +6,16 @@ import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
 import type { User } from '../../../types/user';
+import type { Video } from '../../../types/video';
+import type { RootState } from '../../../store';
 
 export default function HomePage() {
   const dispatch = useDispatch();
-  const { user }:User = useSelector((state) => state.user);
+  const { user }:User = useSelector((state:RootState) => state.user);
   const [playlistToken, setPlaylistToken] = useState(
     Cookies.get('userPlaylistId'),
   );
-  const [scheduledVideos, setscheduledVideos] = useState([]);
+  const [scheduledVideos, setscheduledVideos] = useState<Video[]>([]);
 
   useEffect(() => {
     if (playlistToken) {
@@ -31,7 +33,7 @@ export default function HomePage() {
     }
   }, [dispatch, user]);
 
-  const listenCookieChange = (callback, interval = 1000) => {
+  const listenCookieChange = (callback: (values:{oldValue?: string, newValue?:string}) => void, interval = 1000) => {
     let lastCookie = Cookies.get('userPlaylistId');
     setInterval(() => {
       const userPlaylistId = Cookies.get('userPlaylistId');
@@ -45,7 +47,7 @@ export default function HomePage() {
     }, interval);
   };
 
-  const onConnectYTClick = event => {
+  const onConnectYTClick = (event:React.ChangeEvent<any>) => {
     event.preventDefault();
     listenCookieChange(({ oldValue, newValue }) => {
       console.log(`Cookie changed from "${oldValue}" to "${newValue}"`);

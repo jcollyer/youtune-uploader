@@ -14,6 +14,7 @@
     "heroku-postbuild": "npm run install-client && npm run build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "tsc": "npx tsc",
     "test": "./scripts/test.sh",
     "test:verbose": "./scripts/test-verbose.sh",
     "test:coverage": "./scripts/test-coverage.sh",
@@ -150,7 +151,9 @@
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.4",
+    "@types/moment": "^2.13.0",
     "@types/ramda": "^0.29.6",
+    "@types/redux-logger": "^3.0.10",
     "@types/superagent": "^4.1.19",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",

@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 import { CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
-import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Week } from './Week';
 import Categories from '../../../utils/categories';
+import type { Video } from '../../../types/video';
 
-export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
+type Props = {
+  scheduledVideos: Video[];
+  setLocallScheduledVideoData: (videos: Video[]) => void;
+};
+
+export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props) {
   const [month, setMonth] = useState(moment());
   const [selected, setSelected] = useState(moment().startOf('day'));
   const [duck, setDuck] = useState(0);
-  const [editVideoSelected, setEditVideoSelected] = useState({});
+  const [editVideoSelected, setEditVideoSelected] = useState<Video>({});
 
   const previous = () => {
     setDuck(duck - 1);
@@ -22,7 +27,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
     setMonth(month.add(1, 'month'));
   };
 
-  const select = day => {
+  const select = (day:any) => {
     setSelected(day.date);
     setMonth(day.date.clone());
   };
@@ -31,7 +36,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
     setEditVideoSelected({});
   };
 
-  const updateEditVideoSelected = (event, inputName) => {
+  const updateEditVideoSelected = (event:React.ChangeEvent<any>, inputName:string) => {
     setEditVideoSelected({
       ...editVideoSelected,
       [`${inputName}`]:
@@ -177,7 +182,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
               onChange={event => updateEditVideoSelected(event, 'scheduleDate')}
               className="border-0 outline-0 bg-transparent border-slate-300"
               name="scheduleDate"
-              value={editVideoSelected.scheduleDate.split('T')[0]}
+              value={editVideoSelected.scheduleDate && editVideoSelected.scheduleDate.split('T')[0]}
               placeholder="Schedule Date"
             />
           </div>
@@ -228,10 +233,5 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }) {
     </section>
   );
 }
-
-Calendar.propTypes = {
-  scheduledVideos: PropTypes.array.isRequired,
-  setLocallScheduledVideoData: PropTypes.func.isRequired,
-};
 
 export default Calendar;
