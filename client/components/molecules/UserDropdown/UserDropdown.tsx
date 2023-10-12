@@ -1,23 +1,27 @@
 import React, { useEffect, useRef } from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import * as R from 'ramda';
-
 import Box from 'react-bulma-companion/lib/Box';
-
 import { attemptLogout } from '../../../store/thunks/auth';
+import type { User } from '../../../types/user';
+import { RootState } from '../../../store';
 
-export default function UserDropdown({ open, closeDropdown }) {
+type Props = {
+  open: boolean,
+  closeDropdown: () => void,
+};
+
+export default function UserDropdown({ open, closeDropdown }:Props) {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   const dropdown = useRef(null);
 
   useEffect(() => {
     let init = false;
 
-    const dropdownListener = e => {
+    const dropdownListener = (e:any) => {
       if (!e.composedPath().includes(dropdown.current) && open && init) {
         closeDropdown();
       }
@@ -71,8 +75,3 @@ export default function UserDropdown({ open, closeDropdown }) {
     </Box>
   );
 }
-
-UserDropdown.propTypes = {
-  open: PropTypes.bool.isRequired,
-  closeDropdown: PropTypes.func.isRequired,
-};

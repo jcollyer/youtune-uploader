@@ -1,6 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Day } from './Day';
+
+type Props = {
+  date: any,
+  month: any,
+  select: (date:any) => void,
+  selected: any,
+  scheduledVideos: any[],
+  editVideo: (video:any) => void,
+};
 
 export function Week({
   date,
@@ -9,7 +17,7 @@ export function Week({
   selected,
   scheduledVideos,
   editVideo,
-}) {
+}:Props) {
   const days = [];
   for (let i = 0; i < 7; i++) {
     const day = {
@@ -53,19 +61,11 @@ export function Week({
   }
 
   return (
-    <div className="row week" key={days[0]}>
+    <div className="row week">
       {days}
     </div>
   );
 }
 
-Week.propTypes = {
-  date: PropTypes.object.isRequired,
-  month: PropTypes.object.isRequired,
-  select: PropTypes.func.isRequired,
-  selected: PropTypes.object.isRequired,
-  scheduledVideos: PropTypes.array.isRequired,
-  editVideo: PropTypes.func.isRequired,
-};
-
 export default Week;
+

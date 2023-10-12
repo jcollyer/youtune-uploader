@@ -1,7 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-export function Day({ day, select, selected, videoScheduled, editVideo }) {
+type Props = {
+  day: {
+    date: any,
+    isCurrentMonth: boolean,
+    isToday: boolean,
+    number: number,
+  },
+  select: (day:any) => void,
+  selected: any,
+  videoScheduled: any[],
+  editVideo: (video:any) => void,
+};
+
+export function Day({ day, select, selected, videoScheduled, editVideo }:Props) {
   const { date, isCurrentMonth, isToday, number } = day;
   if (videoScheduled.length > 0) {
     const video = videoScheduled[0];
@@ -48,18 +60,5 @@ export function Day({ day, select, selected, videoScheduled, editVideo }) {
     </button>
   );
 }
-
-Day.propTypes = {
-  day: PropTypes.shape({
-    date: PropTypes.object.isRequired,
-    isCurrentMonth: PropTypes.bool.isRequired,
-    isToday: PropTypes.bool.isRequired,
-    number: PropTypes.number.isRequired,
-  }).isRequired,
-  select: PropTypes.func.isRequired,
-  selected: PropTypes.object.isRequired,
-  videoScheduled: PropTypes.array.isRequired,
-  editVideo: PropTypes.func.isRequired,
-};
 
 export default Day;

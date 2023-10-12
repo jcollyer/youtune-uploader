@@ -45,6 +45,8 @@ module.exports = {
         tsx: 'never',
       },
     ],
+    'react/prop-types': 'off',
+    'react/require-default-props': 'off',
 
     // disable rules
     'arrow-parens': 0,

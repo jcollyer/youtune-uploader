@@ -1,21 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import Field from 'react-bulma-companion/lib/Field';
 import Control from 'react-bulma-companion/lib/Control';
 import Input from 'react-bulma-companion/lib/Input';
 import Icon from 'react-bulma-companion/lib/Icon';
+import type { IconProp } from '@fortawesome/fontawesome-svg-core';
+
+type Props = {
+  className?: string,
+  onChange: (event:React.ChangeEvent<HTMLInputElement>) => void,
+  value: string,
+  placeholder: string,
+  type?: string,
+  leftIcon?: IconProp,
+  rightIcon?: IconProp,
+};
 
 export default function FormInput({
-  className,
+  className = '',
   onChange,
   value,
   placeholder,
-  type,
-  leftIcon,
-  rightIcon,
-}) {
+  type = 'text',
+  leftIcon = undefined,
+  rightIcon = undefined,
+}:Props):JSX.Element {
   return (
     <Field className={className}>
       <Control iconsLeft={!!leftIcon} iconsRight={!!rightIcon}>
@@ -39,20 +48,3 @@ export default function FormInput({
     </Field>
   );
 }
-
-FormInput.defaultProps = {
-  className: '',
-  leftIcon: undefined,
-  rightIcon: undefined,
-  type: 'text',
-};
-
-FormInput.propTypes = {
-  className: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
-  leftIcon: PropTypes.object,
-  rightIcon: PropTypes.object,
-  type: PropTypes.string,
-};
