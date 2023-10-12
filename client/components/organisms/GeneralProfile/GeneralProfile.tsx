@@ -22,9 +22,19 @@ import Input from 'react-bulma-companion/lib/Input';
 import { attemptGetUser, attemptUpdateUser } from '../../../store/thunks/user';
 import { validateName } from '../../../utils/validation';
 
+import type { User } from '../../../types/user';
+import type { RootState } from '../../../store';
+
+type updatedUser = {
+  first_name?: string,
+  last_name?: string,
+  profile_pic?: string,
+  bio?: string,
+};
+
 export default function GeneralProfile() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   const [firstName, setFirstName] = useState(user.firstName || '');
   const [lastName, setLastName] = useState(user.lastName || '');
@@ -79,7 +89,7 @@ export default function GeneralProfile() {
     .catch(R.identity);
 
   const save = () => {
-    const updatedUser = {};
+    const updatedUser:updatedUser = {};
 
     if (firstNameEdited) { updatedUser.first_name = firstName; }
     if (lastNameEdited) { updatedUser.last_name = lastName; }

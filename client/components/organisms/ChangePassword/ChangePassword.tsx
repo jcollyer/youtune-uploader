@@ -8,22 +8,25 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons/faTriangleExclamation';
 
 import Box from 'react-bulma-companion/lib/Box';
-import Block from 'react-bulma-companion/lib/Block';
-import Title from 'react-bulma-companion/lib/Title';
 import Field from 'react-bulma-companion/lib/Field';
 import Control from 'react-bulma-companion/lib/Control';
+import Block from 'react-bulma-companion/lib/Block';
+import Title from 'react-bulma-companion/lib/Title';
 import Label from 'react-bulma-companion/lib/Label';
-import Input from 'react-bulma-companion/lib/Input';
 import Help from 'react-bulma-companion/lib/Help';
+import Input from 'react-bulma-companion/lib/Input';
 import Icon from 'react-bulma-companion/lib/Icon';
 import Button from 'react-bulma-companion/lib/Button';
 
 import { attemptUpdatePassword } from '../../../store/thunks/user';
 import { validatePassword } from '../../../utils/validation';
 
+import type { User } from '../../../types/user';
+import type { RootState } from '../../../store';
+
 export default function ChangePassword() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -36,7 +39,7 @@ export default function ChangePassword() {
   const updateOldPassword = e => setOldPassword(e.target.value);
   const updateConfirmPassword = e => setConfirmPassword(e.target.value);
 
-  const handleValidatePassword = (username, password) => {
+  const handleValidatePassword = (username:string, password:string) => {
     const { valid, message } = validatePassword(username, password);
     setValid(valid);
     setMessage(message);

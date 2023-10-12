@@ -13,9 +13,12 @@ import SettingsMenu from './SettingsMenu/SettingsMenu';
 import ProfileSettings from './ProfileSettings';
 import AccountSettings from './AccountSettings';
 
+import type { User } from '../../../types/user';
+import type { RootState } from '../../../store';
+
 export default function SettingsPage() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
   const { pathname } = useLocation();
 
   useEffect(() => {

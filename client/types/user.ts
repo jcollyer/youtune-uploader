@@ -1,5 +1,9 @@
 export interface User {
   user: {
+    firstName: string;
+    lastName: string;
+    bio: string;
+    profilePic: string;
     createdAt: string;
     id: string;
     user: number;

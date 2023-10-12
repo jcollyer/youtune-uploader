@@ -13,9 +13,12 @@ import useKeyPress from '../../../hooks/useKeyPress';
 import { attemptLogin } from '../../../store/thunks/auth';
 import FormInput from '../../molecules/FormInput';
 
+import type { User } from '../../../types/user';
+import type { RootState } from '../../../store';
+
 export default function LoginPage() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   useEffect(() => {
     if (!R.isEmpty(user)) {
@@ -69,7 +72,7 @@ export default function LoginPage() {
           placeholder="Username"
           value={username}
           leftIcon={faUser}
-          style={{ height: '33px' }}
+          className="h-8"
         />
         <FormInput
           onChange={updatePassword}

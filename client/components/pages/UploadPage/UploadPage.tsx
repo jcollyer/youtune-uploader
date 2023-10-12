@@ -2,18 +2,35 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
 import * as R from 'ramda';
+
 import { PlusSquareOutlined, FileAddOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
 import moment from 'moment';
 import Cookies from 'js-cookie';
 import Categories from '../../../utils/categories';
+
 import generateVideoThumbnail from '../../../utils/generateThumb';
 import { uploadVideo } from '../../../services/video';
-import transparentImage from '../../../assets/images/transparent.png';
+
+import type { RootState } from '../../../store';
+import type { User } from '../../../types/user';
+/* eslint-disable */
+const transparentImage = require('../../../assets/images/transparent.png');
+
+type VideoProps = {
+  id: number,
+  file: any,
+  title: string,
+  description: string,
+  scheduleDate: string,
+  category: string,
+  tags: string,
+  thumbnail: string,
+};
 
 export default function UploadPage() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }: User = useSelector((store: RootState) => store.user);
 
   const [loading, setLoading] = useState(true);
   console.log(loading, 'loading');
@@ -26,15 +43,15 @@ export default function UploadPage() {
     }
   }, [dispatch, user]);
 
-  const [activeIndex, setActiveIndex] = useState([0]);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
   const [allActive, setAllActive] = useState(false);
-  const [videos, setVideos] = useState([]);
+  const [videos, setVideos] = useState<VideoProps[]>([]);
   const [playlistToken] = useState(Cookies.get('userPlaylistId'));
   const [tokens] = useState(Cookies.get('tokens'));
   const [progress, setProgress] = useState(0);
 
   const uploadConfig = {
-    onUploadProgress: progressEvent => {
+    onUploadProgress: (progressEvent: any) => {
       const percentCompleted = Math.round(
         (progressEvent.loaded * 100) / progressEvent.total,
       );
@@ -43,12 +60,12 @@ export default function UploadPage() {
     },
   };
 
-  const onDrop = useCallback(acceptedFiles => {
+  const onDrop = useCallback((acceptedFiles: any) => {
     if (acceptedFiles.length) {
-      acceptedFiles.forEach(async (file, index) => {
+      acceptedFiles.forEach(async (file: any, index: number) => {
         const thumbnail = await generateVideoThumbnail(file);
 
-        setVideos(videos => [
+        setVideos((videos: VideoProps[]) => [
           ...videos,
           {
             id: index,
@@ -67,12 +84,12 @@ export default function UploadPage() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
-  const updateInput = (event, inputName, isImageUpload) => {
+  const updateInput = (event: React.ChangeEvent<any>, inputName: string, isImageUpload?: boolean) => {
     let updatedVideos;
     const updatedCurrentVideo = {
       ...videos[activeIndex],
       [`${inputName}`]: isImageUpload
-        ? URL.createObjectURL(event.target.files[0])
+        ? URL.createObjectURL(event?.target?.files[0])
         : event.currentTarget.value,
     };
     if (allActive) {
@@ -94,11 +111,12 @@ export default function UploadPage() {
     setVideos(updatedVideos);
   };
 
-  const onSubmit = event => {
+  const onSubmit = (event: React.ChangeEvent<any>) => {
     event.preventDefault();
     if (videos.length) {
       const formData = new FormData();
       videos.forEach(video => {
+        const selectedCategory = Categories.filter(c => c.label === video.category)[0]?.id;
         formData.append('file', video.file);
         formData.append('title', video.title || '');
         formData.append('description', video.description || '');
@@ -106,15 +124,12 @@ export default function UploadPage() {
           'scheduleDate',
           video.scheduleDate || new Date().toDateString(),
         );
-        formData.append(
-          'categoryId',
-          Categories.filter(c => c.label === video.category)[0]?.id || 1,
-        );
+        formData.append('categoryId', selectedCategory || '');
         formData.append('tags', video.tags);
         formData.append('thumbnail', video.thumbnail);
       });
-      formData.append('playlistToken', playlistToken);
-      formData.append('tokens', tokens);
+      formData.append('playlistToken', playlistToken || '');
+      formData.append('tokens', tokens || '');
 
       uploadVideo(formData, uploadConfig, tokens);
 
@@ -161,9 +176,8 @@ export default function UploadPage() {
           {videos?.map((video, index) => (
             <div
               key={video.id}
-              className={`${
-                activeIndex === index ? 'active bg-gray-100' : ''
-              } flex flex-row p-4 border-b border-slate-400`}
+              className={`${activeIndex === index ? 'active bg-gray-100' : ''
+                } flex flex-row p-4 border-b border-slate-400`}
               style={{ background: 'rgba(255,255,255, 0.4)' }}
             >
               <div className="border-r border-slate-400 flex-row mr-2 pr-2">
@@ -199,9 +213,8 @@ export default function UploadPage() {
                 onKeyDown={() => setActiveIndex(index)}
               >
                 <div
-                  className={`${
-                    activeIndex !== index ? 'flex' : 'hidden'
-                  } flex-col`}
+                  className={`${activeIndex !== index ? 'flex' : 'hidden'
+                    } flex-col`}
                 >
                   <div className="mb-2">{`Title: ${video.title}`}</div>
                   <div className="mb-2">{`Description: ${video.description}`}</div>
@@ -221,9 +234,8 @@ export default function UploadPage() {
                   </div>
                 </div>
                 <div
-                  className={`${
-                    activeIndex === index ? 'flex' : 'hidden'
-                  } flex-col`}
+                  className={`${activeIndex === index ? 'flex' : 'hidden'
+                    } flex-col`}
                 >
                   <input
                     onChange={event => updateInput(event, 'title')}
@@ -287,9 +299,8 @@ export default function UploadPage() {
               onClick={onSubmit}
               className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
             >
-              {`Upload ${videos.length} Video${
-                videos.length > 1 ? 's' : ''
-              } to YouTube`}
+              {`Upload ${videos.length} Video${videos.length > 1 ? 's' : ''
+                } to YouTube`}
             </button>
           </div>
         )}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import * as R from 'ramda';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
@@ -18,9 +17,12 @@ import Button from 'react-bulma-companion/lib/Button';
 
 import { attemptUpdateUser } from '../../../store/thunks/user';
 
+import type { User } from '../../../types/user';
+import type { RootState } from '../../../store';
+
 export default function ChangeUsername() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   const [usernameCase, setUsernameCase] = useState(user.usernameCase);
 

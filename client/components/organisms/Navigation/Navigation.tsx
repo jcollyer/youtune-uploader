@@ -9,8 +9,11 @@ import Title from 'react-bulma-companion/lib/Title';
 
 import UserDropdown from '../../molecules/UserDropdown';
 
+import type { User } from '../../../types/user';
+import type { RootState } from '../../../store';
+
 export default function Navigation() {
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   const [auth, setAuth] = useState(!R.isEmpty(user));
   const [open, setOpen] = useState(false);

@@ -10,9 +10,12 @@ import {
   UploadOutlined,
 } from '@ant-design/icons';
 
+import type { RootState } from '../../../store';
+import type { User } from '../../../types/user';
+
 export default function WelcomePage() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   useEffect(() => {
     if (!R.isEmpty(user)) {

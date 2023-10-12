@@ -5,6 +5,7 @@ import { push } from 'redux-first-history';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons/faTriangleExclamation';
+
 import Field from 'react-bulma-companion/lib/Field';
 import Control from 'react-bulma-companion/lib/Control';
 import Icon from 'react-bulma-companion/lib/Icon';
@@ -12,14 +13,18 @@ import Input from 'react-bulma-companion/lib/Input';
 import Label from 'react-bulma-companion/lib/Label';
 import Help from 'react-bulma-companion/lib/Help';
 import * as R from 'ramda';
+
 import useKeyPress from '../../../hooks/useKeyPress';
 import { attemptRegister } from '../../../store/thunks/auth';
 import { validateUsername, validatePassword } from '../../../utils/validation';
 import { postCheckUsername } from '../../../services/users';
 
+import type { User } from '../../../types/user';
+import type { RootState } from '../../../store';
+
 export default function RegisterPage() {
   const dispatch = useDispatch();
-  const { user } = useSelector(R.pick(['user']));
+  const { user }:User = useSelector((store:RootState) => store.user);
 
   useEffect(() => {
     if (!R.isEmpty(user)) {
@@ -34,14 +39,14 @@ export default function RegisterPage() {
   const [usernameAvailable, setUsernameAvailable] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
 
-  const checkPassword = (newUsername, newPassword) => {
+  const checkPassword = (newUsername:string, newPassword:string) => {
     const { valid, message } = validatePassword(newUsername, newPassword);
 
     setPasswordValid(valid);
     setPasswordMessage(message);
   };
 
-  const checkUsername = newUsername => {
+  const checkUsername = (newUsername:string) => {
     const { valid, message } = validateUsername(newUsername);
 
     if (valid) {
@@ -60,7 +65,7 @@ export default function RegisterPage() {
     }
   };
 
-  const updateUsername = newUserName => {
+  const updateUsername = (newUserName:string) => {
     setUsername(newUserName);
     checkPassword(newUserName, password);
   };
