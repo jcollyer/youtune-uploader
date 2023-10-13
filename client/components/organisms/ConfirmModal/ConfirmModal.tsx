@@ -1,11 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Modal from 'react-bulma-companion/lib/Modal';
-
 import ConfirmDeleteTodo from '../ConfirmDeleteTodo';
 
-export default function ConfirmModal({ confirm, closeModal, deleteTodo }) {
+type Props = { confirm: boolean, closeModal: () => void, deleteTodo: () => void };
+
+export default function ConfirmModal({ confirm, closeModal, deleteTodo }:Props) {
   return (
     <Modal className="confirm-modal" active={confirm}>
       <Modal.Background />
@@ -16,9 +16,3 @@ export default function ConfirmModal({ confirm, closeModal, deleteTodo }) {
     </Modal>
   );
 }
-
-ConfirmModal.propTypes = {
-  confirm: PropTypes.bool.isRequired,
-  closeModal: PropTypes.func.isRequired,
-  deleteTodo: PropTypes.func.isRequired,
-};

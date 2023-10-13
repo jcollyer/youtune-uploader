@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import * as R from 'ramda';
+import { Routes, Route } from 'react-router-dom';
 
 import Section from 'react-bulma-companion/lib/Section';
 import Container from 'react-bulma-companion/lib/Container';
@@ -19,10 +18,9 @@ import type { RootState } from '../../../store';
 export default function SettingsPage() {
   const dispatch = useDispatch();
   const { user }:User = useSelector((store:RootState) => store.user);
-  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (R.isEmpty(user)) {
+    if (!user) {
       dispatch(push('/login'));
     }
   }, [dispatch, user]);
@@ -33,7 +31,7 @@ export default function SettingsPage() {
         <Container>
           <Columns>
             <Column size="3">
-              <SettingsMenu pathname={pathname} />
+              <SettingsMenu />
             </Column>
             <Column size="9">
               <Routes>

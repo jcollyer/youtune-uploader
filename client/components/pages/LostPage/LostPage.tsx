@@ -4,11 +4,9 @@ import Section from 'react-bulma-companion/lib/Section';
 import Container from 'react-bulma-companion/lib/Container';
 import Title from 'react-bulma-companion/lib/Title';
 
-import styles from './styles.module.css';
-
 export default function LostPage() {
   return (
-    <div className={styles.root}>
+    <div className="text-center">
       <Section>
         <Container>
           <Title size="1">

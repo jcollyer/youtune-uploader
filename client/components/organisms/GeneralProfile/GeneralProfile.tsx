@@ -60,26 +60,26 @@ export default function GeneralProfile() {
     resetState();
   }, [user, resetState]);
 
-  const updateFirstName = e => {
+  const updateFirstName = (e:React.ChangeEvent<HTMLInputElement>) => {
     if (validateName(e.target.value)) {
       setFirstName(e.target.value);
       setFirstNameEdited(true);
     }
   };
 
-  const updateLastName = e => {
+  const updateLastName = (e:React.ChangeEvent<HTMLInputElement>) => {
     if (validateName(e.target.value)) {
       setLastName(e.target.value);
       setLastNameEdited(true);
     }
   };
 
-  const updateBio = e => {
+  const updateBio = (e:React.ChangeEvent<HTMLInputElement>) => {
     setBio(e.target.value);
     setBioEdited(true);
   };
 
-  const updateProfilePic = e => {
+  const updateProfilePic = (e:React.ChangeEvent<HTMLInputElement>) => {
     setProfilePic(e.target.value);
     setProfilePicEdited(true);
   };

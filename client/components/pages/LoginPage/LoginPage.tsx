@@ -13,15 +13,14 @@ import useKeyPress from '../../../hooks/useKeyPress';
 import { attemptLogin } from '../../../store/thunks/auth';
 import FormInput from '../../molecules/FormInput';
 
-import type { User } from '../../../types/user';
 import type { RootState } from '../../../store';
 
 export default function LoginPage() {
   const dispatch = useDispatch();
-  const { user }:User = useSelector((store:RootState) => store.user);
+  const { user } = useSelector((store:RootState) => store.user);
 
   useEffect(() => {
-    if (!R.isEmpty(user)) {
+    if (user) {
       dispatch(push('/home'));
     }
   }, [dispatch, user]);
@@ -55,8 +54,8 @@ export default function LoginPage() {
     setRemember(!remember);
   };
 
-  const updateUsername = e => setUsername(e.target.value);
-  const updatePassword = e => setPassword(e.target.value);
+  const updateUsername = (e:React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value);
+  const updatePassword = (e:React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
 
   return (
     <section className="pt-64">

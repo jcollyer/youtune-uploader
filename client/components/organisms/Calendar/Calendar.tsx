@@ -87,7 +87,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props)
     const date = month
       .clone()
       .startOf('month')
-      .add('w' - 1)
+      .add(1, 'w')
       .day('Sunday');
     let count = 0;
     let monthIndex = date.month();
@@ -95,7 +95,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props)
     while (!done) {
       weeks.push(
         <Week
-          key={date}
+          key={date.clone().toString()}
           date={date.clone()}
           month={month}
           select={day => select(day)}

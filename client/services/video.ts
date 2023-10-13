@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const uploadVideo = (formData, uploadConfig, tokens) =>
+export const uploadVideo = (formData:any, uploadConfig:any, tokens:string | undefined) =>
   axios
-    .post('api/auth/uploadVideo', formData, uploadConfig, tokens)
+    .post('api/auth/uploadVideo', formData, uploadConfig)
     .then(response => {
       if (!tokens) {
         window.open(

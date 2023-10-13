@@ -26,7 +26,7 @@ export default function ChangeUsername() {
 
   const [usernameCase, setUsernameCase] = useState(user.usernameCase);
 
-  const updateUsernameCase = e => setUsernameCase(e.target.value);
+  const updateUsernameCase = (e:React.ChangeEvent<HTMLInputElement>) => setUsernameCase(e.target.value);
 
   const disabled = (user.usernameCase === usernameCase)
     || usernameCase.toLowerCase() !== user.username;

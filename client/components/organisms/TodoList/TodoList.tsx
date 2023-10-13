@@ -3,9 +3,11 @@ import { useSelector } from 'react-redux';
 import * as R from 'ramda';
 
 import Todo from '../../molecules/Todo';
+import { RootState } from '../../../store';
+import type { Todos } from '../../../types/todo';
 
 export default function TodoList() {
-  const { todos } = useSelector(R.pick(['todos']));
+  const { todos }:Todos = useSelector((store:RootState) => store.todos);
 
   return (
     <ul className="todo-list">

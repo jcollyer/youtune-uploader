@@ -22,3 +22,6 @@ declare module 'react-bulma-companion/lib/Navbar';
 declare module 'react-bulma-companion/lib/Checkbox';
 declare module 'react-bulma-companion/lib/Section';
 declare module 'react-bulma-companion/lib/Container';
+declare module 'react-bulma-companion/lib/Menu';
+declare module 'react-bulma-companion/lib/Card';
+declare module 'react-bulma-companion/lib/Modal';

@@ -11,3 +11,8 @@ export interface User {
     usernameCase: string;
   }
 }
+
+export interface UserAuth {
+  email: string;
+  password: string
+}

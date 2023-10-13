@@ -1,14 +1,16 @@
 import request from 'superagent';
 import { handleSuccess, handleError } from '../utils/api';
 
-export const postRegister = user =>
+import type { UserAuth } from '../types/user';
+
+export const postRegister = (user:UserAuth) =>
   request
     .post('/api/auth/register')
     .send(user)
     .then(handleSuccess)
     .catch(handleError);
 
-export const postLogin = user =>
+export const postLogin = (user:UserAuth) =>
   request
     .post('/api/auth/login')
     .send(user)

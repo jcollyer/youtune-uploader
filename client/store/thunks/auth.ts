@@ -9,8 +9,10 @@ import {
   postLogin,
   postLogout,
 } from '../../services/auth';
+import { AppDispatch } from '..';
+import type { UserAuth } from '../../types/user';
 
-export const attemptLogin = user => dispatch =>
+export const attemptLogin = (user:UserAuth) => (dispatch:AppDispatch) =>
   postLogin(user)
     .then(data => {
       dispatch(login(snakeToCamelCase(data.user)));
@@ -32,7 +34,7 @@ export const attemptLogin = user => dispatch =>
     })
     .catch(dispatchError(dispatch));
 
-export const attemptRegister = newUser => dispatch =>
+export const attemptRegister = (newUser:UserAuth) => (dispatch:AppDispatch) =>
   postRegister(newUser)
     .then(data => {
       RNC.addNotification({
@@ -52,7 +54,7 @@ export const attemptRegister = newUser => dispatch =>
     .then(() => dispatch(push('/settings')))
     .catch(dispatchError(dispatch));
 
-export const attemptLogout = () => dispatch =>
+export const attemptLogout = () => (dispatch:AppDispatch) =>
   postLogout()
     .then(data => {
       dispatch(logout());

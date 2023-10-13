@@ -3,13 +3,13 @@ import * as R from 'ramda';
 
 import {
   SET_TODOS, ADD_TODO, TOGGLE_COMPLETE_TODO, UPDATE_TODO, REMOVE_TODO,
-} from '../actions/todos';
+} from '../actions/todo';
 
 import { LOGOUT_USER } from '../actions/user';
 
 export function todo(state = {
   completed: false,
-}, action) {
+}, action:any) {
   switch (action.type) {
     case ADD_TODO:
       return update(state, {
@@ -31,7 +31,7 @@ export function todo(state = {
   }
 }
 
-export default function todos(state = [], action) {
+export default function todos(state = [], action:any) {
   const index = R.findIndex(R.propEq('id', action.id), state);
   const updatedAtIndex = { $splice: [[index, 1, todo(state[index], action)]] };
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import * as R from 'ramda';
 
 import Navbar from 'react-bulma-companion/lib/Navbar';
 import Image from 'react-bulma-companion/lib/Image';
@@ -13,13 +12,13 @@ import type { User } from '../../../types/user';
 import type { RootState } from '../../../store';
 
 export default function Navigation() {
-  const { user }:User = useSelector((store:RootState) => store.user);
+  const { user }: User = useSelector((state: RootState) => state.user);
 
-  const [auth, setAuth] = useState(!R.isEmpty(user));
+  const [auth, setAuth] = useState(user);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    setAuth(!R.isEmpty(user));
+    setAuth(user);
   }, [user]);
 
   const toggleDropdown = () => setOpen(!open);

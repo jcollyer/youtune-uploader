@@ -1,6 +1,6 @@
 import { snakeToCamelCase } from 'json-style-converter/es5';
 import * as R from 'ramda';
-import { setTodos, addTodo, toggleCompleteTodo, updateTodo, removeTodo } from '../actions/todos';
+import { setTodos, addTodo, toggleCompleteTodo, updateTodo, removeTodo } from '../actions/todo';
 import { dispatchError } from '../../utils/api';
 import { getTodos, postTodo, putToggleCompleteTodo, putTodo, deleteTodo } from '../../services/todos';
 import { AppDispatch } from '..';

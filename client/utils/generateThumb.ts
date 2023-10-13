@@ -1,4 +1,4 @@
-const generateVideoThumbnail = file =>
+const generateVideoThumbnail = (file: any) =>
   new Promise(resolve => {
     const canvas = document.createElement('canvas');
     const video = document.createElement('video');
@@ -14,7 +14,7 @@ const generateVideoThumbnail = file =>
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
-      ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+      ctx?.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
       video.pause();
       return resolve(canvas.toDataURL('image/png'));
     };

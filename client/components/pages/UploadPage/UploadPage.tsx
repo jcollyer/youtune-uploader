@@ -1,7 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
-import * as R from 'ramda';
 
 import { PlusSquareOutlined, FileAddOutlined } from '@ant-design/icons';
 import { useDropzone } from 'react-dropzone';
@@ -33,10 +32,10 @@ export default function UploadPage() {
   const { user }: User = useSelector((store: RootState) => store.user);
 
   const [loading, setLoading] = useState(true);
-  console.log(loading, 'loading');
+  console.log(loading, 'loading', user);
 
   useEffect(() => {
-    if (R.isEmpty(user)) {
+    if (!user) {
       dispatch(push('/login'));
     } else {
       setLoading(false);
@@ -47,7 +46,7 @@ export default function UploadPage() {
   const [allActive, setAllActive] = useState(false);
   const [videos, setVideos] = useState<VideoProps[]>([]);
   const [playlistToken] = useState(Cookies.get('userPlaylistId'));
-  const [tokens] = useState(Cookies.get('tokens'));
+  const [tokens] = useState<string | undefined>(Cookies.get('tokens'));
   const [progress, setProgress] = useState(0);
 
   const uploadConfig = {

@@ -1,10 +1,11 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 import Card from 'react-bulma-companion/lib/Card';
 import Content from 'react-bulma-companion/lib/Content';
 
-export default function ConfirmDeleteTodo({ closeModal, deleteTodo }) {
+type Props = { closeModal: () => void, deleteTodo: () => void };
+
+export default function ConfirmDeleteTodo({ closeModal, deleteTodo }:Props) {
   return (
     <Card>
       <Card.Content>
@@ -23,8 +24,3 @@ export default function ConfirmDeleteTodo({ closeModal, deleteTodo }) {
     </Card>
   );
 }
-
-ConfirmDeleteTodo.propTypes = {
-  closeModal: PropTypes.func.isRequired,
-  deleteTodo: PropTypes.func.isRequired,
-};

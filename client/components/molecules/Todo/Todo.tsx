@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+
 import { parseISO, formatDistanceToNow } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons/faTrashCan';
@@ -8,6 +9,7 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil';
 import { faFloppyDisk } from '@fortawesome/free-solid-svg-icons/faFloppyDisk';
 import { faSquare } from '@fortawesome/free-regular-svg-icons/faSquare';
 import { faSquareCheck } from '@fortawesome/free-regular-svg-icons/faSquareCheck';
+
 import Box from 'react-bulma-companion/lib/Box';
 import Media from 'react-bulma-companion/lib/Media';
 import Content from 'react-bulma-companion/lib/Content';
@@ -17,24 +19,18 @@ import Textarea from 'react-bulma-companion/lib/Textarea';
 import ConfirmModal from '../../organisms/ConfirmModal';
 import { attemptToggleCompleteTodo, attemptUpdateTodo, attemptDeleteTodo } from '../../../store/thunks/todos';
 
-const fromNow = (date:string) => formatDistanceToNow(parseISO(date), { addSuffix: true });
+import type { Todo } from '../../../types/todo';
 
-type Props = {
-  id: string,
-  text: string,
-  completed: boolean,
-  createdAt: string,
-  updatedAt: string,
-};
+const fromNow = (date:string | undefined) => formatDistanceToNow(parseISO(date || ''), { addSuffix: true });
 
-export default function Todo({ id, text, completed, createdAt, updatedAt }:Props) {
+export default function Todo({ id, text, completed, createdAt, updatedAt }:Todo) {
   const dispatch = useDispatch();
 
   const [currentText, setCurrentText] = useState(text);
   const [edit, setEdit] = useState(false);
   const [confirm, setConfirm] = useState(false);
   const [updatedMessage, setUpdatedMessage] = useState('');
-  const [createdMessage, setCreatedMessage] = useState('');
+  const [createdMessage, setCreatedMessage] = useState<string | undefined>('');
 
   useEffect(() => {
     const updateMessages = () => {

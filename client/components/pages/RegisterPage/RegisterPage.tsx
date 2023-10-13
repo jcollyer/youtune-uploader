@@ -27,7 +27,7 @@ export default function RegisterPage() {
   const { user }:User = useSelector((store:RootState) => store.user);
 
   useEffect(() => {
-    if (!R.isEmpty(user)) {
+    if (user) {
       dispatch(push('/home'));
     }
   }, [dispatch, user]);
@@ -70,12 +70,12 @@ export default function RegisterPage() {
     checkPassword(newUserName, password);
   };
 
-  const handleUsernameChange = e => {
+  const handleUsernameChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     updateUsername(e.target.value);
     checkUsername(e.target.value);
   };
 
-  const handlePasswordChange = e => {
+  const handlePasswordChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     checkPassword(username, e.target.value);
   };

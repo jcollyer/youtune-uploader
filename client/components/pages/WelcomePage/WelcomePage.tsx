@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
-import * as R from 'ramda';
 import {
   YoutubeOutlined,
   DragOutlined,
@@ -18,7 +17,7 @@ export default function WelcomePage() {
   const { user }:User = useSelector((store:RootState) => store.user);
 
   useEffect(() => {
-    if (!R.isEmpty(user)) {
+    if (user) {
       dispatch(push('/home'));
     }
   }, [dispatch, user]);

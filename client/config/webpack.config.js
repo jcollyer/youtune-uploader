@@ -26,7 +26,7 @@ module.exports = {
   entry: [
     resolve('client/styles/scss/index.scss'),
     resolve('client/assets/index.js'),
-    resolve('client/index.js'),
+    resolve('client/index.tsx'),
   ],
   output: {
     filename: isDev ? '[name].js' : '[name].[fullhash].js',

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import * as R from 'ramda';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -20,12 +20,13 @@ import Button from 'react-bulma-companion/lib/Button';
 
 import { attemptUpdatePassword } from '../../../store/thunks/user';
 import { validatePassword } from '../../../utils/validation';
+import { useAppDispatch } from '../../../hooks/useAppDispatch';
 
 import type { User } from '../../../types/user';
 import type { RootState } from '../../../store';
 
 export default function ChangePassword() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { user }:User = useSelector((store:RootState) => store.user);
 
   const [oldPassword, setOldPassword] = useState('');
@@ -36,8 +37,8 @@ export default function ChangePassword() {
 
   const match = newPassword === confirmPassword;
 
-  const updateOldPassword = e => setOldPassword(e.target.value);
-  const updateConfirmPassword = e => setConfirmPassword(e.target.value);
+  const updateOldPassword = (e:React.ChangeEvent<HTMLInputElement>) => setOldPassword(e.target.value);
+  const updateConfirmPassword = (e:React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value);
 
   const handleValidatePassword = (username:string, password:string) => {
     const { valid, message } = validatePassword(username, password);
@@ -45,7 +46,7 @@ export default function ChangePassword() {
     setMessage(message);
   };
 
-  const updateNewPassword = e => {
+  const updateNewPassword = (e:React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(e.target.value);
     handleValidatePassword(user.username, e.target.value);
   };

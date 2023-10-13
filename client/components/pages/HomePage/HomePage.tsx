@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
 import axios from 'axios';
-import * as R from 'ramda';
 import Cookies from 'js-cookie';
 import Calendar from '../../organisms/Calendar/Calendar';
 import type { User } from '../../../types/user';
@@ -28,7 +27,7 @@ export default function HomePage() {
   }, [playlistToken]);
 
   useEffect(() => {
-    if (R.isEmpty(user)) {
+    if (!user) {
       dispatch(push('/login'));
     }
   }, [dispatch, user]);

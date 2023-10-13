@@ -6,7 +6,9 @@ import { putUser, putUserPassword } from '../../services/user';
 import { getUser } from '../../services/getUser';
 import { AppDispatch } from '..';
 
-export const attemptGetUser = () => (dispatch:AppDispatch) =>
+type passwordInfoProps = { oldPassword: string; newPassword: string; };
+
+export const attemptGetUser = () => (dispatch: AppDispatch) =>
   getUser()
     .then(data => {
       dispatch(updateUser(snakeToCamelCase(data.user)));
@@ -14,7 +16,7 @@ export const attemptGetUser = () => (dispatch:AppDispatch) =>
     })
     .catch(dispatchError(dispatch));
 
-export const attemptUpdateUser = (updatedUser:any) => (dispatch:AppDispatch) =>
+export const attemptUpdateUser = (updatedUser: any) => (dispatch: AppDispatch) =>
   putUser(updatedUser)
     .then(data => {
       dispatch(updateUser(snakeToCamelCase(data.user)));
@@ -36,7 +38,7 @@ export const attemptUpdateUser = (updatedUser:any) => (dispatch:AppDispatch) =>
     })
     .catch(dispatchError(dispatch));
 
-export const attemptUpdatePassword = (passwordInfo:any) => (dispatch:AppDispatch) =>
+export const attemptUpdatePassword = (passwordInfo:passwordInfoProps) => (dispatch: AppDispatch) =>
   putUserPassword(passwordInfo)
     .then(data => {
       RNC.addNotification({
