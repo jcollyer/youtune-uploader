@@ -59,7 +59,8 @@ export default function Navigation() {
               component={Link}
             >
               <button
-                className="font-bold py-2 px-4 rounded border border-slate-400 hover:border-slate-500"
+                className="font-bold py-2 px-4 rounded border border-orange-400
+                  hover:bg-orange-600 bg-orange-500 text-white"
                 type="button"
               >
                 Sign Up

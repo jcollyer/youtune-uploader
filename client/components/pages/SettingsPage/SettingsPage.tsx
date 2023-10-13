@@ -17,7 +17,7 @@ import type { RootState } from '../../../store';
 
 export default function SettingsPage() {
   const dispatch = useDispatch();
-  const { user }:User = useSelector((store:RootState) => store.user);
+  const { user }: User = useSelector((store: RootState) => store.user);
 
   useEffect(() => {
     if (!user) {
@@ -27,22 +27,24 @@ export default function SettingsPage() {
 
   return (
     <div className="settings-page page">
-      <Section>
-        <Container>
-          <Columns>
-            <Column size="3">
-              <SettingsMenu />
-            </Column>
-            <Column size="9">
-              <Routes>
-                <Route path="profile" element={<ProfileSettings />} />
-                <Route path="account" element={<AccountSettings />} />
-                <Route path="*" element={<ProfileSettings />} />
-              </Routes>
-            </Column>
-          </Columns>
-        </Container>
-      </Section>
+      <div className="pt-32">
+        <Section>
+          <Container>
+            <Columns>
+              <Column size="3">
+                <SettingsMenu />
+              </Column>
+              <Column size="9">
+                <Routes>
+                  <Route path="profile" element={<ProfileSettings />} />
+                  <Route path="account" element={<AccountSettings />} />
+                  <Route path="*" element={<ProfileSettings />} />
+                </Routes>
+              </Column>
+            </Columns>
+          </Container>
+        </Section>
+      </div>
     </div>
   );
 }

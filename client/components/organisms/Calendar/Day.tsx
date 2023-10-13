@@ -39,7 +39,7 @@ export function Day({ day, select, selected, videoScheduled, editVideo }:Props) 
               tags: snippet.tags,
             })}
           type="button"
-          className="font-bold px-3 border-t border-slate-500 hover:bg-slate-500 bg-slate-600 w-full absolute bottom-0"
+          className="font-bold px-3 border-t border-slate-500 hover:bg-slate-500 bg-gray-500 w-full absolute bottom-0"
         >
           Edit Video
         </button>

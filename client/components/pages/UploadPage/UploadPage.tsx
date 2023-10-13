@@ -137,8 +137,8 @@ export default function UploadPage() {
   };
 
   return (
-    <div className="flex flex-col max-w-xl m-auto">
-      <h3 className="text-center mt-20 text-3xl mb-12">Upload Video</h3>
+    <div className="flex flex-col pt-20 max-w-xl m-auto">
+      <h3 className="text-center mt-16 text-3xl mb-12">Upload Video</h3>
       <form action="uploadVideo" method="post" encType="multipart/form-data">
         <div className="drag-drop-container">
           <div

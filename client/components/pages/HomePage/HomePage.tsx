@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'redux-first-history';
 import axios from 'axios';
@@ -8,9 +8,11 @@ import type { User } from '../../../types/user';
 import type { Video } from '../../../types/video';
 import type { RootState } from '../../../store';
 
+type CookieProps = { oldValue?: string, newValue?: string };
+
 export default function HomePage() {
   const dispatch = useDispatch();
-  const { user }:User = useSelector((state:RootState) => state.user);
+  const { user }: User = useSelector((state: RootState) => state.user);
   const [playlistToken, setPlaylistToken] = useState(
     Cookies.get('userPlaylistId'),
   );
@@ -32,7 +34,7 @@ export default function HomePage() {
     }
   }, [dispatch, user]);
 
-  const listenCookieChange = (callback: (values:{oldValue?: string, newValue?:string}) => void, interval = 1000) => {
+  const listenCookieChange = (callback: (values:CookieProps) => void, interval = 1000) => {
     let lastCookie = Cookies.get('userPlaylistId');
     setInterval(() => {
       const userPlaylistId = Cookies.get('userPlaylistId');
@@ -46,7 +48,7 @@ export default function HomePage() {
     }, interval);
   };
 
-  const onConnectYTClick = (event:React.ChangeEvent<any>) => {
+  const onConnectYTClick = (event: React.ChangeEvent<any>) => {
     event.preventDefault();
     listenCookieChange(({ oldValue, newValue }) => {
       console.log(`Cookie changed from "${oldValue}" to "${newValue}"`);
@@ -81,10 +83,13 @@ export default function HomePage() {
         </div>
       )}
       {scheduledVideos.length > 0 && (
-        <Calendar
-          scheduledVideos={scheduledVideos}
-          setLocallScheduledVideoData={setscheduledVideos}
-        />
+        <Fragment>
+          <h3 className="text-center mt-32 text-3xl">Scheduled Videos</h3>
+          <Calendar
+            scheduledVideos={scheduledVideos}
+            setLocallScheduledVideoData={setscheduledVideos}
+          />
+        </Fragment>
       )}
     </div>
   );

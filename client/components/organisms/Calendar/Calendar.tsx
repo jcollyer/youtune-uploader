@@ -11,7 +11,7 @@ type Props = {
   setLocallScheduledVideoData: (videos: Video[]) => void;
 };
 
-export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props) {
+export function Calendar({ scheduledVideos, setLocallScheduledVideoData }: Props) {
   const [month, setMonth] = useState(moment());
   const [selected, setSelected] = useState(moment().startOf('day'));
   const [duck, setDuck] = useState(0);
@@ -27,7 +27,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props)
     setMonth(month.add(1, 'month'));
   };
 
-  const select = (day:any) => {
+  const select = (day: any) => {
     setSelected(day.date);
     setMonth(day.date.clone());
   };
@@ -36,7 +36,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props)
     setEditVideoSelected({});
   };
 
-  const updateEditVideoSelected = (event:React.ChangeEvent<any>, inputName:string) => {
+  const updateEditVideoSelected = (event: React.ChangeEvent<any>, inputName: string) => {
     setEditVideoSelected({
       ...editVideoSelected,
       [`${inputName}`]:
@@ -128,6 +128,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props)
   };
 
   return (
+
     <section className="calendar">
       <header className="header">
         <div className="month-display row">
@@ -154,7 +155,7 @@ export function Calendar({ scheduledVideos, setLocallScheduledVideoData }:Props)
       {renderWeeks()}
       {!!Object.keys(editVideoSelected).length && (
         <div className="edit-video">
-          <h3 className="mb-12">Edit Video</h3>
+          <h3 className="mb-5">Edit Video</h3>
           <div className="flex mb-2">
             <p className="mr-2 text-slate-400">Title:</p>
             <input

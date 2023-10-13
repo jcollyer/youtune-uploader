@@ -73,6 +73,7 @@ export default function LoginPage() {
           leftIcon={faUser}
           className="h-8"
         />
+        <br />
         <FormInput
           onChange={updatePassword}
           placeholder="Password"
