@@ -21,6 +21,10 @@ $ brew services start mongodb-community
 
 Start the client
 ```bash
+$ npm run start
+```
+or
+```
 $ npm run start:client
 ```
 
@@ -41,6 +45,14 @@ $ npm start:server
 ```bash
 $ git push heroku master
 ```
+
+#### for Heroku Logs (using papertrail)
+
+```bash
+$ heroku addons:open papertrail
+```
+
+
 
 #### Other Commands
 
