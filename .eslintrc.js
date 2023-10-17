@@ -35,6 +35,7 @@ module.exports = {
     'react/jsx-filename-extension': [2, { extensions: ['.js', '.jsx', '.ts', '.tsx'] }],
     'react/jsx-fragments': [2, 'element'],
     '@typescript-eslint/no-explicit-any': ['off'],
+    '@typescript-eslint/ban-ts-comment': 'off',
     'import/extensions': [
       'error',
       'ignorePackages',

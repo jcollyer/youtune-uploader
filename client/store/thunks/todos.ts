@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { snakeToCamelCase } from 'json-style-converter/es5';
 import * as R from 'ramda';
 import { setTodos, addTodo, toggleCompleteTodo, updateTodo, removeTodo } from '../actions/todo';

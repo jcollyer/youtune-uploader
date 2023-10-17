@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck';
+import { faUser } from '@fortawesome/free-solid-svg-icons/faUser';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons/faTriangleExclamation';
 
 import Box from 'react-bulma-companion/lib/Box';
@@ -22,11 +23,11 @@ import type { RootState } from '../../../store';
 
 export default function ChangeUsername() {
   const dispatch = useDispatch();
-  const { user }:User = useSelector((store:RootState) => store.user);
+  const { user }: User = useSelector((store: RootState) => store.user);
 
   const [usernameCase, setUsernameCase] = useState(user.usernameCase);
 
-  const updateUsernameCase = (e:React.ChangeEvent<HTMLInputElement>) => setUsernameCase(e.target.value);
+  const updateUsernameCase = (e: React.ChangeEvent<HTMLInputElement>) => setUsernameCase(e.target.value);
 
   const disabled = (user.usernameCase === usernameCase)
     || usernameCase.toLowerCase() !== user.username;
@@ -75,7 +76,7 @@ export default function ChangeUsername() {
               color={disabled ? (usernameCase !== user.usernameCase ? 'danger' : undefined) : 'success'}
             >
               <FontAwesomeIcon
-                icon={disabled ? (usernameCase !== user.usernameCase && faTriangleExclamation) : faCheck}
+                icon={disabled ? (usernameCase !== user.usernameCase ? faTriangleExclamation : faUser) : faCheck}
               />
             </Icon>
           )}

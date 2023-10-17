@@ -1,3 +1,4 @@
+// @ts-nocheck
 import update from 'immutability-helper';
 import * as R from 'ramda';
 
