@@ -8,7 +8,7 @@
     "build:prd": "./scripts/build-prd.sh",
     "build:dev": "./scripts/build-dev.sh",
     "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "start:server": "nodemon ./api/index.js",
+    "start:server": "nodemon --optimize_for_size --max_old_space_size=460 ./api/index.js",
     "start:client": "./scripts/watch-dev.sh",
     "install-client": "cd client && npm install",
     "heroku-postbuild": "npm run install-client && npm run build",
