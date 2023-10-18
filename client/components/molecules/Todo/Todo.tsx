@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { parseISO, formatDistanceToNow } from 'date-fns';
+// import { parseISO, formatDistanceToNow } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons/faTrashCan';
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan';
@@ -21,7 +21,7 @@ import { attemptToggleCompleteTodo, attemptUpdateTodo, attemptDeleteTodo } from 
 
 import type { Todo } from '../../../types/todo';
 
-const fromNow = (date:string | undefined) => formatDistanceToNow(parseISO(date || ''), { addSuffix: true });
+// const fromNow = (date:string | undefined) => formatDistanceToNow(parseISO(date || ''), { addSuffix: true });
 
 export default function Todo({ id, text, completed, createdAt, updatedAt }:Todo) {
   const dispatch = useDispatch();
@@ -29,13 +29,13 @@ export default function Todo({ id, text, completed, createdAt, updatedAt }:Todo)
   const [currentText, setCurrentText] = useState(text);
   const [edit, setEdit] = useState(false);
   const [confirm, setConfirm] = useState(false);
-  const [updatedMessage, setUpdatedMessage] = useState('');
-  const [createdMessage, setCreatedMessage] = useState<string | undefined>('');
+  // const [updatedMessage, setUpdatedMessage] = useState('');
+  // const [createdMessage, setCreatedMessage] = useState<string | undefined>('');
 
   useEffect(() => {
     const updateMessages = () => {
-      setUpdatedMessage(updatedAt ? fromNow(updatedAt) : '');
-      setCreatedMessage(fromNow(createdAt));
+      // setUpdatedMessage(updatedAt ? fromNow(updatedAt) : '');
+      // setCreatedMessage(fromNow(createdAt));
     };
 
     updateMessages();
@@ -79,7 +79,7 @@ export default function Todo({ id, text, completed, createdAt, updatedAt }:Todo)
           <Content>
             <p>
               <small>
-                {`created ${createdMessage}`}
+                {/* {`created ${createdMessage}`} */}
               </small>
             </p>
             {edit ? (
@@ -98,7 +98,7 @@ export default function Todo({ id, text, completed, createdAt, updatedAt }:Todo)
             <Level.Left>
               {!!updatedAt && (
                 <small>
-                  {`edited ${updatedMessage}`}
+                  {/* {`edited ${updatedMessage}`} */}
                 </small>
               )}
             </Level.Left>

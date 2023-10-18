@@ -21,6 +21,8 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
   inject: 'body',
 });
 
+const WebpackIgnoreLocalsPlugin = new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en-gb/);
+
 module.exports = {
   devtool: 'source-map',
   entry: [
@@ -100,6 +102,7 @@ module.exports = {
   plugins: [
     HtmlWebpackPluginConfig,
     WebpackDefinePluginConfig,
+    WebpackIgnoreLocalsPlugin,
   ],
   performance: {
     hints: false,
