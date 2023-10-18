@@ -60,4 +60,4 @@ app.use(function (err, req, res) {
   res.status(500).send('Something broke!')
 })
 
-app.listen(port, () => console.log(`Server is listening on port ${port}`));
+app.listen(port, () => console.log(`Server is listening on port ${port}, running in ${process.env.NODE_ENV} mode`));
