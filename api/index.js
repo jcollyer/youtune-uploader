@@ -15,7 +15,7 @@ const app = express();
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://mern-yt-uploader-5be9c88deb19.herokuapp.com',
+    'https://youtune-uploader.vercel.app',
   ],
 };
 
@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 
 const allowlist = [
   'http://localhost:3000',
-  'https://mern-yt-uploader-5be9c88deb19.herokuapp.com',
+  'https://youtune-uploader.vercel.app',
 ];
 
 app.use((req, res, next) => {
